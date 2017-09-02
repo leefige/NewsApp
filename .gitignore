@@ -1,2 +1,4 @@
-.vscode/*
-.git/*
+.vscode/
+.git/
+.idea/
+newsApp.iml
