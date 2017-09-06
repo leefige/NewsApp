@@ -8,4 +8,19 @@
     <string name="action_settings">Settings</string>
 
     <string name="section_format">Hello World from section: %1$d</string>
+
+    <!--For Tab label-->
+    <string name="label_science">科技</string>
+    <string name="label_education">教育</string>
+    <string name="label_military">军事</string>
+    <string name="label_domestic">国内</string>
+    <string name="label_society">社会</string>
+    <string name="label_culture">文化</string>
+    <string name="label_car">汽车</string>
+    <string name="label_international">国际</string>
+    <string name="label_sport">体育</string>
+    <string name="label_economy">财经</string>
+    <string name="label_health">健康</string>
+    <string name="label_entertainment">娱乐</string>
+
 </resources>
