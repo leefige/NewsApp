@@ -155,7 +155,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * Classes defined for LEFT-RIGHT SLIDE
      */
-    
+
     /**
      * A placeholder fragment containing a simple view.
      */
