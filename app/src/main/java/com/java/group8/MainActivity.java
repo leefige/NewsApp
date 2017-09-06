@@ -1,5 +1,9 @@
 package com.java.group8;
 
+/**
+ * Created by Liyf on 2017/9/6.
+ */
+
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -39,7 +43,7 @@ public class MainActivity extends AppCompatActivity
      */
     private ViewPager mViewPager;
 
-    final int PAGE_COUND = 3;
+    final int PAGE_COUNT = 12;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
+        tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
         /**
          *  Following lines are for Navigation drawer
@@ -211,18 +216,36 @@ public class MainActivity extends AppCompatActivity
         @Override
         public int getCount() {
             // Show total pages.
-            return PAGE_COUND;
+            return PAGE_COUNT;
         }
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (position) {
-                case 0:
-                    return "SECTION 1";
-                case 1:
-                    return "SECTION 2";
-                case 2:
-                    return "SECTION 3";
+            switch (NewsCategory.valueOf(position + 1)) {
+                case SCIENCE:
+                    return getString(R.string.label_science);
+                case EDUCATION:
+                    return getString(R.string.label_education);
+                case MILITARY:
+                    return getString(R.string.label_military);
+                case DOMESTIC:
+                    return getString(R.string.label_domestic);
+                case SOCIETY:
+                    return getString(R.string.label_society);
+                case CULTURE:
+                    return getString(R.string.label_culture);
+                case CAR:
+                    return getString(R.string.label_car);
+                case INTERNATIONAL:
+                    return getString(R.string.label_international);
+                case SPORT:
+                    return getString(R.string.label_sport);
+                case ECONOMY:
+                    return getString(R.string.label_economy);
+                case HEALTH:
+                    return getString(R.string.label_health);
+                case ENTERTAINMENT:
+                    return getString(R.string.label_entertainment);
             }
             return null;
         }
