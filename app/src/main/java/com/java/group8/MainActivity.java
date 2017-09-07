@@ -102,6 +102,9 @@ public class MainActivity extends AppCompatActivity
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == CategoryActivity.RESPONSE_FROM_CATEGORY) {
             int idx = data.getIntExtra("category", tabLayout.getSelectedTabPosition());
+            if (idx < 0) {
+                return;
+            }
             tabLayout.getTabAt(idx).select();
         }
     }

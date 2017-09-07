@@ -65,6 +65,9 @@ public class CategoryActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home:
+                Intent intent = new Intent();
+                intent.putExtra("category", -1);
+                setResult(RESPONSE_FROM_CATEGORY, intent);
                 this.finish(); // back button
                 return true;
         }
