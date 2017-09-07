@@ -104,10 +104,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-
-        Button searchButton =
-                (Button) menu.findItem(R.id.main_search).getActionView();
-
         return true;
     }
 
@@ -119,11 +115,13 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_category) {
             return true;
         }
-        else if (id == R.id.main_search) {
-            return false;
+        else if (id == R.id.action_search) {
+//            Jump to search view here
+//            startActivity(new Intent(this, null));
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -149,18 +147,14 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_favourite) {
 
-        } else if (id == R.id.nav_slideshow) {
+        }
+        else if (id == R.id.nav_manage) {
 
-        } else if (id == R.id.nav_manage) {
-
-//        } else if (id == R.id.nav_share) {
-//
-//        } else if (id == R.id.nav_send) {
-
+        }
+        else if (id == R.id.nav_night) {
+            item.setChecked(!item.isChecked());
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
