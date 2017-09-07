@@ -1,7 +1,8 @@
 package com.java.group8;
 
 /**
- * Created by Liyf on 2017/9/7.
+ * From http://blog.csdn.net/lmj623565791/article/details/45059587
+ *
  */
 
 import android.content.Context;
@@ -16,11 +17,6 @@ import android.support.v7.widget.RecyclerView.State;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.View;
 
-/**
- *
- * @author zhy
- *
- */
 public class DividerGridItemDecoration extends RecyclerView.ItemDecoration
 {
 

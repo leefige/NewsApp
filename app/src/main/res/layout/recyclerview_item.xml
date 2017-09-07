@@ -2,13 +2,12 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/recyclerview_item_selector">
+    android:background="@drawable/recycleview_item_selector">
 
     <TextView
         android:id="@+id/id_num"
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        android:gravity="center"
-        android:text="1" />
+        android:gravity="center"/>
 
 </FrameLayout>

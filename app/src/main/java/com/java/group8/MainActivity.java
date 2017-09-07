@@ -1,7 +1,8 @@
 package com.java.group8;
 
 /**
- * Created by Liyf on 2017/9/6.
+ * @auther Li Yifei
+ *
  */
 
 import android.content.Intent;
@@ -132,8 +133,7 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         else if (id == R.id.action_search) {
-//            Jump to search view here
-//            startActivity(new Intent(this, null));
+//TODO:     Jump to search view here
             return true;
         }
 
@@ -161,13 +161,14 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_favourite) {
-
+//TODO:     add favourite page
         }
         else if (id == R.id.nav_manage) {
-
+//TODO:     clear cache
         }
         else if (id == R.id.nav_night) {
             item.setChecked(!item.isChecked());
+//TODO:     add night mode
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -208,7 +209,8 @@ public class MainActivity extends AppCompatActivity
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = (TextView) rootView.findViewById(R.id.section_label);
+            TextView textView = rootView.findViewById(R.id.section_label);
+            //TODO: add news entry
             textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
             return rootView;
         }
@@ -228,7 +230,8 @@ public class MainActivity extends AppCompatActivity
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-            return PlaceholderFragment.newInstance(position + 1);
+//            return PlaceholderFragment.newInstance(position + 1);
+            return new RecyclerViewFragment();
         }
 
         @Override

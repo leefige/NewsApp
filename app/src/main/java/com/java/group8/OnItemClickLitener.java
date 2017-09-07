@@ -1,10 +1,11 @@
 package com.java.group8;
 
-import android.view.View;
-
 /**
- * Created by Liyf on 2017/9/7.
+ * @auther Li Yifei
+ *
  */
+
+import android.view.View;
 
 public interface OnItemClickLitener {
     void onItemClick(View view, int position);

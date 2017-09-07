@@ -1,5 +1,10 @@
 package com.java.group8;
 
+/**
+ * @auther Li Yifei
+ *
+ */
+
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -39,6 +44,7 @@ public class CategoryActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.id_recyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
+//设置适配器
         recyclerView.setAdapter(adapter = new HomeAdapter());
         adapter.setOnItemClickLitener(new OnItemClickLitener() {
             @Override
@@ -51,6 +57,7 @@ public class CategoryActivity extends AppCompatActivity {
 
             @Override
             public void onItemLongClick(View view, int position) {
+//                TODO: ADD REMOVE TAG
                 onItemClick(view, position);
             }
         });
@@ -76,7 +83,7 @@ public class CategoryActivity extends AppCompatActivity {
 
     protected void initData()
     {
-        myTags = new ArrayList<NewsCategory>();
+        myTags = new ArrayList<>();
         for (int i = 1; i <= 12; i++)
         {
             myTags.add(NewsCategory.valueOf(i));
@@ -138,7 +145,7 @@ public class CategoryActivity extends AppCompatActivity {
             public MyViewHolder(View view)
             {
                 super(view);
-                tv = (TextView) view.findViewById(R.id.id_num);
+                tv = view.findViewById(R.id.id_num);
             }
         }
 

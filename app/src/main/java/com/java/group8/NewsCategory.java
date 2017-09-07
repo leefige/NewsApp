@@ -1,9 +1,8 @@
 package com.java.group8;
 
-import android.content.Context;
-
 /**
- * Created by Liyf on 2017/9/7.
+ * @auther Li Yifei
+ *
  */
 
 public enum NewsCategory {
