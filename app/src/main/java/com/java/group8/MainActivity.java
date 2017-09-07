@@ -4,8 +4,6 @@ package com.java.group8;
  * Created by Liyf on 2017/9/6.
  */
 
-import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -14,6 +12,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.view.LayoutInflater;
@@ -27,6 +26,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity
@@ -104,14 +104,10 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-//        SearchManager searchManager =
-//                (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView =
-                (SearchView) menu.findItem(R.id.main_search).getActionView();
 
-//        searchView.setIconifiedByDefault(false);
-//        searchView.setSearchableInfo(
-//                searchManager.getSearchableInfo(getComponentName()));
+        Button searchButton =
+                (Button) menu.findItem(R.id.main_search).getActionView();
+
         return true;
     }
 
@@ -127,7 +123,6 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         else if (id == R.id.main_search) {
-            startActivity(new Intent());
             return false;
         }
 
