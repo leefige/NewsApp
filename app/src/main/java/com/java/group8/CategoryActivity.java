@@ -1,11 +1,11 @@
 package com.java.group8;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CategoryActivity extends AppCompatActivity {
+
+    final static int RESPONSE_FROM_CATEGORY = 0;
 
     private RecyclerView recyclerView;
     private List<NewsCategory> myTags;
@@ -38,6 +40,20 @@ public class CategoryActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.id_recyclerview);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         recyclerView.setAdapter(adapter = new HomeAdapter());
+        adapter.setOnItemClickLitener(new OnItemClickLitener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Intent intent = new Intent();
+                intent.putExtra("category", position);
+                setResult(RESPONSE_FROM_CATEGORY, intent);
+                finish();
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+                onItemClick(view, position);
+            }
+        });
 //设置Item增加、移除动画
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 //添加分割线
@@ -106,12 +122,6 @@ public class CategoryActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(MyViewHolder holder, int position)
-        {
-            holder.tv.setText(stringOfCategory(myTags.get(position)));
-        }
-
-        @Override
         public int getItemCount()
         {
             return myTags.size();
@@ -126,6 +136,44 @@ public class CategoryActivity extends AppCompatActivity {
             {
                 super(view);
                 tv = (TextView) view.findViewById(R.id.id_num);
+            }
+        }
+
+        private OnItemClickLitener onItemClickLitener;
+
+        public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener)
+        {
+            this.onItemClickLitener = mOnItemClickLitener;
+        }
+
+        @Override
+        public void onBindViewHolder(final MyViewHolder holder, final int position)
+        {
+            holder.tv.setText(stringOfCategory(myTags.get(position)));
+
+            // 如果设置了回调，则设置点击事件
+            if (onItemClickLitener != null)
+            {
+                holder.itemView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        int pos = holder.getLayoutPosition();
+                        onItemClickLitener.onItemClick(holder.itemView, pos);
+                    }
+                });
+
+                holder.itemView.setOnLongClickListener(new View.OnLongClickListener()
+                {
+                    @Override
+                    public boolean onLongClick(View v)
+                    {
+                        int pos = holder.getLayoutPosition();
+                        onItemClickLitener.onItemLongClick(holder.itemView, pos);
+                        return false;
+                    }
+                });
             }
         }
     }

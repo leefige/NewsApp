@@ -6,21 +6,24 @@ package com.java.group8;
 
 import android.content.Intent;
 import android.os.Bundle;
+
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
+import android.support.design.widget.NavigationView;
+
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
+import android.view.LayoutInflater;
+import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
@@ -43,8 +46,10 @@ public class MainActivity extends AppCompatActivity
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    private TabLayout tabLayout;
 
-    final int PAGE_COUNT = 12;
+    final static int PAGE_COUNT = 12;
+    final static int CALL_FROM_MAIN = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +69,7 @@ public class MainActivity extends AppCompatActivity
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
+        tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
         tabLayout.setTabMode(TabLayout.MODE_SCROLLABLE);
 
@@ -93,6 +98,13 @@ public class MainActivity extends AppCompatActivity
         });
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == CategoryActivity.RESPONSE_FROM_CATEGORY) {
+            int idx = data.getIntExtra("category", tabLayout.getSelectedTabPosition());
+            tabLayout.getTabAt(idx).select();
+        }
+    }
 
     /**
      * Methods related to OPTIONS MENU
@@ -113,7 +125,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_category) {
-            startActivity(new Intent(this, CategoryActivity.class));
+            startActivityForResult(new Intent(this, CategoryActivity.class), CALL_FROM_MAIN);
             return true;
         }
         else if (id == R.id.action_search) {
