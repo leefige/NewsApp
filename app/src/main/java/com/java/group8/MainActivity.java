@@ -57,7 +57,10 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
+        if (toolbar != null) {
+            setSupportActionBar(toolbar);
+        }
 
         /**
          *  Following lines are for Tab & Slide page
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity
         // Set up the ViewPager with the sections adapter.
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setOffscreenPageLimit(2);
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
@@ -183,38 +187,38 @@ public class MainActivity extends AppCompatActivity
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
-        /**
-         * The fragment argument representing the section number for this
-         * fragment.
-         */
-        private static final String ARG_SECTION_NUMBER = "section_number";
-
-        public PlaceholderFragment() {
-        }
-
-        /**
-         * Returns a new instance of this fragment for the given section
-         * number.
-         */
-        public static PlaceholderFragment newInstance(int sectionNumber) {
-            PlaceholderFragment fragment = new PlaceholderFragment();
-            Bundle args = new Bundle();
-            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-            fragment.setArguments(args);
-            return fragment;
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                                 Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            TextView textView = rootView.findViewById(R.id.section_label);
-            //TODO: add news entry
-            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-            return rootView;
-        }
-    }
+//    public static class PlaceholderFragment extends Fragment {
+//        /**
+//         * The fragment argument representing the section number for this
+//         * fragment.
+//         */
+//        private static final String ARG_SECTION_NUMBER = "section_number";
+//
+//        public PlaceholderFragment() {
+//        }
+//
+//        /**
+//         * Returns a new instance of this fragment for the given section
+//         * number.
+//         */
+//        public static PlaceholderFragment newInstance(int sectionNumber) {
+//            PlaceholderFragment fragment = new PlaceholderFragment();
+//            Bundle args = new Bundle();
+//            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
+//            fragment.setArguments(args);
+//            return fragment;
+//        }
+//
+//        @Override
+//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+//                                 Bundle savedInstanceState) {
+//            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+//            TextView textView = rootView.findViewById(R.id.section_label);
+//            //TODO: add news entry
+////            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
+//            return rootView;
+//        }
+//    }
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -231,8 +235,10 @@ public class MainActivity extends AppCompatActivity
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
 //            return PlaceholderFragment.newInstance(position + 1);
-            return new RecyclerViewFragment();
+//            return new RecyclerViewFragment();
+            return new ListViewFragment();
         }
+
 
         @Override
         public int getCount() {
