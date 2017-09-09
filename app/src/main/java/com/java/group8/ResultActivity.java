@@ -24,6 +24,7 @@ public class ResultActivity extends AppCompatActivity {
         EditText searchInput = (EditText) findViewById(R.id.searchInput);
         searchInput.setOnClickListener(raocl);
         searchInput.clearFocus();
+        searchInput.selectAll();
         Intent intent = getIntent();
         String input = intent.getStringExtra("input");
         searchInput.setText(input);
@@ -31,7 +32,7 @@ public class ResultActivity extends AppCompatActivity {
         TextView cancel = (TextView) findViewById(R.id.cancel);
         cancel.setOnClickListener(raocl);
         TextView submit = (TextView) findViewById(R.id.submit);
-        cancel.setOnClickListener(raocl);
+        submit.setOnClickListener(raocl);
 
         ListView resultList = (ListView) findViewById(R.id.resultList);
         //resultList.addView(findViewById(R.id.cancel));
@@ -43,7 +44,7 @@ public class ResultActivity extends AppCompatActivity {
         }
         public void onClick(View view) {
             if(view.getId() == R.id.submit) {
-
+                startActivity(new Intent(currentActivity, NewsPageActivity.class));
             }
             else if(view.getId() == R.id.cancel) {
                 startActivity(new Intent(currentActivity, MainActivity.class));
