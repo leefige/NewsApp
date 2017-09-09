@@ -7,6 +7,7 @@ import java.util.List;
  */
 
 public class News {
+    public boolean read;
     public String newsClassTag;
     public String news_ID;
     public String news_Source;
@@ -23,6 +24,7 @@ public class News {
     public News(String newsClassTag, String news_ID, String news_Source,
                 String news_Title, String news_Time, String news_URL, String news_Author,
                 String lang_Type, String news_Pictures, String news_Video, String news_Intro) {
+        this.read = false;
         this.newsClassTag = newsClassTag;
         this.news_ID = news_ID;
         this.news_Source = news_Source;
@@ -38,6 +40,7 @@ public class News {
 
     public void addDetail() {
         /*TODO: ADD DETAILS TO THIS OBJECT*/
+        read = true;
         news_content = new NewsDetail();
     }
 

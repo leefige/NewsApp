@@ -42,6 +42,7 @@ public class BaseRefreshFragment extends Fragment {
         list.add(new News("science", "123456789", "", "This is a Big News",
                 "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm",
                 "我", "zh_ch", "http://upload.qianlong.com/2016/0912/1473642904882.jpg", "", "Too young, too simple, sometimes naive!"));
+        list.get(1).addDetail();
         return list;
     }
 }

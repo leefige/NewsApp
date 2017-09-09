@@ -18,7 +18,8 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Created by Oleksii Shliama.
+ *  Originally Created by Oleksii Shliama.
+ *  @author Li Yifei
  */
 public class ListViewFragment extends BaseRefreshFragment {
 
@@ -53,10 +54,6 @@ public class ListViewFragment extends BaseRefreshFragment {
         private final List<News> listData;
         private AsyncImageLoader asyncImageLoader;
 
-        int[] colors = {
-                R.color.saffron,
-                R.color.eggplant,
-                R.color.sienna};
         int[] icons = {
                 R.drawable.icon_1,
                 R.drawable.icon_2,
@@ -74,7 +71,6 @@ public class ListViewFragment extends BaseRefreshFragment {
         public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
             final ViewHolder viewHolder;
             final News data = listData.get(position);
-
             // setup view holder
             if (convertView == null) {
                 convertView = mInflater.inflate(R.layout.list_item, parent, false);
@@ -84,8 +80,17 @@ public class ListViewFragment extends BaseRefreshFragment {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-            Random rand = new Random();
+            viewHolder.titleView.setText(data.news_Title);
+            viewHolder.contentView.setText(data.news_Intro);
+            if (data.read) {
+                viewHolder.titleView.setTextColor(getResources().getColor(R.color.newsRead));
+            }
+            else {
+                viewHolder.titleView.setTextColor(getResources().getColor(R.color.newsUnread));
+            }
 
+            // download image from web
+            Random rand = new Random();
             String imageUrl = data.news_Pictures.split(";")[0];
             ImageView tmpImageView = viewHolder.imageView;
             tmpImageView.setTag(imageUrl);
@@ -99,7 +104,6 @@ public class ListViewFragment extends BaseRefreshFragment {
                         }
                     }
                 });
-
                 if (cachedImage == null) {
                     viewHolder.imageView.setImageResource(icons[rand.nextInt(3)]);
                 } else {
@@ -109,11 +113,6 @@ public class ListViewFragment extends BaseRefreshFragment {
             else {
                 viewHolder.imageView.setImageResource(icons[rand.nextInt(3)]);
             }
-
-//            viewHolder.frameView.setBackgroundResource(colors[rand.nextInt(3)]);
-            viewHolder.titleView.setText(data.news_Title);
-            viewHolder.contentView.setText(data.news_Intro);
-
             return convertView;
         }
 
