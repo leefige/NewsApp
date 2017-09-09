@@ -1,7 +1,6 @@
 package com.java.group8;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,7 +14,6 @@ import android.widget.TextView;
 
 import com.yalantis.phoenix.PullToRefreshView;
 
-import java.net.URL;
 import java.util.List;
 import java.util.Random;
 
@@ -50,8 +48,6 @@ public class ListViewFragment extends BaseRefreshFragment {
     }
 
     class SampleAdapter extends ArrayAdapter<News> {
-//        public static final String KEY_ICON = "icon";
-//        public static final String KEY_COLOR = "color";
         private final LayoutInflater mInflater;
         private final ListView listView;
         private final List<News> listData;
@@ -88,55 +84,33 @@ public class ListViewFragment extends BaseRefreshFragment {
                 viewHolder = (ViewHolder) convertView.getTag();
             }
 
-//            viewHolder.imageView.setImageResource(listData.get(position).get(KEY_ICON));
-//            convertView.setBackgroundResource(listData.get(position).get(KEY_COLOR));
             Random rand = new Random();
-            URL imgUrl = null;
-            Bitmap newsImg = null;
 
-            String imageUrl = data.news_Pictures;
+            String imageUrl = data.news_Pictures.split(";")[0];
             ImageView tmpImageView = viewHolder.imageView;
             tmpImageView.setTag(imageUrl);
 
-            Drawable cachedImage = asyncImageLoader.loadDrawable(imageUrl, new AsyncImageLoader.ImageCallback() {
-                public void imageLoaded(Drawable imageDrawable, String imageUrl) {
-                    ImageView imageViewByTag = listView.findViewWithTag(imageUrl);
-                    if (imageViewByTag != null) {
-                        imageViewByTag.setImageDrawable(imageDrawable);
+            if (!imageUrl.equals("")) {
+                Drawable cachedImage = asyncImageLoader.loadDrawable(imageUrl, new AsyncImageLoader.ImageCallback() {
+                    public void imageLoaded(Drawable imageDrawable, String imageUrl) {
+                        ImageView imageViewByTag = listView.findViewWithTag(imageUrl);
+                        if (imageViewByTag != null) {
+                            imageViewByTag.setImageDrawable(imageDrawable);
+                        }
                     }
-                }
-            });
+                });
 
-            if (cachedImage == null) {
+                if (cachedImage == null) {
+                    viewHolder.imageView.setImageResource(icons[rand.nextInt(3)]);
+                } else {
+                    viewHolder.imageView.setImageDrawable(cachedImage);
+                }
+            }
+            else {
                 viewHolder.imageView.setImageResource(icons[rand.nextInt(3)]);
-            }else{
-                viewHolder.imageView.setImageDrawable(cachedImage);
             }
 
-//            try {
-//                new URL(data.news_Pictures);
-//            } catch (Exception e) {
-//                //TODO: WE CAN FIND A PIC FOR IT
-//            }
-//
-//            if (imgUrl != null) {
-//                DownloadImg dlImg = new DownloadImg(imgUrl);
-//                Thread imgThread = new Thread(dlImg);
-//                imgThread.start();
-//                try {
-//                    imgThread.join();
-//                }catch (Exception e) {}
-//                newsImg = dlImg.getImg();
-//            }
-//            if (newsImg != null) {
-//                viewHolder.imageView.setImageBitmap(newsImg);
-//            }
-//            else {
-//                viewHolder.imageView.setImageResource(icons[rand.nextInt(3)]);
-//            }
-
-            viewHolder.frameView.setBackgroundResource(colors[rand.nextInt(3)]);
-//            viewHolder.imageView.setImageResource(icons[rand.nextInt(3)]);
+//            viewHolder.frameView.setBackgroundResource(colors[rand.nextInt(3)]);
             viewHolder.titleView.setText(data.news_Title);
             viewHolder.contentView.setText(data.news_Intro);
 
@@ -156,42 +130,5 @@ public class ListViewFragment extends BaseRefreshFragment {
                 contentView = convertView.findViewById(R.id.news_content);
             }
         }
-
-//        class DownloadImg implements Runnable {
-//            private URL url;
-//            private Bitmap img;
-//
-//            DownloadImg(URL _url) {
-//                url = _url;
-//            }
-//
-//            @Override
-//            public void run() {
-//                try {
-//                    img = getBitmap();
-//                } catch (IOException e) {
-//                    //TODO: I DONT'T KNOW WHAT TO DO :)
-//                }
-//            }
-//
-//            public Bitmap getImg() {
-//                return img;
-//            }
-//
-//            public void getBitmap() throws IOException {
-//                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//                conn.setConnectTimeout(5000);
-//                conn.setRequestMethod("GET");
-//                if (conn.getResponseCode() == 200) {
-//                    InputStream inputStream = conn.getInputStream();
-////                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//                    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-//                    viewHolder.imageView.setImageBitmap(bitmap);
-//
-////                    return bitmap;
-//                }
-////                return null;
-//            }
-//        }
     }
 }

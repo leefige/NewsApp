@@ -11,7 +11,7 @@ import java.net.URL;
 import java.util.HashMap;
 
 /**
- * Created by Liyf on 2017/9/9.
+ * @author Li Yifei
  */
 
 public class AsyncImageLoader {
