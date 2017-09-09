@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 /**
@@ -13,6 +16,11 @@ import android.widget.TextView;
  */
 
 public class SearchActivity extends AppCompatActivity {
+
+    private LinearLayout mGallery;
+    private int[] mImgIds;
+    private LayoutInflater mInflater;
+
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_search);
@@ -27,6 +35,38 @@ public class SearchActivity extends AppCompatActivity {
 
         EditText searchInput = (EditText) findViewById(R.id.searchInput);
         searchInput.selectAll();
+
+        mInflater = LayoutInflater.from(this);
+        initData();
+        initView();
+    }
+
+    private void initData()
+    {
+        mImgIds = new int[] { R.drawable.ic_main_category, R.drawable.ic_main_category,
+                R.drawable.ic_main_category,
+                R.drawable.ic_main_category, R.drawable.ic_main_category,
+                R.drawable.ic_main_category, R.drawable.ic_main_category,
+                R.drawable.ic_main_category, R.drawable.ic_main_category };
+    }
+
+    private void initView()
+    {
+        mGallery = (LinearLayout) findViewById(R.id.commendLayout);
+
+        for (int i = 0; i < mImgIds.length; i++)
+        {
+
+            View view = mInflater.inflate(R.layout.horizonal_display_search,
+                    mGallery, false);
+            ImageView img = (ImageView) view
+                    .findViewById(R.id.image_search);
+            img.setImageResource(mImgIds[i]);
+            TextView txt = (TextView) view
+                    .findViewById(R.id.text_search);
+            txt.setText("some info ");
+            mGallery.addView(view);
+        }
     }
 
     public class SearchActivityOnClickListener implements View.OnClickListener {
