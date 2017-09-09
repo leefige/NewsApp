@@ -127,17 +127,17 @@ public class CategoryActivity extends AppCompatActivity {
             case SCIENCE:
                 return R.drawable.ic_atom;
             case EDUCATION:
-                return R.drawable.ic_book;
+                return R.drawable.ic_school;
             case MILITARY:
                 return R.drawable.ic_sword;
             case DOMESTIC:
-                return R.drawable.ic_greatwall;
+                return R.drawable.ic_china;
             case SOCIETY:
                 return R.drawable.ic_social;
             case CULTURE:
                 return R.drawable.ic_culture;
             case CAR:
-                return R.drawable.ic_car;
+                return R.drawable.ic_dashboard;
             case INTERNATIONAL:
                 return R.drawable.ic_earth;
             case SPORT:

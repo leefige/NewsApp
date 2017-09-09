@@ -16,6 +16,7 @@
             android:layout_height="130dp"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/ic_atom"
+            android:paddingBottom="15dp"
             android:layout_centerInParent="true"/>
 
         <TextView
