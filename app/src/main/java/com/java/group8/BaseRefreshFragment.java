@@ -1,7 +1,13 @@
 package com.java.group8;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
+import android.widget.EditText;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,13 +27,17 @@ public class BaseRefreshFragment extends Fragment {
     protected NewsCategory category;
     protected List<News> newsList;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         newsList = updateList(category);
+
     }
 
+
     public List<News> updateList(NewsCategory c) {
+
         //TODO: get info from SERVICE NewsDatabase
         List<News> list = new ArrayList<>();
         list.add(new News("science", "123456789", "", "This is a Big News",
@@ -44,4 +54,6 @@ public class BaseRefreshFragment extends Fragment {
                 "我", "zh_ch", "http://upload.qianlong.com/2016/0912/1473642904882.jpg", "", "Too young, too simple, sometimes naive!"));
         return list;
     }
+
 }
+

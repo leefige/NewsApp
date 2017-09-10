@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.yalantis.phoenix.PullToRefreshView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -23,6 +24,7 @@ import java.util.Random;
 public class ListViewFragment extends BaseRefreshFragment {
 
     private PullToRefreshView mPullToRefreshView;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

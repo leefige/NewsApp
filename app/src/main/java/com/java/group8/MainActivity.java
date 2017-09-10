@@ -5,7 +5,10 @@ package com.java.group8;
  *
  */
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 
 import android.support.design.widget.FloatingActionButton;
@@ -23,12 +26,16 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -52,6 +59,9 @@ public class MainActivity extends AppCompatActivity
     final static int PAGE_COUNT = 12;
     final static int CALL_FROM_MAIN = 0;
 
+    private ArrayList<News> newslist = null;
+    private MyReceiver receiver = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +71,16 @@ public class MainActivity extends AppCompatActivity
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
+        receiver = new MyReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.intent.action.MY_BROADCAST");
+        MainActivity.this.registerReceiver(receiver,filter);
 
+        Intent intent = new Intent(this, NewsService.class);
+        String key = "getBy";
+        String value = "Intro";
+        intent.putExtra(key, value);
+        startService(intent);
         /**
          *  Following lines are for Tab & Slide page
          */
@@ -101,6 +120,12 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 
     @Override
@@ -237,6 +262,7 @@ public class MainActivity extends AppCompatActivity
             // Return a PlaceholderFragment (defined as a static inner class below).
 //            return PlaceholderFragment.newInstance(position + 1);
 //            return new RecyclerViewFragment();
+
             return new ListViewFragment();
         }
 
@@ -278,4 +304,17 @@ public class MainActivity extends AppCompatActivity
             return null;
         }
     }
+
+    public class MyReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle=intent.getExtras();
+            newslist = (ArrayList<News>)bundle.get("newslist");
+            Log.d("yew", "perfect");
+            String name = newslist.get(0).news_Author;
+            Log.d("news", name);
+        }
+    }
 }
+
