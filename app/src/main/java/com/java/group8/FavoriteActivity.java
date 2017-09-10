@@ -1,7 +1,9 @@
 package com.java.group8;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 
 import com.daimajia.swipe.SwipeLayout;
 
@@ -16,6 +18,13 @@ public class FavoriteActivity extends AppCompatActivity {
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_favorite);
+
+        Toolbar toolbar_favorite = (Toolbar) findViewById(R.id.toolbar_favorite);
+        setSupportActionBar(toolbar_favorite);
+
+        ActionBar ab = getSupportActionBar();
+        //使能app bar的导航功能
+        ab.setDisplayHomeAsUpEnabled(true);
 
         swipeLayout =  (SwipeLayout)findViewById(R.id.swipeLayout_favorite);
 

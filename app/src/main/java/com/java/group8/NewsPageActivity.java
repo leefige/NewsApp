@@ -32,8 +32,8 @@ public class NewsPageActivity extends AppCompatActivity {
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_newspage);
 
-        Toolbar toolbar2 = (Toolbar) findViewById(R.id.toolbar2);
-        setSupportActionBar(toolbar2);
+        Toolbar toolbar_newspage = (Toolbar) findViewById(R.id.toolbar_newspage);
+        setSupportActionBar(toolbar_newspage);
 
         ActionBar ab = getSupportActionBar();
         //使能app bar的导航功能
