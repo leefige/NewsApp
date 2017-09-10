@@ -1,7 +1,6 @@
 package com.java.group8;
 
 import android.content.Context;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -13,8 +12,6 @@ import android.widget.ListView;
 import android.widget.AbsListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
-import com.java.group8.R;
 
 import java.text.SimpleDateFormat;
 
@@ -64,17 +61,18 @@ public class PullUpRefreshList extends ListView implements AbsListView.OnScrollL
         footerViewHeight = footerView.getMeasuredHeight();
         footerView.setPadding(0, -footerViewHeight, 0, 0);
         this.addFooterView(footerView);
+        initAnimation();
     }
 
-    /**
-     * 获得系统的最新时间
-     *
-     * @return
-     */
-    private String getLastUpdateTime() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return sdf.format(System.currentTimeMillis());
-    }
+//    /**
+//     * 获得系统的最新时间
+//     *
+//     * @return
+//     */
+//    private String getLastUpdateTime() {
+//        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        return sdf.format(System.currentTimeMillis());
+//    }
 
 //    /**
 //     * 初始化头布局
@@ -117,8 +115,12 @@ public class PullUpRefreshList extends ListView implements AbsListView.OnScrollL
         downAnimation.setFillAfter(true); // 动画结束后, 停留在结束的位置上
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent ev) {
+    public Animation getUpAnimation() {
+        return upAnimation;
+    }
+
+//    @Override
+//    public boolean onTouchEvent(MotionEvent ev) {
 //        switch (ev.getAction()) {
 //            case MotionEvent.ACTION_DOWN :
 //                downY = (int) ev.getY();
@@ -168,8 +170,8 @@ public class PullUpRefreshList extends ListView implements AbsListView.OnScrollL
 //            default :
 //                break;
 //        }
-        return super.onTouchEvent(ev);
-    }
+//        return super.onTouchEvent(ev);
+//    }
 
 //    /**
 //     * 根据currentState刷新头布局的状态
@@ -265,8 +267,15 @@ public class PullUpRefreshList extends ListView implements AbsListView.OnScrollL
      * 隐藏脚布局
      */
     public void hideFooterView() {
-        footerView.setPadding(0, -footerViewHeight, 0, 0);
+        footerView.setPadding(0, -2*footerViewHeight, 0, 0);
         isLoadingMore = false;
+    }
+
+    public interface OnRefreshListener {
+        /**
+         * 上拉加载更多
+         */
+        void onLoadingMore();
     }
 }
 
