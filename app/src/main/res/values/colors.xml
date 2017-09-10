@@ -11,4 +11,7 @@
     <color name="eggplant">#663D4E</color>
     <color name="sienna">#EB6460</color>
     <color name="newsBackground">#c2c2c2</color>
+
+    <color name="newsUnread">#000000</color>
+    <color name="newsRead">#878787</color>
 </resources>
