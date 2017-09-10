@@ -17,7 +17,8 @@ import android.widget.TextView;
 
 public class SearchActivity extends AppCompatActivity {
 
-    private LinearLayout mGallery;
+    private LinearLayout mGallery_commend;
+    private LinearLayout mGallery_history;
     private int[] mImgIds;
     private LayoutInflater mInflater;
 
@@ -52,20 +53,34 @@ public class SearchActivity extends AppCompatActivity {
 
     private void initView()
     {
-        mGallery = (LinearLayout) findViewById(R.id.commendLayout);
+        mGallery_commend = (LinearLayout) findViewById(R.id.commendLayout);
+        mGallery_history = (LinearLayout) findViewById(R.id.historyLayout);
 
         for (int i = 0; i < mImgIds.length; i++)
         {
 
             View view = mInflater.inflate(R.layout.horizonal_display_search,
-                    mGallery, false);
+                    mGallery_commend, false);
             ImageView img = (ImageView) view
                     .findViewById(R.id.image_search);
             img.setImageResource(mImgIds[i]);
             TextView txt = (TextView) view
                     .findViewById(R.id.text_search);
             txt.setText("some info ");
-            mGallery.addView(view);
+            mGallery_commend.addView(view);
+        }
+        for (int i = 0; i < mImgIds.length; i++)
+        {
+
+            View view = mInflater.inflate(R.layout.horizonal_display_search,
+                    mGallery_history, false);
+            ImageView img = (ImageView) view
+                    .findViewById(R.id.image_search);
+            img.setImageResource(mImgIds[i]);
+            TextView txt = (TextView) view
+                    .findViewById(R.id.text_search);
+            txt.setText("some info ");
+            mGallery_history.addView(view);
         }
     }
 
