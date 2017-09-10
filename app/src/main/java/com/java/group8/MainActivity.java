@@ -137,7 +137,6 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         else if (id == R.id.action_search) {
-//TODO:     Jump to search view here
             startActivity(new Intent(this, SearchActivity.class));
             return true;
         }
@@ -167,6 +166,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_favourite) {
 //TODO:     add favourite page
+            startActivity(new Intent(this, FavoriteActivity.class));
         }
         else if (id == R.id.nav_manage) {
 //TODO:     clear cache

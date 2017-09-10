@@ -11,7 +11,7 @@
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/favor_newspage"
-        android:icon="@drawable/ic_main_category"
+        android:icon="@drawable/ic_favorite"
         android:title="收藏"
         app:showAsAction="ifRoom"/>
     <item
