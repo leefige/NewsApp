@@ -31,5 +31,6 @@
     <string name="nav_title_favourite">我的收藏</string>
     <string name="nav_title_night_mode">夜间模式</string>
     <string name="title_activity_category">栏目</string>
+    <string name="loading">加载中</string>
 
 </resources>

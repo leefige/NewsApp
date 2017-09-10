@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -14,8 +15,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.yalantis.phoenix.PullToRefreshView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -25,9 +29,15 @@ import java.util.Random;
  */
 public class ListViewFragment extends BaseRefreshFragment {
 
-    private PullToRefreshView mPullToRefreshView;
+    private final int ADDITIONAL_SIZE_PER_LOAD = 20;
+    private final int INIT_SIZE = 20;
+
+    private PullToRefreshView pullDownView;
+    private PullToRefreshListView pullUpView;
     private Activity parent;
     private String tabTitle;
+    private int listSize = INIT_SIZE;
+    private ViewGroup rootView;
 
     public void setMetadata(Activity p, NewsCategory c, String tab) {
         parent = p;
@@ -37,26 +47,56 @@ public class ListViewFragment extends BaseRefreshFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_list_view, container, false);
+        rootView = (ViewGroup) inflater.inflate(R.layout.fragment_list_view, container, false);
+//        pullUpView = rootView.findViewById(R.id.pull_up_view);
+        pullDownView = rootView.findViewById(R.id.pull_to_refresh);
 
         ListView listView = rootView.findViewById(R.id.list_view);
         listView.setAdapter(new SampleAdapter(getActivity(), R.layout.list_item, newsList, listView));
 
-        mPullToRefreshView = rootView.findViewById(R.id.pull_to_refresh);
-        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+
+        pullDownView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mPullToRefreshView.postDelayed(new Runnable() {
+                pullDownView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         //TODO: DO REFRESH HERE
-                        mPullToRefreshView.setRefreshing(false);
+                        pullDownView.setRefreshing(false);
                     }
                 }, REFRESH_DELAY);
             }
         });
 
+//        pullUpView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+//            @Override
+//            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+//                // Do work to refresh the list here.
+//                new LoadMoreTask().execute();
+//            }
+//        });
+
         return rootView;
+    }
+
+    private class LoadMoreTask extends AsyncTask<Void, Void, List<News>> {
+
+
+        @Override
+        protected List<News> doInBackground (Void... size) {
+            //TODO: GET NEWS LIST FROM SERVICE
+            List<News> list = new ArrayList<>();
+            listSize += ADDITIONAL_SIZE_PER_LOAD;
+            return list;
+        }
+
+        @Override
+        protected void onPostExecute(List<News> result) {
+            // Call onRefreshComplete when the list has been refreshed.
+            pullUpView.onRefreshComplete();
+            //super.onPostExecute(result);
+            //TODO
+        }
     }
 
     class SampleAdapter extends ArrayAdapter<News> {
