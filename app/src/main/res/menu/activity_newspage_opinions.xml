@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/share_newspage"
-        android:icon="@drawable/ic_main_category"
+        android:icon="@drawable/ic_main_search"
         android:title="分享"
         app:showAsAction="ifRoom"/>
     <item
@@ -17,6 +17,7 @@
         android:id="@+id/read_newspage"
         android:icon="@drawable/ic_main_category"
         android:title="语音"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"
+        app:actionProviderClass="com.java.group8.MyReadActionProvider"/>
 
 </menu>
