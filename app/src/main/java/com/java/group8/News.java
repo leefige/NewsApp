@@ -1,12 +1,13 @@
 package com.java.group8;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * @author Li Yifei
  */
 
-public class News {
+public class News implements Serializable{
     public String newsClassTag;
     public String news_ID;
     public String news_Source;
