@@ -7,6 +7,7 @@
         android:id="@+id/share_newspage"
         android:icon="@drawable/ic_main_search"
         android:title="分享"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/favor_newspage"
