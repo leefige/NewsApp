@@ -6,7 +6,6 @@ package com.java.group8;
  */
 
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -68,6 +67,14 @@ public class CategoryActivity extends AppCompatActivity {
 //添加分割线
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent();
+        intent.putExtra("category", -1);
+        setResult(RESPONSE_FROM_CATEGORY, intent);
+        this.finish(); // back button
     }
 
     @Override
@@ -181,8 +188,6 @@ public class CategoryActivity extends AppCompatActivity {
                 tv = view.findViewById(R.id.id_num);
                 itemFrame = view.findViewById(R.id.category_main_frame);
                 iv = view.findViewById(R.id.category_icon);
-//                iv.setMinimumHeight(iv.getHeight());
-//                tv.setHeight(((Double)(0.25 * itemFrame.getWidth())).intValue());
             }
         }
 
@@ -198,8 +203,6 @@ public class CategoryActivity extends AppCompatActivity {
         {
             holder.tv.setText(stringOfCategory(myTags.get(position)));
             holder.iv.setImageResource(iconOfCategory(myTags.get(position)));
-//            holder.iv.setMaxHeight(((Double)(0.5 * holder.itemFrame.getWidth())).intValue());
-//            holder.tv.setHeight(holder.itemFrame.getWidth() - holder.iv.getHeight());
 
             // 如果设置了回调，则设置点击事件
             if (onItemClickLitener != null)

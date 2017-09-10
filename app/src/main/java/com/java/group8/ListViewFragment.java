@@ -1,6 +1,8 @@
 package com.java.group8;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -24,6 +26,14 @@ import java.util.Random;
 public class ListViewFragment extends BaseRefreshFragment {
 
     private PullToRefreshView mPullToRefreshView;
+    private Activity parent;
+    private String tabTitle;
+
+    public void setMetadata(Activity p, NewsCategory c, String tab) {
+        parent = p;
+        category = c;
+        tabTitle = tab;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -39,6 +49,7 @@ public class ListViewFragment extends BaseRefreshFragment {
                 mPullToRefreshView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        //TODO: DO REFRESH HERE
                         mPullToRefreshView.setRefreshing(false);
                     }
                 }, REFRESH_DELAY);
@@ -68,7 +79,7 @@ public class ListViewFragment extends BaseRefreshFragment {
         }
 
         @Override
-        public View getView(final int position, View convertView, @NonNull ViewGroup parent) {
+        public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
             final ViewHolder viewHolder;
             final News data = listData.get(position);
             // setup view holder
@@ -82,6 +93,7 @@ public class ListViewFragment extends BaseRefreshFragment {
 
             viewHolder.titleView.setText(data.news_Title);
             viewHolder.contentView.setText(data.news_Intro);
+            viewHolder.categoryView.setText(data.newsClassTag);
             if (data.read) {
                 viewHolder.titleView.setTextColor(getResources().getColor(R.color.newsRead));
             }
@@ -113,6 +125,15 @@ public class ListViewFragment extends BaseRefreshFragment {
             else {
                 viewHolder.imageView.setImageResource(icons[rand.nextInt(3)]);
             }
+
+            convertView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(parent.getContext(), NewsPageActivity.class);
+                    intent.putExtra("news_ID", data.news_ID);
+                    startActivity(intent);
+                }
+            });
             return convertView;
         }
 
@@ -121,12 +142,14 @@ public class ListViewFragment extends BaseRefreshFragment {
             ImageView imageView;
             TextView titleView;
             TextView contentView;
+            TextView categoryView;
 
             public ViewHolder(View convertView) {
                 frameView = convertView.findViewById(R.id.item_frame);
                 imageView = convertView.findViewById(R.id.image_view_icon);
                 titleView = convertView.findViewById(R.id.news_title);
                 contentView = convertView.findViewById(R.id.news_content);
+                categoryView = convertView.findViewById(R.id.news_category);
             }
         }
     }

@@ -137,7 +137,6 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         else if (id == R.id.action_search) {
-//TODO:     Jump to search view here
             startActivity(new Intent(this, SearchActivity.class));
             return true;
         }
@@ -201,7 +200,9 @@ public class MainActivity extends AppCompatActivity
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
             //TODO: PASS CATEGORY TO FRAGMENT
-            return new ListViewFragment();
+            ListViewFragment fragment = new ListViewFragment();
+            fragment.setMetadata(MainActivity.this, NewsCategory.valueOf(position + 1), String.valueOf(getPageTitle(position)));
+            return fragment;
         }
 
 
