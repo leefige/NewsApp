@@ -69,6 +69,11 @@ public class CategoryActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
     }
 
+    public interface OnItemClickLitener {
+        void onItemClick(View view, int position);
+        void onItemLongClick(View view , int position);
+    }
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
