@@ -34,18 +34,21 @@ public class PullToRefreshView extends ViewGroup {
 
     private static final int INVALID_POINTER = -1;
 
-    private View mTarget;
-    private ImageView mRefreshView;
-    private Interpolator mDecelerateInterpolator;
-    private int mTouchSlop;
-    private int mTotalDragDistance;
-    private BaseRefreshView mBaseRefreshView;
+    private View mTarget;   // child
+    private ImageView mRefreshView;     // image to show
+    private BaseRefreshView mBaseRefreshView;   // the sun or sth else
+
+    private boolean mRefreshing;        // is refreshing
+    private boolean mIsBeingDragged;    // is dragging
+
+    private Interpolator mDecelerateInterpolator;   // about speed of animation
+    private int mTouchSlop;             // min distance to be regarded as move
+    private int mTotalDragDistance;     // A CONSTANT distance, don't need to care it
     private float mCurrentDragPercent;
     private int mCurrentOffsetTop;
-    private boolean mRefreshing;
+    private int mCurrentOffsetBottom;
     private int mActivePointerId;
-    private boolean mIsBeingDragged;
-    private float mInitialMotionY;
+    private float mInitialMotionY;      // y where finger touch the screen at the very beginning
     private int mFrom;
     private float mFromDragPercent;
     private boolean mNotify;
