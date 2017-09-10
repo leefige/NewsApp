@@ -138,6 +138,7 @@ public class MainActivity extends AppCompatActivity
         }
         else if (id == R.id.action_search) {
 //TODO:     Jump to search view here
+            startActivity(new Intent(this, SearchActivity.class));
             return true;
         }
 

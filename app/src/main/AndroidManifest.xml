@@ -28,6 +28,23 @@
             android:label="@string/title_activity_category">
 
         </activity>
+        <activity
+            android:name=".SearchActivity"
+            android:label="检索界面">
+        </activity>
+        <activity
+            android:name=".ResultActivity"
+            android:label="搜索结果">
+        </activity>
+        <activity
+            android:name=".NewsPageActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
