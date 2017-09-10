@@ -15,6 +15,15 @@ import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.iflytek.cloud.InitListener;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechError;
+import com.iflytek.cloud.SpeechSynthesizer;
+import com.iflytek.cloud.SpeechUtility;
+import com.iflytek.cloud.SynthesizerListener;
+import com.iflytek.cloud.util.ResourceUtil;
 
 /**
  * Created by xzwkl on 17/9/9.
@@ -38,6 +47,61 @@ public class NewsPageActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         //使能app bar的导航功能
         ab.setDisplayHomeAsUpEnabled(true);
+
+
+        SpeechUtility.createUtility(this, SpeechConstant.APPID +"=59b4fc49");
+//        SpeechUtility s = SpeechUtility.getUtility();
+//        if(s == null) System.out.print("hahah");
+        SpeechSynthesizer mTts = SpeechSynthesizer.createSynthesizer(this.getApplicationContext(), new InitListener() {
+            @Override
+            public void onInit(int i) {
+
+            }
+        });
+        String engineType = "xiaoyan";
+
+        mTts.setParameter( SpeechConstant.ENGINE_TYPE, SpeechConstant.TYPE_CLOUD);
+        mTts.setParameter( SpeechConstant.ENGINE_MODE, SpeechConstant.MODE_AUTO );
+
+//        if( SpeechConstant.TYPE_LOCAL.equals(engineType)
+//                &&SpeechConstant.MODE_MSC.equals(engineMode) ){
+//            // 需下载使用对应的离线合成SDK
+//            mTts.setParameter( ResourceUtil.TTS_RES_PATH, ttsResPath );
+//        }
+
+        mTts.setParameter( SpeechConstant.VOICE_NAME, "xiaoyan");
+
+        final String strTextToSpeech = "科大讯飞，让世界聆听我们的声音";
+        mTts.startSpeaking( strTextToSpeech, new SynthesizerListener() {
+            @Override
+            public void onSpeakBegin() {//开始播放
+            }
+            @Override
+            public void onSpeakPaused() {//暂停播放
+            }
+            @Override
+            public void onSpeakResumed() {//继续播放
+            }
+            @Override
+            public void onBufferProgress(int i, int i1, int i2, String s) {//合成进度
+            }
+            @Override
+            public void onSpeakProgress(int i, int i1, int i2) {//播放进度
+            }
+            @Override
+            public void onCompleted(SpeechError speechError) {
+
+            }
+            @Override
+            public void onEvent(int i, int i1, int i2, Bundle bundle) {
+                // 以下代码用于获取与云端的会话 id，当业务出错时将会话 id提供给技术支持人员，可用于查询会话日志，定位出错原因
+                // 若使用本地能力，会话 id为null
+                //if (SpeechEvent.EVENT_SESSION_ID == eventType) {
+                //     String sid = obj.getString(SpeechEvent.KEY_EVENT_SESSION_ID);
+                //     Log.d(TAG, "session id =" + sid);
+                //}
+            }
+        });
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
