@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.yalantis.phoenix.PullToRefreshView;
 
-import java.util.Map;
 import java.util.Random;
 
 /**
@@ -25,12 +24,12 @@ public class RecyclerViewFragment extends BaseRefreshFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_recycler_view, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        RecyclerView recyclerView = rootView.findViewById(R.id.recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         recyclerView.setAdapter(new SampleAdapter());
 
-        mPullToRefreshView = (PullToRefreshView) rootView.findViewById(R.id.pull_to_refresh);
+        mPullToRefreshView = rootView.findViewById(R.id.pull_to_refresh);
         mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -97,7 +96,7 @@ public class RecyclerViewFragment extends BaseRefreshFragment {
             super(itemView);
 
             mRootView = itemView;
-            mImageViewIcon = (ImageView) itemView.findViewById(R.id.image_view_icon);
+            mImageViewIcon = itemView.findViewById(R.id.image_view_icon);
             titleView = itemView.findViewById(R.id.news_title);
             contentView = itemView.findViewById(R.id.news_content);
         }

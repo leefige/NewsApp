@@ -6,6 +6,7 @@ package com.java.group8;
  */
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -120,6 +122,36 @@ public class CategoryActivity extends AppCompatActivity {
         return null;
     }
 
+    public int iconOfCategory(NewsCategory c) {
+        switch (c) {
+            case SCIENCE:
+                return R.drawable.ic_atom;
+            case EDUCATION:
+                return R.drawable.ic_school;
+            case MILITARY:
+                return R.drawable.ic_sword;
+            case DOMESTIC:
+                return R.drawable.ic_china;
+            case SOCIETY:
+                return R.drawable.ic_social;
+            case CULTURE:
+                return R.drawable.ic_culture;
+            case CAR:
+                return R.drawable.ic_dashboard;
+            case INTERNATIONAL:
+                return R.drawable.ic_earth;
+            case SPORT:
+                return R.drawable.ic_olympic;
+            case ECONOMY:
+                return R.drawable.ic_economics;
+            case HEALTH:
+                return R.drawable.ic_health;
+            case ENTERTAINMENT:
+                return R.drawable.ic_game;
+        }
+        return R.drawable.ic_atom;
+    }
+
     class HomeAdapter extends RecyclerView.Adapter<HomeAdapter.MyViewHolder>
     {
 
@@ -139,13 +171,18 @@ public class CategoryActivity extends AppCompatActivity {
 
         class MyViewHolder extends RecyclerView.ViewHolder
         {
-
+            View itemFrame;
+            ImageView iv;
             TextView tv;
 
             public MyViewHolder(View view)
             {
                 super(view);
                 tv = view.findViewById(R.id.id_num);
+                itemFrame = view.findViewById(R.id.category_main_frame);
+                iv = view.findViewById(R.id.category_icon);
+//                iv.setMinimumHeight(iv.getHeight());
+//                tv.setHeight(((Double)(0.25 * itemFrame.getWidth())).intValue());
             }
         }
 
@@ -160,6 +197,9 @@ public class CategoryActivity extends AppCompatActivity {
         public void onBindViewHolder(final MyViewHolder holder, final int position)
         {
             holder.tv.setText(stringOfCategory(myTags.get(position)));
+            holder.iv.setImageResource(iconOfCategory(myTags.get(position)));
+//            holder.iv.setMaxHeight(((Double)(0.5 * holder.itemFrame.getWidth())).intValue());
+//            holder.tv.setHeight(holder.itemFrame.getWidth() - holder.iv.getHeight());
 
             // 如果设置了回调，则设置点击事件
             if (onItemClickLitener != null)
