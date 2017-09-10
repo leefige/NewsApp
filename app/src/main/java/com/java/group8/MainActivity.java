@@ -27,6 +27,9 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
+
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -163,6 +166,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_favourite) {
 //TODO:     add favourite page
+            startActivity(new Intent(this, FavoriteActivity.class));
         }
         else if (id == R.id.nav_manage) {
 //TODO:     clear cache

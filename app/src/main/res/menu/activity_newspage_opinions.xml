@@ -11,14 +11,14 @@
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/favor_newspage"
-        android:icon="@drawable/ic_main_category"
+        android:icon="@drawable/ic_favorite"
         android:title="收藏"
         app:showAsAction="ifRoom"/>
     <item
         android:id="@+id/read_newspage"
         android:icon="@drawable/ic_main_category"
         android:title="语音"
-        app:showAsAction="always"
+        app:showAsAction="ifRoom"
         app:actionProviderClass="com.java.group8.MyReadActionProvider"/>
 
 </menu>
