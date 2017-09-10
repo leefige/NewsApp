@@ -193,6 +193,7 @@ class MyReadActionProvider extends ActionProvider {
                     public boolean onMenuItemClick(MenuItem item)
                     {
                         if(!not_init) mTts.stopSpeaking();
+                        current_read_state = false;
                         not_init = true;
                         return true;
                     }
