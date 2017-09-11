@@ -1,10 +1,17 @@
 package com.java.group8;
 
+import android.content.BroadcastReceiver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Bundle;
+import android.util.Log;
+
+import java.util.ArrayList;
 
 /**
  * Created by 亦铭 on 9/10/2017.
@@ -14,13 +21,17 @@ public class NewsDatabase extends SQLiteOpenHelper{
     private static final int DB_VERSION = 1;
     private static final String DB_NAME = "News.db";
     public static final String ALL_TABLE_NAME = "AllNews";
-    public static final String MY_TABEL_NAME = "MyNews";
     public static final String FAV_TABLE_NAME = "FavNews";
-    private static final String ALL_DETAILS = "ID text primary key, ClassTag text, Category text, " +
-            "Source text, Title text, KeyWords text, Time int, " +
-            "URL text, Author text, Content text, Type text, crawl_Source text, " +
-            "news_Journal text, crawl_Time text, Pictures text, Video text, Intro text, Read int, repeat_ID text)";
-
+    private static final String ALL_DETAILS = "(ID text primary key, ClassTag text, " +
+            "Source text, Title text, Time text, " +
+            "URL text, Author text, Type text, " +
+            "Pictures text, Video text, Read int, "+
+            "Details blob)";/*
+            "Seggedtitle text, Counttitle int, Countcontent int, Inborn int, " +
+            "Category text, Content text, Crawl_Source text, News_Journal text, " +
+            "Crawl_Time text, Repeat_ID text, Seggedcontent text, Persons_word text, Persons_count int," +
+            "Locations_word text, Locations_count int, Organizations_word text, Organizations_count int" +
+            "Keywords_word text, Keywords_score real,  Bagwords_word text, Bagwords_score real)";*/
 
 
     public NewsDatabase(Context context){
@@ -31,12 +42,15 @@ public class NewsDatabase extends SQLiteOpenHelper{
         // create table Orders(Id integer primary key, CustomName text, OrderPrice integer, Country text);
         String sql = "create table if not exists " + ALL_TABLE_NAME + ALL_DETAILS;
         sqLiteDatabase.execSQL(sql);
-        // TODO other tabels create
+        String str = "create table if not exists " + FAV_TABLE_NAME + ALL_DETAILS;
+        sqLiteDatabase.execSQL(str);
     }
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         String sql = "DROP TABLE IF EXISTS " + ALL_TABLE_NAME;
         sqLiteDatabase.execSQL(sql);
+        String str = "DROP TABLE IF EXISTS " + FAV_TABLE_NAME;
+        sqLiteDatabase.execSQL(str);
         onCreate(sqLiteDatabase);
     }
     @Override
@@ -48,11 +62,13 @@ public class NewsDatabase extends SQLiteOpenHelper{
     public void insert(ContentValues values, String table_name){
         SQLiteDatabase db = getWritableDatabase();
         db.insert(table_name, null, values);
+        Log.d("insert", "sucess");
     }
     //查询，选择语句，占位符
     public Cursor query(String sql, String[] str){
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery(sql, str);
+        Log.d("query", "query");
         return c;
     }
     //根据id删除
@@ -69,7 +85,6 @@ public class NewsDatabase extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.update(table_name, values, whereClause, whereArgs);
     }
-
 
 
 

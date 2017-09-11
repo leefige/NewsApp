@@ -90,6 +90,9 @@ public class MainActivity extends AppCompatActivity
         String key = NewsService.KEY;
         String value = NewsService.LIST;
         intent.putExtra(key, value);
+        NewsCategory c = null;   //NewsCategory.CAR;
+        intent.putExtra(NewsService.NEWSCATEGORY, c);
+        intent.putExtra(NewsService.NEWSID, "20160913041301d5fc6a41214a149cd8a0581d3a014f");
         startService(intent);
         /**
          *  Following lines are for Tab & Slide page
@@ -300,7 +303,7 @@ public class MainActivity extends AppCompatActivity
             Bundle bundle=intent.getExtras();
             newslist = (ArrayList<News>)bundle.get(NewsService.NEWSLIST);
             Log.d("yew", "perfect");
-            String name = newslist.get(0).news_Author;
+            String name = newslist.get(0).newsClassTag;
             Log.d("news", name);
         }
     }
