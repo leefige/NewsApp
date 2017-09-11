@@ -34,6 +34,7 @@ public class CategoryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_category);
+        getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){
@@ -47,7 +48,7 @@ public class CategoryActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 //设置适配器
         recyclerView.setAdapter(adapter = new HomeAdapter());
-        adapter.setOnItemClickLitener(new OnItemClickLitener() {
+        adapter.setOnItemClickLitener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent();
@@ -69,7 +70,13 @@ public class CategoryActivity extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.HORIZONTAL));
     }
 
-    public interface OnItemClickLitener {
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
+    }
+
+    public interface OnItemClickListener {
         void onItemClick(View view, int position);
         void onItemLongClick(View view , int position);
     }
@@ -196,9 +203,9 @@ public class CategoryActivity extends AppCompatActivity {
             }
         }
 
-        private OnItemClickLitener onItemClickLitener;
+        private OnItemClickListener onItemClickLitener;
 
-        public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener)
+        public void setOnItemClickLitener(OnItemClickListener mOnItemClickLitener)
         {
             this.onItemClickLitener = mOnItemClickLitener;
         }

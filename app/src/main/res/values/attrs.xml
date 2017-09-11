@@ -3,6 +3,8 @@
     <attr name="uiBackground" format="color|reference"/>
     <attr name="textColorUnread" format="color|reference"/>
     <attr name="textColorRead" format="color|reference"/>
+    <attr name="textColorNorm" format="color|reference"/>
     <attr name="listItemBackground" format="color|reference"/>
     <attr name="listItemBorder" format="color|reference"/>
+
 </resources>

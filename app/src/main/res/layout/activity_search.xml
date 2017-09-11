@@ -6,7 +6,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:background="?attr/listItemBackground">
 
         <LinearLayout
             android:focusable="true"
@@ -23,7 +24,12 @@
                 android:layout_height="match_parent"
                 android:ems="10"
                 android:inputType="textPersonName"
-                android:text="请输入搜索内容" />
+                android:paddingLeft="20dp"
+                android:paddingBottom="10dp"
+                android:paddingTop="10dp"
+                android:text="请输入搜索内容"
+                android:textSize="20sp"
+                android:textColor="?attr/textColorRead"/>
 
             <TextView
                 android:id="@+id/submit"
@@ -54,7 +60,12 @@
                 android:id="@+id/commendTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="猜你喜欢" />
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:paddingLeft="20dp"
+                android:text="猜你喜欢"
+                android:textSize="15sp"
+                android:textColor="?attr/textColorUnread"/>
 
             <HorizontalScrollView
                 android:layout_width="wrap_content"
@@ -83,13 +94,18 @@
                 android:id="@+id/historyTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="历史记录" />
+                android:paddingBottom="8dp"
+                android:paddingTop="8dp"
+                android:paddingLeft="20dp"
+                android:text="历史记录"
+                android:textSize="15sp"
+                android:textColor="?attr/textColorUnread"/>
 
             <HorizontalScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="250dp"
                 android:layout_gravity="center_vertical"
-                android:background="#AA444444"
+                android:background="#aa686868"
                 android:scrollbars="none" >
 
                 <LinearLayout

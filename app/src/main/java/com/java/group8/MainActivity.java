@@ -160,6 +160,16 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+//        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            MenuItem night = menu.findItem(R.id.nav_night);
+            night.setChecked(true);
+//        }
+        return super.onMenuOpened(featureId, menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -207,16 +217,12 @@ public class MainActivity extends AppCompatActivity
 //TODO:     clear cache
         }
         else if (id == R.id.nav_night) {
-            item.setChecked(!item.isChecked());
-//TODO:     add night mode
             int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-            getDelegate().setLocalNightMode(currentNightMode == Configuration.UI_MODE_NIGHT_NO
-                    ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
-            // 同样需要调用recreate方法使之生效
+            int neoNightMode = currentNightMode == Configuration.UI_MODE_NIGHT_NO ?
+                    AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
+            getDelegate().setLocalNightMode(neoNightMode);
+            ((MyApplication)getApplicationContext()).setNightMode(neoNightMode);
             recreate();
-//            for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
-//                ((ListViewFragment) mSectionsPagerAdapter.getItem(i)).refreshTheme();
-//            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
