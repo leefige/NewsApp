@@ -34,9 +34,19 @@ public class NewsService extends IntentService {
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
 
-    private static final String KEY = "getBy";
-    private static final String INTRO = "List";
-    private static final String DETAILS = "Details";
+    //add value
+    public static final String KEY = "getBy";
+    public static final String LIST = "List";
+    public static final String DETAILS = "Details";
+
+    //add action
+
+    public static final String MAINACTION = "android.intent.action.MAINACTION";
+
+
+    //add return key
+    public static final String NEWSLIST = "newslist";
+
     private static final String LATEST_URL = "http://166.111.68.66:2042/news/action/query/latest";
     private static final String DETAIL_URL = "http://166.111.68.66:2042/news/action/query/detail?newsId=";
 
@@ -57,7 +67,7 @@ public class NewsService extends IntentService {
         if (intent != null) {
             final String key = intent.getStringExtra(KEY);
             switch (key){
-                case INTRO:
+                case LIST:
                     getNews();
                     Log.d("start", "startservice");
                     break;
@@ -129,8 +139,8 @@ public class NewsService extends IntentService {
                         }
                         Log.d("wait", "a minute");
                         Intent intent = new Intent();
-                        intent.putExtra("newslist", newslist);
-                        intent.setAction("android.intent.action.MY_BROADCAST");
+                        intent.putExtra(NEWSLIST, newslist);
+                        intent.setAction(MAINACTION);
                         sendBroadcast(intent);
 
                     }
@@ -176,28 +186,34 @@ public class NewsService extends IntentService {
                         String pic = json_obj.getString("news_Pictures");
                         String video = json_obj.getString("news_Video");
                         String intro = json_obj.getString("news_Intro");
+                        News news = new News(tag, id, source, title, time, url, author, lang_type, pic, video, intro);
 
-                        String category = json_obj.getString("news_Category");
-                        String inborn_keywords = json_obj.getString("inborn_KeyWords");
-                        String content = json_obj.getString("news_Content");
-                        String crawl_source = json_obj.getString("crawl_Source");
-                        String journal = json_obj.getString("news_Journal");
-                        String crawl_time = json_obj.getString("crawl_Time");
-                        String repeat_ID = json_obj.getString("repeat_ID");
+                        news.news_content.news_Category = json_obj.getString("news_Category");
+                        news.news_content.inborn_KeyWords = json_obj.getString("inborn_KeyWords");
+                        news.news_content.news_Content = json_obj.getString("news_Content");
+                        news.news_content.crawl_Source = json_obj.getString("crawl_Source");
+                        news.news_content.crawl_Time = json_obj.getString("crawl_Time");
+                        news.news_content.news_Journal = json_obj.getString("news_Journal");
+                        news.news_content.repeat_ID = json_obj.getString("repeat_ID");
+                        news.news_content.seggedTitle = json_obj.getString("seggedTitle");
+                        news.news_content.wordCountOfTitle = json_obj.getInt("wordCountOfTitle");
+                        news.news_content.wordCountOfContent = json_obj.getInt("wordCountOfContent");
 
-                        JSONArray json_keyword = json_obj.getJSONArray("Keywords");
-                        Hashtable keyword_list = new Hashtable();
+
+                        JSONArray json_keyword = json_obj.getJSONArray("seggedPListOfContent");
+                        news.news_content.seggedPListOfContent = new ArrayList<String>();
                         for(int i=0; i<json_keyword.size(); i++){
                             JSONObject json_keyword_obj = json_keyword.getJSONObject(i);
                             String word = json_keyword_obj.getString("word");
-                            String score = json_keyword_obj.getString("score");
-                            keyword_list.put(word, score);
+                            double score = json_keyword_obj.getDouble("score");
+                            //News.NewsDetail.Keyword key_word = new News.NewsDetail.Keyword(word, score);
+                            //keyword_list.add(key_word);
                         }
                         String seggedtitle = json_obj.getString("seggedTitle");
 
 
 
-                        News news = new News(tag, id, source, title, time, url, author, lang_type, pic, video, intro);
+
 
 
                         Log.d("wait", "a minute");

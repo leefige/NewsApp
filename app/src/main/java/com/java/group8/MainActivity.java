@@ -79,14 +79,14 @@ public class MainActivity extends AppCompatActivity
         //开启receiver,选择filter
         receiver = new MyReceiver();
         IntentFilter filter = new IntentFilter();
-        filter.addAction("android.intent.action.MY_BROADCAST");
+        filter.addAction(NewsService.MAINACTION);
         //绑定filter
         MainActivity.this.registerReceiver(receiver,filter);
 
         //像service发送数据
         Intent intent = new Intent(this, NewsService.class);
-        String key = "getBy";
-        String value = "List";
+        String key = NewsService.KEY;
+        String value = NewsService.LIST;
         intent.putExtra(key, value);
         startService(intent);
         /**
@@ -286,7 +286,7 @@ public class MainActivity extends AppCompatActivity
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle=intent.getExtras();
-            newslist = (ArrayList<News>)bundle.get("newslist");
+            newslist = (ArrayList<News>)bundle.get(NewsService.NEWSLIST);
             Log.d("yew", "perfect");
             String name = newslist.get(0).news_Author;
             Log.d("news", name);

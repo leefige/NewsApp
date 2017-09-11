@@ -37,6 +37,7 @@ public class News implements Serializable{
         this.news_Video = news_Video;
         this.news_Intro = news_Intro;
         read = false;
+        news_content = new NewsDetail();
     }
 
     public void addDetail() {
@@ -45,7 +46,7 @@ public class News implements Serializable{
         news_content = new NewsDetail();
     }
 
-    public class NewsDetail {
+    public class NewsDetail implements Serializable{
         public String seggedTitle;
         public int wordCountOfTitle;
         public int wordCountOfContent;
