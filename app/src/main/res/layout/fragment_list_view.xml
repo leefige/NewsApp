@@ -13,7 +13,8 @@
                 android:layout_height="match_parent"
                 android:divider="@null"
                 android:dividerHeight="0dp"
-                android:fadingEdge="none"/>
+                android:fadingEdge="none"
+                android:background="?attr/uiBackground"/>
 
         </com.yalantis.phoenix.PullToRefreshView>
 

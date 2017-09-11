@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -22,9 +23,17 @@ public class SearchActivity extends AppCompatActivity {
     private int[] mImgIds;
     private LayoutInflater mInflater;
 
+    @Override
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_search);
+        getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
+
+        android.support.v7.app.ActionBar actionBar = getSupportActionBar();
+        if(actionBar != null){
+            actionBar.setHomeButtonEnabled(true);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
 
         SearchActivityOnClickListener saocl = new SearchActivityOnClickListener(this);
 
@@ -40,6 +49,22 @@ public class SearchActivity extends AppCompatActivity {
         mInflater = LayoutInflater.from(this);
         initData();
         initView();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish(); // back button
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void initData()

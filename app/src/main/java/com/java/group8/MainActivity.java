@@ -5,8 +5,12 @@ package com.java.group8;
  *
  */
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.content.IntentFilter;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,14 +25,23 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.EditText;
 
 import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
+
+import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -52,6 +65,10 @@ public class MainActivity extends AppCompatActivity
     final static int PAGE_COUNT = 12;
     final static int CALL_FROM_MAIN = 0;
 
+    private ArrayList<News> newslist = null;
+    //receiver接受service数据
+    private MyReceiver receiver = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,7 +78,19 @@ public class MainActivity extends AppCompatActivity
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
+        //开启receiver,选择filter
+        receiver = new MyReceiver();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(NewsService.MAINACTION);
+        //绑定filter
+        MainActivity.this.registerReceiver(receiver,filter);
 
+        //像service发送数据
+        Intent intent = new Intent(this, NewsService.class);
+        String key = NewsService.KEY;
+        String value = NewsService.LIST;
+        intent.putExtra(key, value);
+        startService(intent);
         /**
          *  Following lines are for Tab & Slide page
          */
@@ -104,6 +133,12 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == CategoryActivity.RESPONSE_FROM_CATEGORY) {
             int idx = data.getIntExtra("category", tabLayout.getSelectedTabPosition());
@@ -122,6 +157,16 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
+    }
+
+    @Override
+    public boolean onMenuOpened(int featureId, Menu menu) {
+        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+//        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
+            MenuItem night = menu.findItem(R.id.nav_night);
+            night.setChecked(true);
+//        }
+        return super.onMenuOpened(featureId, menu);
     }
 
     @Override
@@ -172,8 +217,12 @@ public class MainActivity extends AppCompatActivity
 //TODO:     clear cache
         }
         else if (id == R.id.nav_night) {
-            item.setChecked(!item.isChecked());
-//TODO:     add night mode
+            int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            int neoNightMode = currentNightMode == Configuration.UI_MODE_NIGHT_NO ?
+                    AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
+            getDelegate().setLocalNightMode(neoNightMode);
+            ((MyApplication)getApplicationContext()).setNightMode(neoNightMode);
+            recreate();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -184,7 +233,6 @@ public class MainActivity extends AppCompatActivity
     /**
      * Classes defined for LEFT-RIGHT SLIDE
      */
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -242,6 +290,18 @@ public class MainActivity extends AppCompatActivity
                     return getString(R.string.label_entertainment);
             }
             return null;
+        }
+    }
+    //receiver需要类
+    public class MyReceiver extends BroadcastReceiver {
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle=intent.getExtras();
+            newslist = (ArrayList<News>)bundle.get(NewsService.NEWSLIST);
+            Log.d("yew", "perfect");
+            String name = newslist.get(0).news_Author;
+            Log.d("news", name);
         }
     }
 }
