@@ -24,6 +24,7 @@ public class BaseRefreshFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRetainInstance(true);
         newsList = updateList(category);
     }
 

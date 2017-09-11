@@ -8,6 +8,7 @@ package com.java.group8;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.content.IntentFilter;
 
@@ -24,6 +25,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 
 import android.util.Log;
@@ -170,7 +172,6 @@ public class MainActivity extends AppCompatActivity
             return true;
         }
         else if (id == R.id.action_search) {
-//TODO:     Jump to search view here
             startActivity(new Intent(this, SearchActivity.class));
             return true;
         }
@@ -208,6 +209,14 @@ public class MainActivity extends AppCompatActivity
         else if (id == R.id.nav_night) {
             item.setChecked(!item.isChecked());
 //TODO:     add night mode
+            int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            getDelegate().setLocalNightMode(currentNightMode == Configuration.UI_MODE_NIGHT_NO
+                    ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+            // 同样需要调用recreate方法使之生效
+            recreate();
+//            for (int i = 0; i < mSectionsPagerAdapter.getCount(); i++) {
+//                ((ListViewFragment) mSectionsPagerAdapter.getItem(i)).refreshTheme();
+//            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -218,8 +227,6 @@ public class MainActivity extends AppCompatActivity
     /**
      * Classes defined for LEFT-RIGHT SLIDE
      */
-
-
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -235,11 +242,10 @@ public class MainActivity extends AppCompatActivity
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
-//            return PlaceholderFragment.newInstance(position + 1);
-//            return new RecyclerViewFragment();
+            //TODO: PASS CATEGORY TO FRAGMENT
             ListViewFragment fragment = new ListViewFragment();
             fragment.setMetadata(MainActivity.this, NewsCategory.valueOf(position + 1), String.valueOf(getPageTitle(position)));
-            return new ListViewFragment();
+            return fragment;
         }
 
 

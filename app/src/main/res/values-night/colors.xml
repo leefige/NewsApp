@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#7a3fb5</color>
-    <color name="colorPrimaryDark">#9f3090</color>
+    <color name="colorPrimary">#261835</color>
+    <color name="colorPrimaryDark">#201b1f</color>
     <color name="colorAccent">#FF4081</color>
 
     <color name="colorItemNormal">#ffffff</color>
@@ -11,11 +11,11 @@
     <color name="eggplant">#663D4E</color>
     <color name="sienna">#EB6460</color>
 
-    <color name="newsBackground">#c9c9c9</color>
-    <color name="newsUnread">#000000</color>
-    <color name="newsRead">#878787</color>
-    <color name="rectBackground">#F4F3F2</color>
-    <color name="rectBorder">#808080</color>
+    <color name="newsBackground">#102020</color>
+    <color name="newsUnread">#d4d4d4</color>
+    <color name="newsRead">#818181</color>
+    <color name="rectBackground">#203040</color>
+    <color name="rectBorder">#161645</color>
 
 
 </resources>

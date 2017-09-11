@@ -3,11 +3,14 @@ package com.java.group8;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,9 +43,7 @@ public class ListViewFragment extends BaseRefreshFragment {
     private PullUpRefreshList listView = null;
 
 
-    private PullToRefreshView pullDownView = null;
-//    private PullToRefreshListView pullUpView;
-
+    private PullToRefreshView pullDownView;
 
     public void setMetadata(Activity p, NewsCategory c, String tab) {
         parent = p;
@@ -50,11 +51,9 @@ public class ListViewFragment extends BaseRefreshFragment {
         tabTitle = tab;
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = (ViewGroup) inflater.inflate(R.layout.fragment_list_view, container, false);
-//        pullUpView = rootView.findViewById(R.id.pull_up_view);
         pullDownView = rootView.findViewById(R.id.pull_to_refresh);
 
         listView = rootView.findViewById(R.id.list_view);
@@ -75,14 +74,6 @@ public class ListViewFragment extends BaseRefreshFragment {
                 }, REFRESH_DELAY);
             }
         });
-
-//        pullUpView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
-//            @Override
-//            public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-//                // Do work to refresh the list here.
-//                new LoadMoreTask().execute();
-//            }
-//        });
 
         return rootView;
     }
@@ -124,26 +115,6 @@ public class ListViewFragment extends BaseRefreshFragment {
         }
     }
 
-//    private class LoadMoreTask extends AsyncTask<Void, Void, List<News>> {
-//
-//
-//        @Override
-//        protected List<News> doInBackground (Void... size) {
-//            //TODO: GET NEWS LIST FROM SERVICE
-//            List<News> list = new ArrayList<>();
-//            listSize += ADDITIONAL_SIZE_PER_LOAD;
-//            return list;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(List<News> result) {
-//            // Call onRefreshComplete when the list has been refreshed.
-//            pullUpView.onRefreshComplete();
-//            //super.onPostExecute(result);
-//            //TODO
-//        }
-//    }
-
     class SampleAdapter extends ArrayAdapter<News> {
         private final LayoutInflater mInflater;
         private final ListView listView;
@@ -179,12 +150,14 @@ public class ListViewFragment extends BaseRefreshFragment {
             viewHolder.titleView.setText(data.news_Title);
             viewHolder.contentView.setText(data.news_Intro);
             viewHolder.categoryView.setText(data.newsClassTag);
+            TypedValue typedValue = new TypedValue();
             if (data.read) {
-                viewHolder.titleView.setTextColor(getResources().getColor(R.color.newsRead));
+                getContext().getTheme().resolveAttribute(R.attr.textColorRead, typedValue, true);
             }
             else {
-                viewHolder.titleView.setTextColor(getResources().getColor(R.color.newsUnread));
+                getContext().getTheme().resolveAttribute(R.attr.textColorUnread, typedValue, true);
             }
+            viewHolder.titleView.setTextColor(getResources().getColor(typedValue.resourceId));
 
             // download image from web
             Random rand = new Random();
