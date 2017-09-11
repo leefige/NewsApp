@@ -15,9 +15,12 @@ import android.widget.TextView;
  */
 
 public class ResultActivity extends AppCompatActivity {
+
+    @Override
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_result);
+        getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
 
         ResultActivityOnClickListener raocl = new ResultActivityOnClickListener(this);
 
@@ -37,6 +40,13 @@ public class ResultActivity extends AppCompatActivity {
         ListView resultList = (ListView) findViewById(R.id.resultList);
         //resultList.addView(findViewById(R.id.cancel));
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
+    }
+
     public class ResultActivityOnClickListener implements View.OnClickListener {
         private Activity currentActivity;
         public ResultActivityOnClickListener(Activity a) {

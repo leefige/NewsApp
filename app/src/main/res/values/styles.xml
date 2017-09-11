@@ -9,6 +9,7 @@
 
         <item name="uiBackground">@color/newsBackground</item>
         <item name="textColorUnread">@color/newsUnread</item>
+        <item name="textColorNorm">@color/normalText</item>
         <item name="textColorRead">@color/newsRead</item>
         <item name="listItemBackground">@color/rectBackground</item>
         <item name="listItemBorder">@color/rectBorder</item>

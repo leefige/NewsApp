@@ -40,9 +40,11 @@ public class NewsPageActivity extends AppCompatActivity {
         super();
     }
 
+    @Override
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_newspage);
+        getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
 
         Toolbar toolbar_newspage = (Toolbar) findViewById(R.id.toolbar_newspage);
         setSupportActionBar(toolbar_newspage);
@@ -73,6 +75,12 @@ public class NewsPageActivity extends AppCompatActivity {
 //        }
 
         mTts.setParameter( SpeechConstant.VOICE_NAME, "xiaoyan");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

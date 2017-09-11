@@ -65,7 +65,8 @@
                     android:paddingLeft="15dp"
                     android:paddingRight="15dp"
                     android:paddingBottom="5dp"
-                    android:text="This is a test text" />
+                    android:text="This is a test text"
+                    android:textColor="?attr/textColorNorm"/>
 
                 <TextView
                     android:id="@+id/news_category"
@@ -74,7 +75,8 @@
                     android:layout_alignParentRight="true"
                     android:paddingRight="15dp"
                     android:paddingBottom="5dp"
-                    android:text="category" />
+                    android:text="category"
+                    android:textColor="?attr/textColorNorm"/>
             </RelativeLayout>
 
 
