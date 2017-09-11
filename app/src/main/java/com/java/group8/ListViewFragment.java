@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 import com.yalantis.phoenix.PullToRefreshView;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -33,13 +34,13 @@ public class ListViewFragment extends BaseRefreshFragment {
 
     private final int ADDITIONAL_SIZE_PER_LOAD = 20;
     private final int INIT_SIZE = 20;
-    private Activity parent;
-    private String tabTitle;
+    private Activity parent = null;
+    private String tabTitle = null;
     private int listSize = INIT_SIZE;
-    private SampleAdapter adapter;
+    private SampleAdapter adapter = null;
 
-    private ViewGroup rootView;
-    private PullUpRefreshList listView;
+    private ViewGroup rootView = null;
+    private PullUpRefreshList listView = null;
 
 
     private PullToRefreshView pullDownView;
@@ -49,7 +50,6 @@ public class ListViewFragment extends BaseRefreshFragment {
         category = c;
         tabTitle = tab;
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

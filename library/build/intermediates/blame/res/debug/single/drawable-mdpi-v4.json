@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "D:\\android\\NewsApp\\library\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\sun.png",
+        "source": "D:\\android\\NewsApp\\library\\src\\main\\res\\drawable-mdpi\\sun.png"
+    },
+    {
+        "merged": "D:\\android\\NewsApp\\library\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\sky.png",
+        "source": "D:\\android\\NewsApp\\library\\src\\main\\res\\drawable-mdpi\\sky.png"
+    },
+    {
+        "merged": "D:\\android\\NewsApp\\library\\build\\intermediates\\res\\merged\\debug\\drawable-mdpi-v4\\buildings.png",
+        "source": "D:\\android\\NewsApp\\library\\src\\main\\res\\drawable-mdpi\\buildings.png"
+    }
+]

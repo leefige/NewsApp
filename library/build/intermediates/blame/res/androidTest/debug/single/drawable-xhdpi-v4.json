@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "D:\\android\\NewsApp\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\sky.png",
+        "source": "D:\\android\\NewsApp\\library\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\sky.png"
+    },
+    {
+        "merged": "D:\\android\\NewsApp\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\buildings.png",
+        "source": "D:\\android\\NewsApp\\library\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\buildings.png"
+    },
+    {
+        "merged": "D:\\android\\NewsApp\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\drawable-xhdpi-v4\\sun.png",
+        "source": "D:\\android\\NewsApp\\library\\build\\intermediates\\bundles\\debug\\res\\drawable-xhdpi-v4\\sun.png"
+    }
+]

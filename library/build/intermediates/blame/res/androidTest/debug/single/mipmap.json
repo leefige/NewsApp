@@ -1,0 +1,10 @@
+[
+    {
+        "merged": "D:\\android\\NewsApp\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap\\thu_small.png",
+        "source": "D:\\android\\NewsApp\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap\\thu_small.png"
+    },
+    {
+        "merged": "D:\\android\\NewsApp\\library\\build\\intermediates\\res\\merged\\androidTest\\debug\\mipmap\\thu_white.png",
+        "source": "D:\\android\\NewsApp\\library\\build\\intermediates\\bundles\\debug\\res\\mipmap\\thu_white.png"
+    }
+]
