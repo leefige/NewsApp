@@ -8,8 +8,8 @@ package com.java.group8;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
+import android.content.IntentFilter;
 
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -32,10 +32,12 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.EditText;
 
-import java.util.ArrayList;
+import com.iflytek.cloud.SpeechConstant;
+import com.iflytek.cloud.SpeechUtility;
+
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -192,6 +194,7 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_favourite) {
 //TODO:     add favourite page
+            startActivity(new Intent(this, FavoriteActivity.class));
         }
         else if (id == R.id.nav_manage) {
 //TODO:     clear cache
@@ -210,41 +213,7 @@ public class MainActivity extends AppCompatActivity
      * Classes defined for LEFT-RIGHT SLIDE
      */
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-//    public static class PlaceholderFragment extends Fragment {
-//        /**
-//         * The fragment argument representing the section number for this
-//         * fragment.
-//         */
-//        private static final String ARG_SECTION_NUMBER = "section_number";
-//
-//        public PlaceholderFragment() {
-//        }
-//
-//        /**
-//         * Returns a new instance of this fragment for the given section
-//         * number.
-//         */
-//        public static PlaceholderFragment newInstance(int sectionNumber) {
-//            PlaceholderFragment fragment = new PlaceholderFragment();
-//            Bundle args = new Bundle();
-//            args.putInt(ARG_SECTION_NUMBER, sectionNumber);
-//            fragment.setArguments(args);
-//            return fragment;
-//        }
-//
-//        @Override
-//        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-//                                 Bundle savedInstanceState) {
-//            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-//            TextView textView = rootView.findViewById(R.id.section_label);
-//            //TODO: add news entry
-////            textView.setText(getString(R.string.section_format, getArguments().getInt(ARG_SECTION_NUMBER)));
-//            return rootView;
-//        }
-//    }
+
 
     /**
      * A {@link FragmentPagerAdapter} that returns a fragment corresponding to
@@ -262,7 +231,8 @@ public class MainActivity extends AppCompatActivity
             // Return a PlaceholderFragment (defined as a static inner class below).
 //            return PlaceholderFragment.newInstance(position + 1);
 //            return new RecyclerViewFragment();
-
+            ListViewFragment fragment = new ListViewFragment();
+            fragment.setMetadata(MainActivity.this, NewsCategory.valueOf(position + 1), String.valueOf(getPageTitle(position)));
             return new ListViewFragment();
         }
 
@@ -304,7 +274,6 @@ public class MainActivity extends AppCompatActivity
             return null;
         }
     }
-
     public class MyReceiver extends BroadcastReceiver {
 
         @Override
@@ -317,4 +286,3 @@ public class MainActivity extends AppCompatActivity
         }
     }
 }
-

@@ -12,7 +12,7 @@ public enum NewsCategory {
 
     private int index;
 
-    private NewsCategory(int _index) {
+    NewsCategory(int _index) {
         index = _index;
     }
 

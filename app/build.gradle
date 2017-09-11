@@ -12,6 +12,11 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+        }
+    }
     buildTypes {
         release {
             minifyEnabled true
@@ -28,11 +33,12 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:26.+'
     compile 'com.android.support:design:26.+'
+    compile 'com.github.rahatarmanahmed:circularprogressview:2.5.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.daimajia.swipelayout:library:1.2.0@aar'
     compile 'javax.ws.rs:javax.ws.rs-api:2.0.1'
     compile 'com.squareup.okhttp3:okhttp:3.9.0'
     testCompile 'junit:junit:4.12'
-    compile project(':library')
+    compile project(':lib_phoenix')
     compile 'net.sf.json-lib:json-lib:2.4:JDK15'
-
 }
