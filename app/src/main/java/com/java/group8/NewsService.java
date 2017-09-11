@@ -76,7 +76,7 @@ public class NewsService extends IntentService {
 
     @Override
     public void onDestroy() {
-        //Log.i("myIntentService", "onDestroy");
+        Log.i("myIntentService", "onDestroy");
         super.onDestroy();
     }
 

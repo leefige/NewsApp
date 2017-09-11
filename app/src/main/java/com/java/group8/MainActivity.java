@@ -64,6 +64,7 @@ public class MainActivity extends AppCompatActivity
     final static int CALL_FROM_MAIN = 0;
 
     private ArrayList<News> newslist = null;
+    //receiver接受service数据
     private MyReceiver receiver = null;
 
     @Override
@@ -75,11 +76,14 @@ public class MainActivity extends AppCompatActivity
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
+        //开启receiver,选择filter
         receiver = new MyReceiver();
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.intent.action.MY_BROADCAST");
+        //绑定filter
         MainActivity.this.registerReceiver(receiver,filter);
 
+        //像service发送数据
         Intent intent = new Intent(this, NewsService.class);
         String key = "getBy";
         String value = "Intro";
@@ -276,6 +280,7 @@ public class MainActivity extends AppCompatActivity
             return null;
         }
     }
+    //receiver需要类
     public class MyReceiver extends BroadcastReceiver {
 
         @Override
@@ -285,6 +290,9 @@ public class MainActivity extends AppCompatActivity
             Log.d("yew", "perfect");
             String name = newslist.get(0).news_Author;
             Log.d("news", name);
+            Intent _intent = new Intent(MainActivity.this, NewsService.class);
+            stopService(_intent);
+
         }
     }
 }
