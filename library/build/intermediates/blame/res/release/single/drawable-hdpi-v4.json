@@ -1,14 +1,14 @@
 [
     {
-        "merged": "D:\\android\\NewsApp\\library\\build\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\sky.png",
-        "source": "D:\\android\\NewsApp\\library\\src\\main\\res\\drawable-hdpi\\sky.png"
+        "merged": "/Users/xzwkl/Desktop/github/NewsApp/library/build/intermediates/res/merged/release/drawable-hdpi-v4/sun.png",
+        "source": "/Users/xzwkl/Desktop/github/NewsApp/library/src/main/res/drawable-hdpi/sun.png"
     },
     {
-        "merged": "D:\\android\\NewsApp\\library\\build\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\sun.png",
-        "source": "D:\\android\\NewsApp\\library\\src\\main\\res\\drawable-hdpi\\sun.png"
+        "merged": "/Users/xzwkl/Desktop/github/NewsApp/library/build/intermediates/res/merged/release/drawable-hdpi-v4/sky.png",
+        "source": "/Users/xzwkl/Desktop/github/NewsApp/library/src/main/res/drawable-hdpi/sky.png"
     },
     {
-        "merged": "D:\\android\\NewsApp\\library\\build\\intermediates\\res\\merged\\release\\drawable-hdpi-v4\\buildings.png",
-        "source": "D:\\android\\NewsApp\\library\\src\\main\\res\\drawable-hdpi\\buildings.png"
+        "merged": "/Users/xzwkl/Desktop/github/NewsApp/library/build/intermediates/res/merged/release/drawable-hdpi-v4/buildings.png",
+        "source": "/Users/xzwkl/Desktop/github/NewsApp/library/src/main/res/drawable-hdpi/buildings.png"
     }
 ]

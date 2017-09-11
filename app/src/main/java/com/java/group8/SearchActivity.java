@@ -1,6 +1,7 @@
 package com.java.group8;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ public class SearchActivity extends AppCompatActivity {
     private LinearLayout mGallery_history;
     private int[] mImgIds;
     private LayoutInflater mInflater;
+    private SearchActivityOnClickListener saocl;
 
     @Override
     protected void onCreate(Bundle saveInstanceState) {
@@ -35,7 +37,7 @@ public class SearchActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        SearchActivityOnClickListener saocl = new SearchActivityOnClickListener(this);
+        saocl = new SearchActivityOnClickListener(this);
 
         TextView cancel = (TextView) findViewById(R.id.cancel);
         cancel.setOnClickListener(saocl);
@@ -92,6 +94,7 @@ public class SearchActivity extends AppCompatActivity {
             TextView txt = (TextView) view
                     .findViewById(R.id.text_search);
             txt.setText("some info ");
+            view.setOnClickListener(saocl);
             mGallery_commend.addView(view);
         }
         for (int i = 0; i < mImgIds.length; i++)
@@ -105,6 +108,7 @@ public class SearchActivity extends AppCompatActivity {
             TextView txt = (TextView) view
                     .findViewById(R.id.text_search);
             txt.setText("some info ");
+            view.setOnClickListener(saocl);
             mGallery_history.addView(view);
         }
     }
@@ -123,6 +127,10 @@ public class SearchActivity extends AppCompatActivity {
                 Intent i = new Intent(current_activity, ResultActivity.class);
                 EditText e = (EditText) findViewById(R.id.searchInput);
                 i.putExtra("input", e.getText().toString());
+                startActivity(i);
+            }
+            else if(view.getId() == R.id.layout_search) {
+                Intent i = new Intent(current_activity, NewsPageActivity.class);
                 startActivity(i);
             }
         }
