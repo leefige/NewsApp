@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/xzwkl/Desktop/github/NewsApp/library/build/intermediates/res/merged/androidTest/debug/drawable-xxxhdpi-v4/sun.png",
+        "source": "/Users/xzwkl/Desktop/github/NewsApp/library/build/intermediates/bundles/debug/res/drawable-xxxhdpi-v4/sun.png"
+    },
+    {
+        "merged": "/Users/xzwkl/Desktop/github/NewsApp/library/build/intermediates/res/merged/androidTest/debug/drawable-xxxhdpi-v4/buildings.png",
+        "source": "/Users/xzwkl/Desktop/github/NewsApp/library/build/intermediates/bundles/debug/res/drawable-xxxhdpi-v4/buildings.png"
+    },
+    {
+        "merged": "/Users/xzwkl/Desktop/github/NewsApp/library/build/intermediates/res/merged/androidTest/debug/drawable-xxxhdpi-v4/sky.png",
+        "source": "/Users/xzwkl/Desktop/github/NewsApp/library/build/intermediates/bundles/debug/res/drawable-xxxhdpi-v4/sky.png"
+    }
+]

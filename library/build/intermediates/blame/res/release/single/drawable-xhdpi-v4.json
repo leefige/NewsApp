@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "/Users/xzwkl/Desktop/github/NewsApp/library/build/intermediates/res/merged/release/drawable-xhdpi-v4/buildings.png",
+        "source": "/Users/xzwkl/Desktop/github/NewsApp/library/src/main/res/drawable-xhdpi/buildings.png"
+    },
+    {
+        "merged": "/Users/xzwkl/Desktop/github/NewsApp/library/build/intermediates/res/merged/release/drawable-xhdpi-v4/sky.png",
+        "source": "/Users/xzwkl/Desktop/github/NewsApp/library/src/main/res/drawable-xhdpi/sky.png"
+    },
+    {
+        "merged": "/Users/xzwkl/Desktop/github/NewsApp/library/build/intermediates/res/merged/release/drawable-xhdpi-v4/sun.png",
+        "source": "/Users/xzwkl/Desktop/github/NewsApp/library/src/main/res/drawable-xhdpi/sun.png"
+    }
+]
