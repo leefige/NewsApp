@@ -86,7 +86,7 @@ public class MainActivity extends AppCompatActivity
         //像service发送数据
         Intent intent = new Intent(this, NewsService.class);
         String key = "getBy";
-        String value = "Intro";
+        String value = "List";
         intent.putExtra(key, value);
         startService(intent);
         /**
@@ -290,9 +290,6 @@ public class MainActivity extends AppCompatActivity
             Log.d("yew", "perfect");
             String name = newslist.get(0).news_Author;
             Log.d("news", name);
-            Intent _intent = new Intent(MainActivity.this, NewsService.class);
-            stopService(_intent);
-
         }
     }
 }

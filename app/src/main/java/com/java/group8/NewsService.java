@@ -12,7 +12,9 @@ import net.sf.json.JSONSerializer;
 import java.io.IOException;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 
 import okhttp3.Call;
@@ -33,10 +35,10 @@ public class NewsService extends IntentService {
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
 
     private static final String KEY = "getBy";
-    private static final String INTRO = "Intro";
+    private static final String INTRO = "List";
     private static final String DETAILS = "Details";
     private static final String LATEST_URL = "http://166.111.68.66:2042/news/action/query/latest";
-
+    private static final String DETAIL_URL = "http://166.111.68.66:2042/news/action/query/detail?newsId=";
 
     public NewsService() {
         super("NewsService");
@@ -60,7 +62,9 @@ public class NewsService extends IntentService {
                     Log.d("start", "startservice");
                     break;
                 case DETAILS:
-
+                    final String news_ID = intent.getStringExtra("news_ID");
+                    getDetails(news_ID);
+                    Log.d("start", "getdetails");
                     break;
                 default:
                     break;
@@ -81,13 +85,11 @@ public class NewsService extends IntentService {
     }
 
     private void getNews(){
-        Log.d("begin", "2");
         final OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .get()
                 .url(LATEST_URL)
                 .build();
-        Log.d("begin", "1");
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -129,6 +131,79 @@ public class NewsService extends IntentService {
                         Intent intent = new Intent();
                         intent.putExtra("newslist", newslist);
                         intent.setAction("android.intent.action.MY_BROADCAST");
+                        sendBroadcast(intent);
+
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void getDetails(String news_ID){
+        Log.d("begin", "2");
+        final OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder()
+                .get()
+                .url(DETAIL_URL+news_ID)
+                .build();
+        Log.d("begin", "1");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if(!response.isSuccessful())
+                            throw new IOException("Unexpected code " + response.code());
+                        //Log.d("Response", response.body().string());
+                        String body = response.body().string();
+                        JSONObject json_obj = JSONObject.fromObject(body);
+
+                        //Log.d("res", json_obj.toString());
+                        String id = json_obj.getString("news_ID");
+                        String tag = json_obj.getString("newsClassTag");
+                        String source = json_obj.getString("news_Source");
+                        String title = json_obj.getString("news_Title");
+                        String time = json_obj.getString("news_Time");
+                        String url = json_obj.getString("news_URL");
+                        String lang_type = json_obj.getString("lang_Type");
+                        String author = json_obj.getString("news_Author");
+                        String pic = json_obj.getString("news_Pictures");
+                        String video = json_obj.getString("news_Video");
+                        String intro = json_obj.getString("news_Intro");
+
+                        String category = json_obj.getString("news_Category");
+                        String inborn_keywords = json_obj.getString("inborn_KeyWords");
+                        String content = json_obj.getString("news_Content");
+                        String crawl_source = json_obj.getString("crawl_Source");
+                        String journal = json_obj.getString("news_Journal");
+                        String crawl_time = json_obj.getString("crawl_Time");
+                        String repeat_ID = json_obj.getString("repeat_ID");
+
+                        JSONArray json_keyword = json_obj.getJSONArray("Keywords");
+                        Hashtable keyword_list = new Hashtable();
+                        for(int i=0; i<json_keyword.size(); i++){
+                            JSONObject json_keyword_obj = json_keyword.getJSONObject(i);
+                            String word = json_keyword_obj.getString("word");
+                            String score = json_keyword_obj.getString("score");
+                            keyword_list.put(word, score);
+                        }
+                        String seggedtitle = json_obj.getString("seggedTitle");
+
+
+
+                        News news = new News(tag, id, source, title, time, url, author, lang_type, pic, video, intro);
+
+
+                        Log.d("wait", "a minute");
+                        Intent intent = new Intent();
+                        intent.putExtra("news", news);
+                        intent.setAction("android.intent.action.DETAILS_BROADCAST");
                         sendBroadcast(intent);
 
                     }

@@ -16,8 +16,10 @@ public class NewsDatabase extends SQLiteOpenHelper{
     public static final String ALL_TABLE_NAME = "AllNews";
     public static final String MY_TABEL_NAME = "MyNews";
     public static final String FAV_TABLE_NAME = "FavNews";
-    private static final String ALL_DETAILS = "ID text primary key, ClassTag text, Source text, Time int, " +
-            "URL text, Author text, Type text, Pictures text, Video text, Intro text, Read int)";
+    private static final String ALL_DETAILS = "ID text primary key, ClassTag text, Category text, " +
+            "Source text, Title text, KeyWords text, Time int, " +
+            "URL text, Author text, Content text, Type text, crawl_Source text, " +
+            "news_Journal text, crawl_Time text, Pictures text, Video text, Intro text, Read int, repeat_ID text)";
 
 
 
