@@ -18,8 +18,8 @@ public class BaseRefreshFragment extends Fragment {
     public static final String KEY_ICON = "icon";
     public static final String KEY_COLOR = "color";
 
-    protected NewsCategory category;
-    protected List<News> newsList;
+    protected NewsCategory category = null;
+    protected List<News> newsList = null;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

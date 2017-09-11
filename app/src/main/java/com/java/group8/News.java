@@ -20,6 +20,7 @@ public class News implements Serializable{
     public String news_Video;
     public String news_Intro;
     public NewsDetail news_content = null;
+    public boolean read;
 
     public News(String newsClassTag, String news_ID, String news_Source,
                 String news_Title, String news_Time, String news_URL, String news_Author,
@@ -35,10 +36,12 @@ public class News implements Serializable{
         this.news_Pictures = news_Pictures;
         this.news_Video = news_Video;
         this.news_Intro = news_Intro;
+        read = false;
     }
 
     public void addDetail() {
         /*TODO: ADD DETAILS TO THIS OBJECT*/
+        read = true;
         news_content = new NewsDetail();
     }
 
