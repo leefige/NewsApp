@@ -3,17 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/recycleview_item_selector">
+    android:background="@drawable/recyclerview_item_selector">
 
     <RelativeLayout
         android:id="@+id/category_main_frame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="?attr/listItemBackground">
 
         <ImageView
             android:id="@+id/category_icon"
-            android:layout_width="130dp"
-            android:layout_height="130dp"
+            android:layout_width="125dp"
+            android:layout_height="125dp"
             android:scaleType="centerInside"
             app:srcCompat="@drawable/ic_atom"
             android:paddingBottom="15dp"
@@ -26,7 +27,8 @@
             android:layout_below="@id/category_icon"
             android:gravity="bottom|center_horizontal"
             android:paddingBottom="10dp"
-            android:textSize="18sp"/>
+            android:textSize="18sp"
+            android:textColor="?attr/textColorNorm"/>
     </RelativeLayout>
 
 </FrameLayout>

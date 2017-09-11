@@ -17,11 +17,15 @@
         <item
             android:id="@+id/nav_favourite"
             android:icon="@drawable/ic_menu_favourite"
-            android:title="@string/nav_title_favourite" />
+            android:title="@string/nav_title_favourite"
+            android:background="?attr/listItemBackground"/>
 
     </group>
 
-    <item android:title="@string/nav_item_setting">
+    <item
+        android:title="@string/nav_item_setting"
+        android:background="?attr/listItemBackground">
+
         <menu>
             <item
                 android:id="@+id/nav_night"
