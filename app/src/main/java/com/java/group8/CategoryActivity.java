@@ -48,7 +48,7 @@ public class CategoryActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
 //设置适配器
         recyclerView.setAdapter(adapter = new HomeAdapter());
-        adapter.setOnItemClickLitener(new OnItemClickListener() {
+        adapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent();
@@ -203,11 +203,11 @@ public class CategoryActivity extends AppCompatActivity {
             }
         }
 
-        private OnItemClickListener onItemClickLitener;
+        private OnItemClickListener onItemClickListener;
 
-        public void setOnItemClickLitener(OnItemClickListener mOnItemClickLitener)
+        public void setOnItemClickListener(OnItemClickListener mOnItemClickListener)
         {
-            this.onItemClickLitener = mOnItemClickLitener;
+            this.onItemClickListener = mOnItemClickListener;
         }
 
         @Override
@@ -217,7 +217,7 @@ public class CategoryActivity extends AppCompatActivity {
             holder.iv.setImageResource(iconOfCategory(myTags.get(position)));
 
             // 如果设置了回调，则设置点击事件
-            if (onItemClickLitener != null)
+            if (onItemClickListener != null)
             {
                 holder.itemView.setOnClickListener(new View.OnClickListener()
                 {
@@ -225,7 +225,7 @@ public class CategoryActivity extends AppCompatActivity {
                     public void onClick(View v)
                     {
                         int pos = holder.getLayoutPosition();
-                        onItemClickLitener.onItemClick(holder.itemView, pos);
+                        onItemClickListener.onItemClick(holder.itemView, pos);
                     }
                 });
 
@@ -235,7 +235,7 @@ public class CategoryActivity extends AppCompatActivity {
                     public boolean onLongClick(View v)
                     {
                         int pos = holder.getLayoutPosition();
-                        onItemClickLitener.onItemLongClick(holder.itemView, pos);
+                        onItemClickListener.onItemLongClick(holder.itemView, pos);
                         return false;
                     }
                 });

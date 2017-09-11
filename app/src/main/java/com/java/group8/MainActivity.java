@@ -29,16 +29,9 @@ import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.TextView;
-import android.widget.EditText;
-
-import com.iflytek.cloud.SpeechConstant;
-import com.iflytek.cloud.SpeechUtility;
 
 import java.util.ArrayList;
 
@@ -64,6 +57,8 @@ public class MainActivity extends AppCompatActivity
 
     final static int PAGE_COUNT = 12;
     final static int CALL_FROM_MAIN = 0;
+
+    private boolean nightChecked = false;
 
     private ArrayList<News> newslist = null;
     //receiver接受service数据
@@ -160,16 +155,6 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
-        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-//        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-            MenuItem night = menu.findItem(R.id.nav_night);
-            night.setChecked(true);
-//        }
-        return super.onMenuOpened(featureId, menu);
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -217,17 +202,35 @@ public class MainActivity extends AppCompatActivity
 //TODO:     clear cache
         }
         else if (id == R.id.nav_night) {
+//            boolean isChecked = item.isChecked();
+//            item.setChecked(!isChecked);
+            nightChecked = !nightChecked;
+            item.setChecked(nightChecked);
             int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
             int neoNightMode = currentNightMode == Configuration.UI_MODE_NIGHT_NO ?
                     AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
             getDelegate().setLocalNightMode(neoNightMode);
             ((MyApplication)getApplicationContext()).setNightMode(neoNightMode);
-            recreate();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+//            recreate();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean("night", nightChecked);
+        super.onSaveInstanceState(savedInstanceState);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        nightChecked = savedInstanceState.getBoolean("night");
     }
 
     /**
@@ -247,8 +250,6 @@ public class MainActivity extends AppCompatActivity
         @Override
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
-            // Return a PlaceholderFragment (defined as a static inner class below).
-            //TODO: PASS CATEGORY TO FRAGMENT
             ListViewFragment fragment = new ListViewFragment();
             fragment.setMetadata(MainActivity.this, NewsCategory.valueOf(position + 1), String.valueOf(getPageTitle(position)));
             return fragment;
