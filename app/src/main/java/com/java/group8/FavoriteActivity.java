@@ -16,6 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.swipe.SimpleSwipeListener;
 import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 import com.daimajia.swipe.util.Attributes;
@@ -153,13 +154,35 @@ class ListViewAdapter extends BaseSwipeAdapter {
     //           You have to do that in fillValues method.
     @Override
     public View generateView(int position, ViewGroup parent) {
-        return LayoutInflater.from(mContext).inflate(R.layout.swipe_layout_item, null);
+        final View v = LayoutInflater.from(mContext).inflate(R.layout.swipe_layout_item, null);
+        SwipeLayout swipeLayout = (SwipeLayout)v.findViewById(getSwipeLayoutResourceId(position));
+        swipeLayout.addSwipeListener(new SimpleSwipeListener() {
+            @Override
+            public void onOpen(SwipeLayout layout) {
+
+            }
+        });
+        v.findViewById(R.id.delete_favorite).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext, "record delete", Toast.LENGTH_SHORT).show();
+            }
+        });
+        v.findViewById(R.id.url_favorite).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(mContext, "go to" + ((TextView) v.findViewById(R.id.url_favorite)).getText(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        return v;
     }
 
     @Override
     public void fillValues(int position, View convertView) {
-        TextView t = (TextView)convertView.findViewById(R.id.delete_favorite);
-        t.setText((position + 1 )+".");
+        TextView bottom_t = (TextView) convertView.findViewById(R.id.delete_favorite);
+        bottom_t.setText("删除");
+        TextView surface_t = (TextView) convertView.findViewById(R.id.url_favorite);
+        surface_t.setText("url" + String.valueOf(position));
     }
 
     @Override
