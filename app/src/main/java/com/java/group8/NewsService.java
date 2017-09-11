@@ -199,17 +199,13 @@ public class NewsService extends IntentService {
                         news.news_content.wordCountOfTitle = json_obj.getInt("wordCountOfTitle");
                         news.news_content.wordCountOfContent = json_obj.getInt("wordCountOfContent");
 
-
-                        JSONArray json_keyword = json_obj.getJSONArray("seggedPListOfContent");
                         news.news_content.seggedPListOfContent = new ArrayList<String>();
-                        for(int i=0; i<json_keyword.size(); i++){
-                            JSONObject json_keyword_obj = json_keyword.getJSONObject(i);
-                            String word = json_keyword_obj.getString("word");
-                            double score = json_keyword_obj.getDouble("score");
-                            //News.NewsDetail.Keyword key_word = new News.NewsDetail.Keyword(word, score);
-                            //keyword_list.add(key_word);
+                        String[] listcontent = (String[]) json_obj.get("seggedPListOfContent");
+                        for(int i=0; i<listcontent.length; i++){
+                            news.news_content.seggedPListOfContent.add(listcontent[i]);
                         }
-                        String seggedtitle = json_obj.getString("seggedTitle");
+
+
 
 
 
