@@ -34,6 +34,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity
@@ -60,9 +62,15 @@ public class MainActivity extends AppCompatActivity
 
     private boolean nightChecked = false;
 
-    private ArrayList<News> newslist = null;
     //receiver接受service数据
     private MyReceiver receiver = null;
+
+    private int requestIndex = 0;
+
+
+    ////////////////////////////////////////
+    HashMap<NewsCategory, ListViewFragment> fragMap = null;
+    ////////////////////////////////////////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +88,6 @@ public class MainActivity extends AppCompatActivity
         //绑定filter
         MainActivity.this.registerReceiver(receiver,filter);
 
-        //像service发送数据
-        Intent intent = new Intent(this, NewsService.class);
-        String key = NewsService.KEY;
-        String value = NewsService.LIST;
-        intent.putExtra(key, value);
-        startService(intent);
         /**
          *  Following lines are for Tab & Slide page
          */
@@ -125,6 +127,14 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+
+        fragMap = new HashMap<>();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
     }
 
     @Override
@@ -252,6 +262,7 @@ public class MainActivity extends AppCompatActivity
             // getItem is called to instantiate the fragment for the given page.
             ListViewFragment fragment = new ListViewFragment();
             fragment.setMetadata(MainActivity.this, NewsCategory.valueOf(position + 1), String.valueOf(getPageTitle(position)));
+            fragMap.put(NewsCategory.valueOf(position + 1), fragment);
             return fragment;
         }
 
@@ -293,13 +304,19 @@ public class MainActivity extends AppCompatActivity
             return null;
         }
     }
+
+    public void setRequestIndex(int requestIndex) {
+        this.requestIndex = requestIndex;
+    }
+
     //receiver需要类
     public class MyReceiver extends BroadcastReceiver {
-
         @Override
         public void onReceive(Context context, Intent intent) {
-            Bundle bundle=intent.getExtras();
-            newslist = (ArrayList<News>)bundle.get(NewsService.NEWSLIST);
+            Bundle bundle = intent.getExtras();
+            ArrayList<News> newslist = (ArrayList<News>) bundle.get(NewsService.NEWSLIST);
+            ListViewFragment frag = fragMap.get(NewsCategory.valueOf(requestIndex));
+            frag.receiveListFromService(newslist);
             Log.d("yew", "perfect");
             String name = newslist.get(0).news_Author;
             Log.d("news", name);
