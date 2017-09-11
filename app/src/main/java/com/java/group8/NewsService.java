@@ -39,26 +39,33 @@ public class NewsService extends IntentService {
     // TODO: Rename actions, choose action names that describe tasks that this
     // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
 
-    //add value
+    //add key
     public static final String KEY = "getBy";
+    public static final String NEWSID = "news_ID";
+    public static final String NEWSCATEGORY = "_category";
+    public static final String NEWSKEYWORD = "_keyword";
+
+    //add value
     public static final String LIST = "List";
     public static final String DETAILS = "Details";
-    public static final String NEWSID = "news_ID";
-    public static final String NEWSCATEGORY = "category";
+    public static final String SEARCH = "Search";
+
 
     //add action
 
     public static final String MAINACTION = "android.intent.action.NEWSLIST";
     public static final String DETAIACTION = "android.intent.action.NEWSDETAILS";
-
+    public static final String SEARCHACTION = "android.intent.action.NEWSSEARCH";
 
     //add return key
     public static final String NEWSLIST = "newslist";
     public static final String NEWSDETAILS = "newsdetails";
 
+    //add URL
     private static final String LATEST_URL = "http://166.111.68.66:2042/news/action/query/latest";
     private static final String LATEST_CATEGORY_URL = "http://166.111.68.66:2042/news/action/query/latest?category=";
     private static final String DETAIL_URL = "http://166.111.68.66:2042/news/action/query/detail?newsId=";
+    private static final String SEARCH_URL = "http://166.111.68.66:2042/news/action/query/search?keyword=";
 
     //database
     private static final String SELECT = "select * from ";
@@ -92,6 +99,10 @@ public class NewsService extends IntentService {
                     getDetails(news_ID);
                     Log.d("start", "getdetails");
                     break;
+                case SEARCH:
+                    final String keyword = intent.getStringExtra(NEWSKEYWORD);
+                    getResult(keyword);
+                    Log.d("start", "getresult");
                 default:
                     break;
             }
@@ -326,4 +337,62 @@ public class NewsService extends IntentService {
         }).start();
 
     }
+
+    private void getResult(String keyWord){
+        final OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder()
+                .get()
+                .url(SEARCH_URL + keyWord)
+                .build();
+
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("begin", "SEARCH");
+                client.newCall(request).enqueue(new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        if(!response.isSuccessful())
+                            throw new IOException("Unexpected code " + response.code());
+                        //Log.d("Response", response.body().string());
+                        String body = response.body().string();
+                        JSONObject json = JSONObject.fromObject(body);
+                        JSONArray list = json.getJSONArray("list");
+                        ArrayList<News> newslist = new ArrayList<News>();
+                        for(int i=0; i<list.size(); i++){
+                            JSONObject json_obj = list.getJSONObject(i);
+                            //Log.d("res", json_obj.toString());
+                            String id = json_obj.getString("news_ID");
+                            String tag = json_obj.getString("newsClassTag");
+                            String source = json_obj.getString("news_Source");
+                            String title = json_obj.getString("news_Title");
+                            String time = json_obj.getString("news_Time");
+                            String url = json_obj.getString("news_URL");
+                            String lang_type = json_obj.getString("lang_Type");
+                            String author = json_obj.getString("news_Author");
+                            String pic = json_obj.getString("news_Pictures");
+                            String video = json_obj.getString("news_Video");
+                            String intro = json_obj.getString("news_Intro");
+                            News news = new News(tag, id, source, title, time, url, author, lang_type, pic, video, intro);
+                            newslist.add(news);
+                            //Log.d("tag", tag);
+                        }
+                        Log.d("wait", "a minute");
+                        Intent intent = new Intent();
+                        intent.putExtra(NEWSLIST, newslist);
+                        intent.setAction(SEARCHACTION);
+                        sendBroadcast(intent);
+
+                    }
+                });
+            }
+        }).start();
+    }
+
 }

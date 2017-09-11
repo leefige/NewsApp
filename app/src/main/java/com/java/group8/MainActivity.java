@@ -88,11 +88,12 @@ public class MainActivity extends AppCompatActivity
         //像service发送数据
         Intent intent = new Intent(this, NewsService.class);
         String key = NewsService.KEY;
-        String value = NewsService.LIST;
+        String value = NewsService.SEARCH;
         intent.putExtra(key, value);
-        NewsCategory c = null;   //NewsCategory.CAR;
-        intent.putExtra(NewsService.NEWSCATEGORY, c);
-        intent.putExtra(NewsService.NEWSID, "20160913041301d5fc6a41214a149cd8a0581d3a014f");
+        intent.putExtra(NewsService.NEWSKEYWORD, "北京");
+        //NewsCategory c = null;   //NewsCategory.CAR;
+        //intent.putExtra(NewsService.NEWSCATEGORY, c);
+        //intent.putExtra(NewsService.NEWSID, "20160913041301d5fc6a41214a149cd8a0581d3a014f");
         startService(intent);
         /**
          *  Following lines are for Tab & Slide page
