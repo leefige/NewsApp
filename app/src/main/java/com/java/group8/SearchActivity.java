@@ -106,7 +106,7 @@ public class SearchActivity extends AppCompatActivity {
         String servicekind = NewsService.SEARCH;
         intent_commend.putExtra(key, value);
         intent_commend.putExtra(para1, news_ID);
-        intent_commend.putExtra(para2, servicekind);
+        //intent_commend.putExtra(para2, servicekind);
         startService(intent_commend);
 
         //init history command
