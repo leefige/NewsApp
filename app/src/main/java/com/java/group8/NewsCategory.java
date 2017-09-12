@@ -24,6 +24,8 @@ public enum NewsCategory implements Serializable {
 
     public static NewsCategory valueOf(int code) {
         switch (code){
+            case 0:
+                return null;
             case 1:
                 return SCIENCE;
             case 2:
@@ -49,6 +51,6 @@ public enum NewsCategory implements Serializable {
             case 12:
                 return ENTERTAINMENT;
         }
-        return SCIENCE;
+        return null;
     }
 }

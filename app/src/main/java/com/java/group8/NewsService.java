@@ -130,6 +130,8 @@ public class NewsService extends IntentService {
                 .url(category == null? LATEST_URL : LATEST_CATEGORY_URL + category.getIndex())
                 .build();
 
+        Log.d("URL REQUEST", request.toString());
+
 
         new Thread(new Runnable() {
             @Override

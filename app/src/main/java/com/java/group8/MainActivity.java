@@ -33,9 +33,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Deque;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
@@ -57,7 +55,7 @@ public class MainActivity extends AppCompatActivity
     private ViewPager mViewPager;
     private TabLayout tabLayout;
 
-    final static int PAGE_COUNT = 12;
+    final static int PAGE_COUNT = 13;
     final static int CALL_FROM_MAIN = 0;
 
     private boolean nightChecked = false;
@@ -252,8 +250,8 @@ public class MainActivity extends AppCompatActivity
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             ListViewFragment fragment = new ListViewFragment();
-            fragment.setMetadata(MainActivity.this, NewsCategory.valueOf(position + 1), String.valueOf(getPageTitle(position)));
-            fragMap.put(NewsCategory.valueOf(position + 1), fragment);
+            fragment.setMetadata(MainActivity.this, NewsCategory.valueOf(position), String.valueOf(getPageTitle(position)));
+            fragMap.put(NewsCategory.valueOf(position), fragment);
             return fragment;
         }
 
@@ -266,7 +264,10 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         public CharSequence getPageTitle(int position) {
-            switch (NewsCategory.valueOf(position + 1)) {
+            if (position == 0) {
+                return getString(R.string.label_latest);
+            }
+            switch (NewsCategory.valueOf(position)) {
                 case SCIENCE:
                     return getString(R.string.label_science);
                 case EDUCATION:

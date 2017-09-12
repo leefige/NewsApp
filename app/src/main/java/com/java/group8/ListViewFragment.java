@@ -93,9 +93,7 @@ public class ListViewFragment extends Fragment {
             Log.d("newsList", "is null");
         }
         else {
-            for (int i = 0; i < newsList.size(); i++) {
-                Log.d("ITEM "+i, newsList.get(i).news_Pictures);
-            }
+            Log.d("ITEM_size ", String.valueOf(newsList.size()));
         }
         adapter.notifyDataSetChanged();
     }
@@ -215,7 +213,7 @@ public class ListViewFragment extends Fragment {
         public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
             final ViewHolder viewHolder;
             final News data = listData.get(position);
-            Log.d("PIC AT "+position, data.news_Title);
+//            Log.d("PIC AT "+position, data.news_Title);
             // setup view holder
             if (convertView == null) {
                 convertView = mInflater.inflate(R.layout.list_item, parent, false);
@@ -243,7 +241,7 @@ public class ListViewFragment extends Fragment {
             tmpImageView.setTag(imageUrl);
 
             if (!imageUrl.equals("")) {
-                Log.d("PIC AT "+position, imageUrl);
+//                Log.d("PIC AT "+position, imageUrl);
                 Drawable cachedImage = null;
                 try {
                     cachedImage = asyncImageLoader.loadDrawable(imageUrl, new AsyncImageLoader.ImageCallback() {
@@ -266,7 +264,7 @@ public class ListViewFragment extends Fragment {
                 }
             }
             else {
-                Log.d("PIC AT "+position, "empty");
+//                Log.d("PIC AT "+position, "empty");
                 viewHolder.imageView.setImageResource(R.drawable.icon_3);
             }
 
