@@ -35,6 +35,7 @@ public class FavoriteActivity extends AppCompatActivity {
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
         setContentView(R.layout.activity_favorite);
+        getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
 
         android.support.v7.app.ActionBar actionBar = getSupportActionBar();
         if(actionBar != null){

@@ -188,7 +188,6 @@ public class ListViewFragment extends Fragment {
 
                 @Override
                 protected void onPostExecute(Void result) {
-//                    adapter.notifyDataSetChanged();
                     // 控制脚布局隐藏
                     listView.hideFooterView();
                 }
@@ -204,6 +203,7 @@ public class ListViewFragment extends Fragment {
         private final ListView listView;
         private final List<News> listData;
         private AsyncImageLoader asyncImageLoader;
+        private final String REQUEST_HEAD = "https://image.baidu.com/search/index?tn=baiduimage&ipn=r&ct=201326592&cl=2&lm=-1&st=-1&sf=1&fmq=&pv=&ic=0&nc=1&z=&se=1&showtab=0&fb=0&width=&height=&face=0&istype=2&ie=utf-8&fm=index&pos=history&word=";
 
         public SampleAdapter(Context context, int layoutResourceId, List<News> data, ListView _listView) {
             super(context, layoutResourceId, data);
@@ -217,7 +217,6 @@ public class ListViewFragment extends Fragment {
         public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
             final ViewHolder viewHolder;
             final News data = listData.get(position);
-//            Log.d("PIC AT "+position, data.news_Title);
             // setup view holder
             if (convertView == null) {
                 convertView = mInflater.inflate(R.layout.list_item, parent, false);
@@ -269,7 +268,6 @@ public class ListViewFragment extends Fragment {
             }
             else {
 //                Log.d("PIC AT "+position, "empty");
-                viewHolder.imageView.setImageResource(R.drawable.icon_3);
             }
 
             convertView.setOnClickListener(new View.OnClickListener() {

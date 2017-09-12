@@ -38,6 +38,7 @@
     <string name="title_newspage_activity"> </string>
     <string name="title_activity_favourite">我的收藏</string>
     <string name="action_clear_favourite">清空收藏</string>
+    <string name="cache_cleared">缓存已清空</string>
 
 
 </resources>
