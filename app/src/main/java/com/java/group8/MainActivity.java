@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
+        Log.d("main", "start");
         //开启receiver,选择filter
         receiver = new MyReceiver();
         IntentFilter filter = new IntentFilter();
@@ -150,6 +151,11 @@ public class MainActivity extends AppCompatActivity
     /**
      * Methods related to OPTIONS MENU
      */
+
+    @Override
+    public void onConfigurationChanged(Configuration config) {
+        super.onConfigurationChanged(config);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -306,6 +312,14 @@ public class MainActivity extends AppCompatActivity
             NewsCategory dst = (NewsCategory)bundle.get(NewsService.NEWSCATEGORY);
             String move = (String) bundle.get(NewsService.MOVETYPE);
             ListViewFragment frag = fragMap.get(dst);
+            if(news_list == null)
+                Log.d("Newslist", "null");
+            if(move == null)
+                Log.d("move", "null");
+            if(frag == null)
+                Log.d("frag", "null");
+            if(fragMap == null)
+                Log.d("fragmap", "null");
             frag.receiveListFromService(news_list, move);
             Log.d("yew", "perfect");
             String name = news_list.get(0).newsClassTag;
