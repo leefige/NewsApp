@@ -22,16 +22,22 @@
             app:title="首页"
             app:logo="@mipmap/ic_launcher"
             app:popupTheme="@style/AppTheme.PopupOverlay"/>
-
-        <TextView
+        <LinearLayout
+            android:id="@+id/showpage_newspage"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/title_newspage"/>
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/title_newspage"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/content_newspage"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:id="@+id/content_newspage"/>
+        </LinearLayout>
 
     </LinearLayout>
 

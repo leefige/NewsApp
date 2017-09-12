@@ -3,8 +3,10 @@ package com.java.group8;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -85,17 +87,38 @@ public class SearchActivity extends AppCompatActivity {
 
         for (int i = 0; i < mImgIds.length; i++)
         {
+            // download image from web
+            String imageUrl = data.news_Pictures.split(";")[0];
+            ImageView tmpImageView = viewHolder.imageView;
+            tmpImageView.setTag(imageUrl);
 
-            View view = mInflater.inflate(R.layout.horizonal_display_search,
-                    mGallery_commend, false);
-            ImageView img = (ImageView) view
-                    .findViewById(R.id.image_search);
-            img.setImageResource(mImgIds[i]);
-            TextView txt = (TextView) view
-                    .findViewById(R.id.text_search);
-            txt.setText("some info ");
-            view.setOnClickListener(saocl);
-            mGallery_commend.addView(view);
+            if (!imageUrl.equals("")) {
+//                Log.d("PIC AT "+position, imageUrl);
+                Drawable cachedImage = null;
+                try {
+                    cachedImage = asyncImageLoader.loadDrawable(imageUrl, new AsyncImageLoader.ImageCallback() {
+                        public void imageLoaded(Drawable imageDrawable, String imageUrl) {
+                            ImageView imageViewByTag = listView.findViewWithTag(imageUrl);
+                            if (imageViewByTag != null) {
+                                imageViewByTag.setImageDrawable(imageDrawable);
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.d("Pic Exception", e.getMessage());
+                }
+                finally {
+                    if (cachedImage == null) {
+                        viewHolder.imageView.setImageResource(R.drawable.icon_3);
+                    } else {
+                        viewHolder.imageView.setImageDrawable(cachedImage);
+                    }
+                }
+            }
+            else {
+//                Log.d("PIC AT "+position, "empty");
+                viewHolder.imageView.setImageResource(R.drawable.icon_3);
+            }
         }
         for (int i = 0; i < mImgIds.length; i++)
         {
