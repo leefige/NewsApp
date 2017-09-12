@@ -31,12 +31,9 @@ import java.util.List;
  */
 public class ListViewFragment extends Fragment {
 
-    private final int ADDITIONAL_SIZE_PER_LOAD = 20;
     private final int INIT_SIZE = 20;
     public static final int REFRESH_DELAY = 2000;
-
-    private int listSize = INIT_SIZE;
-
+    public static final int LOAD_DELAY = 1500;
 
     private ViewGroup rootView = null;
     private PullUpRefreshList listView = null;
@@ -55,23 +52,7 @@ public class ListViewFragment extends Fragment {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
         newsList = new ArrayList<>();
-        newsList.add(new News(stringOfCategory(category), "123456789", "", "This is a Big News",
-                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm;http://img003.21cnimg.com/photos/album/20160808/m600/A3B78A702DF9BF0EE02ADFD5D4F53D54.jpeg",
-                "我", "zh_ch", "http://upload.qianlong.com/2016/0809/1470711910844.jpg", "", "Too young, too simple, sometimes naive!"));
-        newsList.add(new News(stringOfCategory(category), "123456789", "", "This is a Big News",
-                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm",
-                "我", "zh_ch", "http://cms-bucket.nosdn.127.net/catchpic/6/69/69544c89ef3587fc92857afce37f05e7.jpg", "", "Too young, too simple, sometimes naive!"));
-        newsList.add(new News(stringOfCategory(category), "123456789", "", "This is a Big News",
-                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm",
-                "我", "zh_ch", "http://img003.21cnimg.com/photos/album/20160808/m600/A3B78A702DF9BF0EE02ADFD5D4F53D54.jpeg", "", "Too young, too simple, sometimes naive!"));
-        newsList.add(new News(stringOfCategory(category), "123456789", "", "This is a Big News",
-                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm",
-                "我", "zh_ch", "http://upload.qianlong.com/2016/0912/1473642904882.jpg", "", "Too young, too simple, sometimes naive!"));
-
-    }
-
-    //TODO: ADD A NEW METHOD "INITLIST" TO GET DATA FROM CACHE WHEN CREATE
-    public void initList(NewsCategory c) {
+        updateList(category);
     }
 
     public void updateList(NewsCategory c) {
@@ -80,46 +61,40 @@ public class ListViewFragment extends Fragment {
         String key = NewsService.KEY;
         String value = NewsService.LIST;
         intent.putExtra(key, value);
+        intent.putExtra(NewsService.NEWSCATEGORY, c);
+        intent.putExtra(NewsService.MOVETYPE, NewsService.LOAD);
         parent.startService(intent);
-        ((MainActivity)parent).setRequestIndex(c.getIndex());
-
-
-
-
-//        if(c == null)
-//            c = NewsCategory.CAR;
-//        list.add(new News(stringOfCategory(c), "123456789", "", "This is a Big News",
-//                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm;http://img003.21cnimg.com/photos/album/20160808/m600/A3B78A702DF9BF0EE02ADFD5D4F53D54.jpeg",
-//                "我", "zh_ch", "http://upload.qianlong.com/2016/0809/1470711910844.jpg", "", "Too young, too simple, sometimes naive!"));
-//        list.add(new News(stringOfCategory(c), "123456789", "", "This is a Big News",
-//                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm",
-//                "我", "zh_ch", "http://cms-bucket.nosdn.127.net/catchpic/6/69/69544c89ef3587fc92857afce37f05e7.jpg", "", "Too young, too simple, sometimes naive!"));
-//        list.add(new News(stringOfCategory(c), "123456789", "", "This is a Big News",
-//                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm",
-//                "我", "zh_ch", "http://img003.21cnimg.com/photos/album/20160808/m600/A3B78A702DF9BF0EE02ADFD5D4F53D54.jpeg", "", "Too young, too simple, sometimes naive!"));
-//        list.add(new News(stringOfCategory(c), "123456789", "", "This is a Big News",
-//                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm",
-//                "我", "zh_ch", "http://upload.qianlong.com/2016/0912/1473642904882.jpg", "", "Too young, too simple, sometimes naive!"));
-//        list.get(1).addDetail();
     }
 
-    public void receiveListFromService(List<News> li) {
+    public void refreshList(NewsCategory c) {
+
+        Intent intent = new Intent(parent, NewsService.class);
+        String key = NewsService.KEY;
+        String value = NewsService.LIST;
+        intent.putExtra(key, value);
+        intent.putExtra(NewsService.NEWSCATEGORY, c);
+        intent.putExtra(NewsService.MOVETYPE, NewsService.REFRESH);
+        parent.startService(intent);
+    }
+
+    public void receiveListFromService(List<News> li, String moveType) {
         receiveList = li;
+        switch (moveType) {
+            case NewsService.LOAD:
+                newsList.addAll(receiveList);
+                break;
+            case NewsService.REFRESH:
+                newsList.clear();
+                newsList.addAll(receiveList);
+                break;
+        }
 
-//        if (newsList.size() < INIT_SIZE) {
-//            newsList = new ArrayList<>()
-//        }
-
-        newsList.addAll(receiveList);
         if (newsList == null) {
             Log.d("newsList", "is null");
         }
         else {
-            for (int i = 0; i < newsList.size(); i++) {
-                Log.d("item "+i, newsList.get(i).news_Title);
-            }
+            Log.d("ITEM_size ", String.valueOf(newsList.size()));
         }
-
         adapter.notifyDataSetChanged();
     }
 
@@ -178,17 +153,7 @@ public class ListViewFragment extends Fragment {
                 pullDownView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        updateList(category);
-//                        if (receiveList != null) {
-//                            newsList.addAll(receiveList);
-//                        }
-                        //TODO: DO REFRESH HERE
-//                        Intent intent = new Intent(parent, NewsService.class);
-//                        String key = NewsService.KEY;
-//                        String value = NewsService.LIST;
-//                        intent.putExtra(key, value);
-//                        parent.startService(intent);
-//                        ((MainActivity)parent).setRequestFragmentIndex();
+                        refreshList(category);
                         pullDownView.setRefreshing(false);
                     }
                 }, REFRESH_DELAY);
@@ -212,26 +177,14 @@ public class ListViewFragment extends Fragment {
 
                 @Override
                 protected Void doInBackground(Void... params) {
-                    SystemClock.sleep(2000);
-                    newsList.add(new News(stringOfCategory(NewsCategory.CULTURE), "123456789", "", "This is a Big News",
-                            "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm;http://img003.21cnimg.com/photos/album/20160808/m600/A3B78A702DF9BF0EE02ADFD5D4F53D54.jpeg",
-                            "我", "zh_ch", "http://upload.qianlong.com/2016/0809/1470711910844.jpg", "", "Too young, too simple, sometimes naive!"));
-                    newsList.add(new News(stringOfCategory(NewsCategory.SCIENCE), "123456789", "", "This is a Big News",
-                            "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm;http://img003.21cnimg.com/photos/album/20160808/m600/A3B78A702DF9BF0EE02ADFD5D4F53D54.jpeg",
-                            "我", "zh_ch", "http://upload.qianlong.com/2016/0809/1470711910844.jpg", "", "Too young, too simple, sometimes naive!"));
-                    newsList.add(new News(stringOfCategory(NewsCategory.SCIENCE), "123456789", "", "This is a Big News",
-                            "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm;http://img003.21cnimg.com/photos/album/20160808/m600/A3B78A702DF9BF0EE02ADFD5D4F53D54.jpeg",
-                            "我", "zh_ch", "http://upload.qianlong.com/2016/0809/1470711910844.jpg", "", "Too young, too simple, sometimes naive!"));
-                    newsList.add(new News(stringOfCategory(NewsCategory.SCIENCE), "123456789", "", "This is a Big News",
-                            "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm;http://img003.21cnimg.com/photos/album/20160808/m600/A3B78A702DF9BF0EE02ADFD5D4F53D54.jpeg",
-                            "我", "zh_ch", "http://upload.qianlong.com/2016/0809/1470711910844.jpg", "", "Too young, too simple, sometimes naive!"));
+                    SystemClock.sleep(LOAD_DELAY);
+                    updateList(category);
                     return null;
                 }
 
                 @Override
                 protected void onPostExecute(Void result) {
-                    adapter.notifyDataSetChanged();
-
+//                    adapter.notifyDataSetChanged();
                     // 控制脚布局隐藏
                     listView.hideFooterView();
                 }
@@ -260,6 +213,7 @@ public class ListViewFragment extends Fragment {
         public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
             final ViewHolder viewHolder;
             final News data = listData.get(position);
+//            Log.d("PIC AT "+position, data.news_Title);
             // setup view holder
             if (convertView == null) {
                 convertView = mInflater.inflate(R.layout.list_item, parent, false);
@@ -287,21 +241,30 @@ public class ListViewFragment extends Fragment {
             tmpImageView.setTag(imageUrl);
 
             if (!imageUrl.equals("")) {
-                Drawable cachedImage = asyncImageLoader.loadDrawable(imageUrl, new AsyncImageLoader.ImageCallback() {
-                    public void imageLoaded(Drawable imageDrawable, String imageUrl) {
-                        ImageView imageViewByTag = listView.findViewWithTag(imageUrl);
-                        if (imageViewByTag != null) {
-                            imageViewByTag.setImageDrawable(imageDrawable);
+//                Log.d("PIC AT "+position, imageUrl);
+                Drawable cachedImage = null;
+                try {
+                    cachedImage = asyncImageLoader.loadDrawable(imageUrl, new AsyncImageLoader.ImageCallback() {
+                        public void imageLoaded(Drawable imageDrawable, String imageUrl) {
+                            ImageView imageViewByTag = listView.findViewWithTag(imageUrl);
+                            if (imageViewByTag != null) {
+                                imageViewByTag.setImageDrawable(imageDrawable);
+                            }
                         }
+                    });
+                } catch (Exception e) {
+                    Log.d("Pic Exception", e.getMessage());
+                }
+                finally {
+                    if (cachedImage == null) {
+                        viewHolder.imageView.setImageResource(R.drawable.icon_3);
+                    } else {
+                        viewHolder.imageView.setImageDrawable(cachedImage);
                     }
-                });
-                if (cachedImage == null) {
-                    viewHolder.imageView.setImageResource(R.drawable.icon_3);
-                } else {
-                    viewHolder.imageView.setImageDrawable(cachedImage);
                 }
             }
             else {
+//                Log.d("PIC AT "+position, "empty");
                 viewHolder.imageView.setImageResource(R.drawable.icon_3);
             }
 
@@ -310,6 +273,7 @@ public class ListViewFragment extends Fragment {
                 public void onClick(View view) {
                     Intent intent = new Intent(parent.getContext(), NewsPageActivity.class);
                     intent.putExtra("news_ID", data.news_ID);
+                    Log.d("click news item", "news_ID: "+data.news_ID);
                     startActivity(intent);
                 }
             });

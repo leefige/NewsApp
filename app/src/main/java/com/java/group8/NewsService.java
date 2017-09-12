@@ -42,7 +42,6 @@ public class NewsService extends IntentService {
     //add action
 
     public static final String MAINACTION = "android.intent.action.MAINACTION";
-    public static final String NEWSPAGEACTION = "android.intent.action.NEWSPAGEACTION";
 
 
     //add return key

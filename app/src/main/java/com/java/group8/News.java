@@ -61,11 +61,11 @@ public class News implements Serializable{
         public List<String> seggedPListOfContent = null;
         public List<Person> persons = null;
         public List<Location> locations = null;
-        public List<String> organizations = null;
+        public List<Location> organizations = null;
         public List<Keyword> Keywords = null;
         public List<Word> bagOfWords = null;
 
-        public class Person {
+        public class Person implements Serializable{
             public String word;
             public int count;
             public Person(String n, int c) {
@@ -77,7 +77,7 @@ public class News implements Serializable{
             }
         }
 
-        public class Location {
+        public class Location implements Serializable{
             public String word;
             public int count;
             public Location(String n, int c) {
@@ -89,7 +89,7 @@ public class News implements Serializable{
             }
         }
 
-        public class Keyword {
+        public class Keyword implements Serializable{
             public String word;
             public double score;
             public Keyword(String n, double s) {
@@ -101,7 +101,7 @@ public class News implements Serializable{
             }
         }
 
-        public class Word {
+        public class Word implements Serializable{
             public String word;
             public double score;
             public Word(String n, double s) {
