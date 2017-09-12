@@ -220,17 +220,18 @@ public class NewsService extends IntentService {
         Cursor c = dbmanager.query(_str, _s);
         _str = SELECT + NewsDatabase.ALL_TABLE_NAME + WHEREID;
         Cursor d = dbmanager.query(_str, _s);
+        Log.d("cursor", d.toString());
         if(c.moveToFirst() == true){
-            String id = c.getString(c.getColumnIndex("news_ID"));
-            String tag = c.getString(c.getColumnIndex("newsClassTag"));
-            String source = c.getString(c.getColumnIndex("news_Source"));
-            String title = c.getString(c.getColumnIndex("news_Title"));
-            String time = c.getString(c.getColumnIndex("news_Time"));
-            String url = c.getString(c.getColumnIndex("news_URL"));
-            String lang_type = c.getString(c.getColumnIndex("lang_Type"));;
-            String author = c.getString(c.getColumnIndex("news_Author"));
-            String pic = c.getString(c.getColumnIndex("news_Pictures"));
-            String video = c.getString(c.getColumnIndex("news_Video"));
+            String id = c.getString(c.getColumnIndex("ID"));
+            String tag = c.getString(c.getColumnIndex("ClassTag"));
+            String source = c.getString(c.getColumnIndex("Source"));
+            String title = c.getString(c.getColumnIndex("Title"));
+            String time = c.getString(c.getColumnIndex("Time"));
+            String url = c.getString(c.getColumnIndex("URL"));
+            String lang_type = c.getString(c.getColumnIndex("Type"));;
+            String author = c.getString(c.getColumnIndex("Author"));
+            String pic = c.getString(c.getColumnIndex("Pictures"));
+            String video = c.getString(c.getColumnIndex("Video"));
             News news = new News(tag, id, source, title, time, url, author, lang_type, pic, video, null);
             news.read = true;
             byte data[] = c.getBlob(c.getColumnIndex("Details"));
@@ -243,23 +244,25 @@ public class NewsService extends IntentService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            c.close();
             Intent intent = new Intent();
             intent.putExtra(NEWSDETAILS, news);
             intent.putExtra(ISFAV, true);
             intent.setAction(DETAIACTION);
             sendBroadcast(intent);
         }
+
         else if(d.moveToFirst() == true){
-            String id = d.getString(d.getColumnIndex("news_ID"));
-            String tag = d.getString(d.getColumnIndex("newsClassTag"));
-            String source = d.getString(d.getColumnIndex("news_Source"));
-            String title = d.getString(d.getColumnIndex("news_Title"));
-            String time = d.getString(d.getColumnIndex("news_Time"));
-            String url = d.getString(d.getColumnIndex("news_URL"));
-            String lang_type = d.getString(d.getColumnIndex("lang_Type"));;
-            String author = d.getString(d.getColumnIndex("news_Author"));
-            String pic = d.getString(d.getColumnIndex("news_Pictures"));
-            String video = d.getString(d.getColumnIndex("news_Video"));
+            String id = d.getString(d.getColumnIndex("ID"));
+            String tag = d.getString(d.getColumnIndex("ClassTag"));
+            String source = d.getString(d.getColumnIndex("Source"));
+            String title = d.getString(d.getColumnIndex("Title"));
+            String time = d.getString(d.getColumnIndex("Time"));
+            String url = d.getString(d.getColumnIndex("URL"));
+            String lang_type = d.getString(d.getColumnIndex("Type"));;
+            String author = d.getString(d.getColumnIndex("Author"));
+            String pic = d.getString(d.getColumnIndex("Pictures"));
+            String video = d.getString(d.getColumnIndex("Video"));
             News news = new News(tag, id, source, title, time, url, author, lang_type, pic, video, null);
             news.read = true;
             byte data[] = d.getBlob(d.getColumnIndex("Details"));
@@ -272,6 +275,7 @@ public class NewsService extends IntentService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            d.close();
             Intent intent = new Intent();
             intent.putExtra(NEWSDETAILS, news);
             intent.putExtra(ISFAV, false);
@@ -500,16 +504,16 @@ public class NewsService extends IntentService {
             _str = SELECT + NewsDatabase.ALL_TABLE_NAME + WHEREID;
             c = dbmanager.query(_str, _s);
             if(c.moveToFirst() == true){
-                String id = c.getString(c.getColumnIndex("news_ID"));
-                String tag = c.getString(c.getColumnIndex("newsClassTag"));
-                String source = c.getString(c.getColumnIndex("news_Source"));
-                String title = c.getString(c.getColumnIndex("news_Title"));
-                String time = c.getString(c.getColumnIndex("news_Time"));
-                String url = c.getString(c.getColumnIndex("news_URL"));
-                String lang_type = c.getString(c.getColumnIndex("lang_Type"));;
-                String author = c.getString(c.getColumnIndex("news_Author"));
-                String pic = c.getString(c.getColumnIndex("news_Pictures"));
-                String video = c.getString(c.getColumnIndex("news_Video"));
+                String id = c.getString(c.getColumnIndex("ID"));
+                String tag = c.getString(c.getColumnIndex("ClassTag"));
+                String source = c.getString(c.getColumnIndex("Source"));
+                String title = c.getString(c.getColumnIndex("Title"));
+                String time = c.getString(c.getColumnIndex("Time"));
+                String url = c.getString(c.getColumnIndex("URL"));
+                String lang_type = c.getString(c.getColumnIndex("Type"));;
+                String author = c.getString(c.getColumnIndex("Author"));
+                String pic = c.getString(c.getColumnIndex("Pictures"));
+                String video = c.getString(c.getColumnIndex("Video"));
 
                 ContentValues values = new ContentValues();
                 values.put("ID", id);
