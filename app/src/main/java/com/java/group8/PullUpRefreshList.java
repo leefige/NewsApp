@@ -6,11 +6,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.RotateAnimation;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.AbsListView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 
 /**
@@ -20,13 +17,6 @@ import android.widget.TextView;
 public class PullUpRefreshList extends ListView implements AbsListView.OnScrollListener {
     private static final String TAG = "RefreshListView";
     private int firstVisibleItemPosition; // 屏幕显示在第一个的item的索引
-    private int downY; // 按下时y轴的偏移量
-    private int headerViewHeight; // 头布局的高度
-    private View headerView; // 头布局的对象
-
-    private final int DOWN_PULL_REFRESH = 0; // 下拉刷新状态
-    private final int RELEASE_REFRESH = 1; // 松开刷新
-    private final int REFRESHING = 2; // 正在刷新中
 
     private Animation upAnimation; // 向上旋转的动画
     private Animation downAnimation; // 向下旋转的动画

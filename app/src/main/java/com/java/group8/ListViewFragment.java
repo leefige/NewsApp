@@ -33,6 +33,7 @@ public class ListViewFragment extends Fragment {
 
     private final int INIT_SIZE = 20;
     public static final int REFRESH_DELAY = 2000;
+    public static final int LOAD_DELAY = 1500;
 
     private ViewGroup rootView = null;
     private PullUpRefreshList listView = null;
@@ -178,7 +179,7 @@ public class ListViewFragment extends Fragment {
 
                 @Override
                 protected Void doInBackground(Void... params) {
-                    SystemClock.sleep(2000);
+                    SystemClock.sleep(LOAD_DELAY);
                     updateList(category);
                     return null;
                 }
@@ -243,18 +244,25 @@ public class ListViewFragment extends Fragment {
 
             if (!imageUrl.equals("")) {
                 Log.d("PIC AT "+position, imageUrl);
-                Drawable cachedImage = asyncImageLoader.loadDrawable(imageUrl, new AsyncImageLoader.ImageCallback() {
-                    public void imageLoaded(Drawable imageDrawable, String imageUrl) {
-                        ImageView imageViewByTag = listView.findViewWithTag(imageUrl);
-                        if (imageViewByTag != null) {
-                            imageViewByTag.setImageDrawable(imageDrawable);
+                Drawable cachedImage = null;
+                try {
+                    cachedImage = asyncImageLoader.loadDrawable(imageUrl, new AsyncImageLoader.ImageCallback() {
+                        public void imageLoaded(Drawable imageDrawable, String imageUrl) {
+                            ImageView imageViewByTag = listView.findViewWithTag(imageUrl);
+                            if (imageViewByTag != null) {
+                                imageViewByTag.setImageDrawable(imageDrawable);
+                            }
                         }
+                    });
+                } catch (Exception e) {
+                    Log.d("Pic Exception", e.getMessage());
+                }
+                finally {
+                    if (cachedImage == null) {
+                        viewHolder.imageView.setImageResource(R.drawable.icon_3);
+                    } else {
+                        viewHolder.imageView.setImageDrawable(cachedImage);
                     }
-                });
-                if (cachedImage == null) {
-                    viewHolder.imageView.setImageResource(R.drawable.icon_3);
-                } else {
-                    viewHolder.imageView.setImageDrawable(cachedImage);
                 }
             }
             else {
