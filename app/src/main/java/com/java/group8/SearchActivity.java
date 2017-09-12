@@ -54,6 +54,8 @@ public class SearchActivity extends AppCompatActivity {
         mGallery_commend = (LinearLayout) findViewById(R.id.commendLayout);
         mGallery_history = (LinearLayout) findViewById(R.id.historyLayout);
 
+        asyncImageLoader = new AsyncImageLoader();
+
         saocl = new SearchActivityOnClickListener(this);
 
         TextView cancel = (TextView) findViewById(R.id.cancel);
