@@ -32,6 +32,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -210,7 +211,12 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, FavoriteActivity.class));
         }
         else if (id == R.id.nav_manage) {
-//TODO:     clear cache
+            Intent intent = new Intent(this, NewsService.class);
+            String key = NewsService.KEY;
+            String value = NewsService.CLEARLOCAL;
+            intent.putExtra(key, value);
+            startService(intent);
+            Toast.makeText(this, "缓存已清空", Toast.LENGTH_SHORT).show();
         }
         else if (id == R.id.nav_night) {
             nightChecked = !nightChecked;
