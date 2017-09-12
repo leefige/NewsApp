@@ -188,7 +188,6 @@ public class ListViewFragment extends Fragment {
 
                 @Override
                 protected void onPostExecute(Void result) {
-//                    adapter.notifyDataSetChanged();
                     // 控制脚布局隐藏
                     listView.hideFooterView();
                 }

@@ -17,6 +17,7 @@
     <color name="normalText">#535353</color>
     <color name="rectBackground">#F4F3F2</color>
     <color name="rectBorder">#808080</color>
+    <color name="spanText">#2323d6</color>
 
 
 </resources>
