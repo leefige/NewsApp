@@ -70,7 +70,7 @@ public class NewsPageActivity extends AppCompatActivity {
 
         receiver = new MyReceiver_newspage();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(NewsService.NEWSPAGEACTION);
+        filter.addAction(NewsService.);
         NewsPageActivity.this.registerReceiver(receiver, filter);
         Intent intent =  new Intent(this, NewsService.class);
         String key = NewsService.KEY;
