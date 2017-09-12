@@ -2,44 +2,27 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <group android:checkableBehavior="none">
-        <!--<item-->
-            <!--android:id="@+id/nav_camera"-->
-            <!--android:icon="@drawable/ic_menu_camera"-->
-            <!--android:title="Import" />-->
-        <!--<item-->
-            <!--android:id="@+id/nav_gallery"-->
-            <!--android:icon="@drawable/ic_menu_gallery"-->
-            <!--android:title="Gallery" />-->
-        <!--<item-->
-            <!--android:id="@+id/nav_slideshow"-->
-            <!--android:icon="@drawable/ic_menu_slideshow"-->
-            <!--android:title="Slideshow" />-->
         <item
             android:id="@+id/nav_favourite"
             android:icon="@drawable/ic_menu_favourite"
-            android:title="@string/nav_title_favourite" />
+            android:title="@string/nav_title_favourite"
+            android:background="?attr/listItemBackground"/>
 
     </group>
 
-    <item android:title="@string/nav_item_setting">
+    <item
+        android:title="@string/nav_item_setting"
+        android:background="?attr/listItemBackground">
+
         <menu>
             <item
                 android:id="@+id/nav_night"
                 android:icon="@drawable/ic_menu_night"
-                android:checkableBehavior="single"
-                android:title="@string/nav_title_night_mode" />
+                android:title="@string/nav_title_night_mode"/>
             <item
                 android:id="@+id/nav_manage"
                 android:icon="@drawable/ic_menu_manage"
                 android:title="@string/nav_title_clear_cache" />
-            <!--<item-->
-                <!--android:id="@+id/nav_share"-->
-                <!--android:icon="@drawable/ic_menu_share"-->
-                <!--android:title="Share" />-->
-            <!--<item-->
-                <!--android:id="@+id/nav_send"-->
-                <!--android:icon="@drawable/ic_menu_send"-->
-                <!--android:title="Send" />-->
         </menu>
     </item>
 

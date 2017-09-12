@@ -388,7 +388,6 @@ public class NewsService extends IntentService {
                         intent.putExtra(NEWSLIST, newslist);
                         intent.setAction(SEARCHACTION);
                         sendBroadcast(intent);
-
                     }
                 });
             }

@@ -3,12 +3,12 @@ package com.java.group8;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -24,26 +24,134 @@ import com.yalantis.phoenix.PullToRefreshView;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  *  Originally Created by Oleksii Shliama.
  *  @author Li Yifei
  */
-public class ListViewFragment extends BaseRefreshFragment {
+public class ListViewFragment extends Fragment {
 
     private final int ADDITIONAL_SIZE_PER_LOAD = 20;
     private final int INIT_SIZE = 20;
-    private Activity parent = null;
-    private String tabTitle = null;
+    public static final int REFRESH_DELAY = 2000;
+
     private int listSize = INIT_SIZE;
-    private SampleAdapter adapter = null;
+
 
     private ViewGroup rootView = null;
     private PullUpRefreshList listView = null;
-
-
+    private SampleAdapter adapter = null;
     private PullToRefreshView pullDownView;
+
+    private Activity parent = null;
+    private String tabTitle = null;
+
+    protected NewsCategory category = null; //You are passing this null
+    protected List<News> newsList = null;   //You are passing this null
+    private List<News> receiveList = null;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        newsList = new ArrayList<>();
+        newsList.add(new News(stringOfCategory(category), "123456789", "", "This is a Big News",
+                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm;http://img003.21cnimg.com/photos/album/20160808/m600/A3B78A702DF9BF0EE02ADFD5D4F53D54.jpeg",
+                "我", "zh_ch", "http://upload.qianlong.com/2016/0809/1470711910844.jpg", "", "Too young, too simple, sometimes naive!"));
+        newsList.add(new News(stringOfCategory(category), "123456789", "", "This is a Big News",
+                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm",
+                "我", "zh_ch", "http://cms-bucket.nosdn.127.net/catchpic/6/69/69544c89ef3587fc92857afce37f05e7.jpg", "", "Too young, too simple, sometimes naive!"));
+        newsList.add(new News(stringOfCategory(category), "123456789", "", "This is a Big News",
+                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm",
+                "我", "zh_ch", "http://img003.21cnimg.com/photos/album/20160808/m600/A3B78A702DF9BF0EE02ADFD5D4F53D54.jpeg", "", "Too young, too simple, sometimes naive!"));
+        newsList.add(new News(stringOfCategory(category), "123456789", "", "This is a Big News",
+                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm",
+                "我", "zh_ch", "http://upload.qianlong.com/2016/0912/1473642904882.jpg", "", "Too young, too simple, sometimes naive!"));
+
+    }
+
+    //TODO: ADD A NEW METHOD "INITLIST" TO GET DATA FROM CACHE WHEN CREATE
+    public void initList(NewsCategory c) {
+    }
+
+    public void updateList(NewsCategory c) {
+
+        Intent intent = new Intent(parent, NewsService.class);
+        String key = NewsService.KEY;
+        String value = NewsService.LIST;
+        intent.putExtra(key, value);
+        parent.startService(intent);
+        ((MainActivity)parent).setRequestIndex(c.getIndex());
+
+
+
+
+//        if(c == null)
+//            c = NewsCategory.CAR;
+//        list.add(new News(stringOfCategory(c), "123456789", "", "This is a Big News",
+//                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm;http://img003.21cnimg.com/photos/album/20160808/m600/A3B78A702DF9BF0EE02ADFD5D4F53D54.jpeg",
+//                "我", "zh_ch", "http://upload.qianlong.com/2016/0809/1470711910844.jpg", "", "Too young, too simple, sometimes naive!"));
+//        list.add(new News(stringOfCategory(c), "123456789", "", "This is a Big News",
+//                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm",
+//                "我", "zh_ch", "http://cms-bucket.nosdn.127.net/catchpic/6/69/69544c89ef3587fc92857afce37f05e7.jpg", "", "Too young, too simple, sometimes naive!"));
+//        list.add(new News(stringOfCategory(c), "123456789", "", "This is a Big News",
+//                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm",
+//                "我", "zh_ch", "http://img003.21cnimg.com/photos/album/20160808/m600/A3B78A702DF9BF0EE02ADFD5D4F53D54.jpeg", "", "Too young, too simple, sometimes naive!"));
+//        list.add(new News(stringOfCategory(c), "123456789", "", "This is a Big News",
+//                "2017-09-08", "http://cnews.chinadaily.com.cn/2017-09/08/content_31716799.htm",
+//                "我", "zh_ch", "http://upload.qianlong.com/2016/0912/1473642904882.jpg", "", "Too young, too simple, sometimes naive!"));
+//        list.get(1).addDetail();
+    }
+
+    public void receiveListFromService(List<News> li) {
+        receiveList = li;
+
+//        if (newsList.size() < INIT_SIZE) {
+//            newsList = new ArrayList<>()
+//        }
+
+        newsList.addAll(receiveList);
+        if (newsList == null) {
+            Log.d("newsList", "is null");
+        }
+        else {
+            for (int i = 0; i < newsList.size(); i++) {
+                Log.d("item "+i, newsList.get(i).news_Title);
+            }
+        }
+
+        adapter.notifyDataSetChanged();
+    }
+
+    public String stringOfCategory(NewsCategory c) {
+        switch (c) {
+            case SCIENCE:
+                return getString(R.string.label_science);
+            case EDUCATION:
+                return getString(R.string.label_education);
+            case MILITARY:
+                return getString(R.string.label_military);
+            case DOMESTIC:
+                return getString(R.string.label_domestic);
+            case SOCIETY:
+                return getString(R.string.label_society);
+            case CULTURE:
+                return getString(R.string.label_culture);
+            case CAR:
+                return getString(R.string.label_car);
+            case INTERNATIONAL:
+                return getString(R.string.label_international);
+            case SPORT:
+                return getString(R.string.label_sport);
+            case ECONOMY:
+                return getString(R.string.label_economy);
+            case HEALTH:
+                return getString(R.string.label_health);
+            case ENTERTAINMENT:
+                return getString(R.string.label_entertainment);
+        }
+        return null;
+    }
 
     public void setMetadata(Activity p, NewsCategory c, String tab) {
         parent = p;
@@ -61,14 +169,26 @@ public class ListViewFragment extends BaseRefreshFragment {
         listView.setAdapter(adapter);
         listView.setOnRefreshListener(new ListLoadMoreListener());
 
-
+        /**
+         * Pull down to refresh
+         */
         pullDownView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 pullDownView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
+                        updateList(category);
+//                        if (receiveList != null) {
+//                            newsList.addAll(receiveList);
+//                        }
                         //TODO: DO REFRESH HERE
+//                        Intent intent = new Intent(parent, NewsService.class);
+//                        String key = NewsService.KEY;
+//                        String value = NewsService.LIST;
+//                        intent.putExtra(key, value);
+//                        parent.startService(intent);
+//                        ((MainActivity)parent).setRequestFragmentIndex();
                         pullDownView.setRefreshing(false);
                     }
                 }, REFRESH_DELAY);
@@ -78,6 +198,10 @@ public class ListViewFragment extends BaseRefreshFragment {
         return rootView;
     }
 
+
+    /**
+     * Pull up to load more
+     */
     private class ListLoadMoreListener implements PullUpRefreshList.OnRefreshListener {
         @Override
         public void onLoadingMore() {
@@ -115,16 +239,14 @@ public class ListViewFragment extends BaseRefreshFragment {
         }
     }
 
+    /**
+     * About how to generate view
+     */
     class SampleAdapter extends ArrayAdapter<News> {
         private final LayoutInflater mInflater;
         private final ListView listView;
         private final List<News> listData;
         private AsyncImageLoader asyncImageLoader;
-
-        int[] icons = {
-                R.drawable.icon_1,
-                R.drawable.icon_2,
-                R.drawable.icon_3};
 
         public SampleAdapter(Context context, int layoutResourceId, List<News> data, ListView _listView) {
             super(context, layoutResourceId, data);
@@ -160,7 +282,6 @@ public class ListViewFragment extends BaseRefreshFragment {
             viewHolder.titleView.setTextColor(getResources().getColor(typedValue.resourceId));
 
             // download image from web
-            Random rand = new Random();
             String imageUrl = data.news_Pictures.split(";")[0];
             ImageView tmpImageView = viewHolder.imageView;
             tmpImageView.setTag(imageUrl);
@@ -175,13 +296,13 @@ public class ListViewFragment extends BaseRefreshFragment {
                     }
                 });
                 if (cachedImage == null) {
-                    viewHolder.imageView.setImageResource(icons[rand.nextInt(3)]);
+                    viewHolder.imageView.setImageResource(R.drawable.icon_3);
                 } else {
                     viewHolder.imageView.setImageDrawable(cachedImage);
                 }
             }
             else {
-                viewHolder.imageView.setImageResource(icons[rand.nextInt(3)]);
+                viewHolder.imageView.setImageResource(R.drawable.icon_3);
             }
 
             convertView.setOnClickListener(new View.OnClickListener() {

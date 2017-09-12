@@ -41,7 +41,8 @@ import com.iflytek.cloud.SpeechConstant;
 import com.iflytek.cloud.SpeechUtility;
 
 import java.util.ArrayList;
-
+import java.util.HashMap;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -65,9 +66,18 @@ public class MainActivity extends AppCompatActivity
     final static int PAGE_COUNT = 12;
     final static int CALL_FROM_MAIN = 0;
 
-    private ArrayList<News> newslist = null;
+    private boolean nightChecked = false;
+
     //receiver接受service数据
     private MyReceiver receiver = null;
+
+    private int requestIndex = 0;
+
+
+    ////////////////////////////////////////
+    HashMap<NewsCategory, ListViewFragment> fragMap = null;
+    ////////////////////////////////////////
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,11 +98,11 @@ public class MainActivity extends AppCompatActivity
         //像service发送数据
         Intent intent = new Intent(this, NewsService.class);
         String key = NewsService.KEY;
-        String value = NewsService.SEARCH;
+        String value = NewsService.LIST;
         intent.putExtra(key, value);
-        intent.putExtra(NewsService.NEWSKEYWORD, "北京");
-        //NewsCategory c = null;   //NewsCategory.CAR;
-        //intent.putExtra(NewsService.NEWSCATEGORY, c);
+        //intent.putExtra(NewsService.NEWSKEYWORD, "北京");
+        NewsCategory c = null;   //NewsCategory.CAR;
+        intent.putExtra(NewsService.NEWSCATEGORY, c);
         //intent.putExtra(NewsService.NEWSID, "20160913041301d5fc6a41214a149cd8a0581d3a014f");
         startService(intent);
         /**
@@ -134,7 +144,14 @@ public class MainActivity extends AppCompatActivity
                         .setAction("Action", null).show();
             }
         });
+        fragMap = new HashMap<>();
     }
+    @Override
+    public void onResume() {
+        super.onResume();
+        getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
+    }
+
 
     @Override
     protected void onDestroy() {
@@ -161,16 +178,6 @@ public class MainActivity extends AppCompatActivity
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
-    }
-
-    @Override
-    public boolean onMenuOpened(int featureId, Menu menu) {
-        int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-//        if (currentNightMode == Configuration.UI_MODE_NIGHT_YES) {
-            MenuItem night = menu.findItem(R.id.nav_night);
-            night.setChecked(true);
-//        }
-        return super.onMenuOpened(featureId, menu);
     }
 
     @Override
@@ -221,19 +228,35 @@ public class MainActivity extends AppCompatActivity
 //TODO:     clear cache
         }
         else if (id == R.id.nav_night) {
+//            boolean isChecked = item.isChecked();
+//            item.setChecked(!isChecked);
+            nightChecked = !nightChecked;
+            item.setChecked(nightChecked);
             int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
             int neoNightMode = currentNightMode == Configuration.UI_MODE_NIGHT_NO ?
                     AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
             getDelegate().setLocalNightMode(neoNightMode);
             ((MyApplication)getApplicationContext()).setNightMode(neoNightMode);
-            recreate();
+            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+            drawer.closeDrawer(GravityCompat.START);
+//            recreate();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        savedInstanceState.putBoolean("night", nightChecked);
+        super.onSaveInstanceState(savedInstanceState);
+    }
 
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        nightChecked = savedInstanceState.getBoolean("night");
+    }
     /**
      * Classes defined for LEFT-RIGHT SLIDE
      */
@@ -255,6 +278,8 @@ public class MainActivity extends AppCompatActivity
             //TODO: PASS CATEGORY TO FRAGMENT
             ListViewFragment fragment = new ListViewFragment();
             fragment.setMetadata(MainActivity.this, NewsCategory.valueOf(position + 1), String.valueOf(getPageTitle(position)));
+            fragMap.put(NewsCategory.valueOf(position + 1), fragment);
+
             return fragment;
         }
 
@@ -296,13 +321,18 @@ public class MainActivity extends AppCompatActivity
             return null;
         }
     }
+    public void setRequestIndex(int requestIndex) {
+        this.requestIndex = requestIndex;
+    }
     //receiver需要类
     public class MyReceiver extends BroadcastReceiver {
 
         @Override
         public void onReceive(Context context, Intent intent) {
-            Bundle bundle=intent.getExtras();
-            newslist = (ArrayList<News>)bundle.get(NewsService.NEWSLIST);
+            Bundle bundle = intent.getExtras();
+            ArrayList<News> newslist = (ArrayList<News>) bundle.get(NewsService.NEWSLIST);
+            ListViewFragment frag = fragMap.get(NewsCategory.valueOf(requestIndex));
+            frag.receiveListFromService(newslist);
             Log.d("yew", "perfect");
             String name = newslist.get(0).newsClassTag;
             Log.d("news", name);

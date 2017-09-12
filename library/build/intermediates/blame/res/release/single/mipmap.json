@@ -1,10 +1,10 @@
 [
     {
-        "merged": "D:\\android\\NewsApp\\library\\build\\intermediates\\res\\merged\\release\\mipmap\\thu_small.png",
-        "source": "D:\\android\\NewsApp\\library\\src\\main\\res\\mipmap\\thu_small.png"
+        "merged": "/Users/xzwkl/Desktop/github/NewsApp/library/build/intermediates/res/merged/release/mipmap/thu_small.png",
+        "source": "/Users/xzwkl/Desktop/github/NewsApp/library/src/main/res/mipmap/thu_small.png"
     },
     {
-        "merged": "D:\\android\\NewsApp\\library\\build\\intermediates\\res\\merged\\release\\mipmap\\thu_white.png",
-        "source": "D:\\android\\NewsApp\\library\\src\\main\\res\\mipmap\\thu_white.png"
+        "merged": "/Users/xzwkl/Desktop/github/NewsApp/library/build/intermediates/res/merged/release/mipmap/thu_white.png",
+        "source": "/Users/xzwkl/Desktop/github/NewsApp/library/src/main/res/mipmap/thu_white.png"
     }
 ]
