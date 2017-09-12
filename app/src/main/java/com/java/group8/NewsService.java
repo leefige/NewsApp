@@ -45,6 +45,7 @@ public class NewsService extends IntentService {
     public static final String NEWSCATEGORY = "_category";
     public static final String NEWSKEYWORD = "_keyword";
     public static final String MOVETYPE = "_move";
+    public static final String SERVICEKIND = "_servicekind";
 
     //add value
     public static final String LIST = "List";
@@ -52,6 +53,7 @@ public class NewsService extends IntentService {
     public static final String SEARCH = "Search";
     public static final String REFRESH = "Refresh";
     public static final String LOAD = "Load";
+    public static final String HISTORY = "history";
 
     //add action
 
