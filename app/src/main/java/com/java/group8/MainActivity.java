@@ -129,6 +129,9 @@ public class MainActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
         getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
+        for (ListViewFragment frg: fragMap.values()) {
+            frg.notifyRead();
+        }
     }
 
     @Override

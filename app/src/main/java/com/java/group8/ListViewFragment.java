@@ -55,6 +55,10 @@ public class ListViewFragment extends Fragment {
         updateList(category);
     }
 
+    public void notifyRead() {
+        adapter.notifyDataSetChanged();
+    }
+
     public void updateList(NewsCategory c) {
 
         Intent intent = new Intent(parent, NewsService.class);
@@ -274,6 +278,7 @@ public class ListViewFragment extends Fragment {
                     Intent intent = new Intent(parent.getContext(), NewsPageActivity.class);
                     intent.putExtra("news_ID", data.news_ID);
                     Log.d("click news item", "news_ID: "+data.news_ID);
+                    listData.get(position).addDetail();
                     startActivity(intent);
                 }
             });
