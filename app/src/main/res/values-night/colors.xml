@@ -18,6 +18,6 @@
     <color name="rectBackground">#203040</color>
     <color name="rectBorder">#161645</color>
     <color name="spanText">#ff4081</color>
-
+    <color name="deleteItem">#ea352c</color>
 
 </resources>
