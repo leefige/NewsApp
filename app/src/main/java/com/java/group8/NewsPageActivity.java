@@ -1,7 +1,9 @@
 package com.java.group8;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.view.ActionProvider;
 import android.support.v4.view.MenuItemCompat;
@@ -10,11 +12,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iflytek.cloud.InitListener;
@@ -25,6 +29,8 @@ import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.cloud.util.ResourceUtil;
 
+import org.w3c.dom.Text;
+
 import static com.java.group8.NewsPageActivity.mTts;
 
 /**
@@ -33,8 +39,11 @@ import static com.java.group8.NewsPageActivity.mTts;
 
 public class NewsPageActivity extends AppCompatActivity {
 
+    private MyReceiver_newspage receiver = null;
     private ShareActionProvider mShareActionProvider;
     public static SpeechSynthesizer mTts;
+
+    private News current_news;
 
     public NewsPageActivity() {
         super();
@@ -52,6 +61,26 @@ public class NewsPageActivity extends AppCompatActivity {
         ActionBar ab = getSupportActionBar();
         //使能app bar的导航功能
         ab.setDisplayHomeAsUpEnabled(true);
+
+        //读入新闻检索信息，从数据库载入
+        String news_ID = saveInstanceState.getString("news_ID");
+
+        receiver = new MyReceiver_newspage();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(NewsService.NEWSPAGEACTION);
+        NewsPageActivity.this.registerReceiver(receiver, filter);
+        Intent intent =  new Intent(this, NewsService.class);
+        String key = NewsService.KEY;
+        String value = NewsService.DETAILS;
+        intent.putExtra(key, value);
+        String para1 = "news_ID";
+        intent.putExtra(para1, news_ID);
+        startService(intent);
+
+        TextView title = (TextView) findViewById(R.id.title_newspage);
+        title.setText(current_news.news_Title);
+        TextView content = (TextView) findViewById(R.id.content_newspage);
+        content.setText(current_news.news_content.news_Content);
 
 
         SpeechUtility.createUtility(this, SpeechConstant.APPID +"=59b4fc49");
@@ -81,6 +110,12 @@ public class NewsPageActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -114,6 +149,15 @@ public class NewsPageActivity extends AppCompatActivity {
     private void setShareIntent(Intent shareIntent) {
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(shareIntent);
+        }
+    }
+
+
+    public class MyReceiver_newspage extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            current_news = (News) bundle.getSerializable("news");
         }
     }
 }
