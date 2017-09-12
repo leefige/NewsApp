@@ -49,9 +49,12 @@ public class NewsPageActivity extends AppCompatActivity {
         Toolbar toolbar_newspage = (Toolbar) findViewById(R.id.toolbar_newspage);
         setSupportActionBar(toolbar_newspage);
 
-        ActionBar ab = getSupportActionBar();
+        android.support.v7.app.ActionBar ab = getSupportActionBar();
         //使能app bar的导航功能
-        ab.setDisplayHomeAsUpEnabled(true);
+        if(ab != null){
+            ab.setHomeButtonEnabled(true);
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
 
         SpeechUtility.createUtility(this, SpeechConstant.APPID +"=59b4fc49");
@@ -101,12 +104,16 @@ public class NewsPageActivity extends AppCompatActivity {
         return true;
     }
 
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.share_newspage:
                 break;
             case R.id.favor_newspage:
                 break;
+            case android.R.id.home:
+                this.finish(); // back button
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }

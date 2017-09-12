@@ -33,9 +33,12 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Queue;
 
 
 public class MainActivity extends AppCompatActivity
@@ -65,7 +68,7 @@ public class MainActivity extends AppCompatActivity
     //receiver接受service数据
     private MyReceiver receiver = null;
 
-    private int requestIndex = 0;
+    Queue<Integer> requestQueue = new ArrayDeque<>();
 
 
     ////////////////////////////////////////
@@ -263,6 +266,7 @@ public class MainActivity extends AppCompatActivity
             ListViewFragment fragment = new ListViewFragment();
             fragment.setMetadata(MainActivity.this, NewsCategory.valueOf(position + 1), String.valueOf(getPageTitle(position)));
             fragMap.put(NewsCategory.valueOf(position + 1), fragment);
+            fragment.updateList(NewsCategory.valueOf(position + 1));
             return fragment;
         }
 
@@ -306,7 +310,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public void setRequestIndex(int requestIndex) {
-        this.requestIndex = requestIndex;
+        requestQueue.offer(requestIndex);
     }
 
     //receiver需要类
@@ -315,7 +319,7 @@ public class MainActivity extends AppCompatActivity
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
             ArrayList<News> newslist = (ArrayList<News>) bundle.get(NewsService.NEWSLIST);
-            ListViewFragment frag = fragMap.get(NewsCategory.valueOf(requestIndex));
+            ListViewFragment frag = fragMap.get(NewsCategory.valueOf(requestQueue.poll()));
             frag.receiveListFromService(newslist);
             Log.d("yew", "perfect");
             String name = newslist.get(0).news_Author;
