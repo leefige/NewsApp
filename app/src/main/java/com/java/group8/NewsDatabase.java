@@ -72,7 +72,7 @@ public class NewsDatabase extends SQLiteOpenHelper{
         return c;
     }
     //根据id删除
-    public void delete(int id, String table_name){
+    public void delete(String id, String table_name){
         SQLiteDatabase db = getWritableDatabase();
         db.delete(table_name, "ID=?", new String[]{String.valueOf(id)});
     }

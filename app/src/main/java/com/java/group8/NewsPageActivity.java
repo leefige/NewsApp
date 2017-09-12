@@ -1,8 +1,11 @@
 package com.java.group8;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ActionProvider;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
@@ -10,11 +13,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.method.ScrollingMovementMethod;
+import android.text.style.URLSpan;
+import android.util.Log;
+import android.util.Patterns;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.iflytek.cloud.InitListener;
@@ -25,6 +39,12 @@ import com.iflytek.cloud.SpeechUtility;
 import com.iflytek.cloud.SynthesizerListener;
 import com.iflytek.cloud.util.ResourceUtil;
 
+import org.w3c.dom.Text;
+
+import java.net.URL;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import static com.java.group8.NewsPageActivity.mTts;
 
 /**
@@ -33,8 +53,11 @@ import static com.java.group8.NewsPageActivity.mTts;
 
 public class NewsPageActivity extends AppCompatActivity {
 
+    private MyReceiver_newspage receiver = null;
     private ShareActionProvider mShareActionProvider;
     public static SpeechSynthesizer mTts;
+
+    private News current_news;
 
     public NewsPageActivity() {
         super();
@@ -55,6 +78,29 @@ public class NewsPageActivity extends AppCompatActivity {
             ab.setHomeButtonEnabled(true);
             ab.setDisplayHomeAsUpEnabled(true);
         }
+
+        //读入新闻检索信息，从数据库载入
+        Intent input = getIntent();
+        String news_ID = input.getStringExtra("news_ID");
+
+        receiver = new MyReceiver_newspage();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(NewsService.DETAIACTION);
+        NewsPageActivity.this.registerReceiver(receiver, filter);
+        Intent intent =  new Intent(this, NewsService.class);
+        String key = NewsService.KEY;
+        String value = NewsService.DETAILS;
+        intent.putExtra(key, value);
+        String para1 = "news_ID";
+        intent.putExtra(para1, news_ID);
+        startService(intent);
+
+        TextView content = (TextView) findViewById(R.id.content_newspage);
+        content.setMovementMethod(new ScrollingMovementMethod());
+//        TextView title = (TextView) findViewById(R.id.title_newspage);
+//        TextView content = (TextView) findViewById(R.id.content_newspage);
+//        BaseAdapter_newspage banp = new BaseAdapter_newspage(this);
+//        title.setAdapter
 
 
         SpeechUtility.createUtility(this, SpeechConstant.APPID +"=59b4fc49");
@@ -84,6 +130,12 @@ public class NewsPageActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -121,6 +173,57 @@ public class NewsPageActivity extends AppCompatActivity {
     private void setShareIntent(Intent shareIntent) {
         if (mShareActionProvider != null) {
             mShareActionProvider.setShareIntent(shareIntent);
+        }
+    }
+
+
+    public class MyReceiver_newspage extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+            current_news = (News) bundle.getSerializable(NewsService.NEWSDETAILS);
+
+            TextView title = (TextView) findViewById(R.id.title_newspage);
+            title.setText(current_news.news_Title);
+            TextView content = (TextView) findViewById(R.id.content_newspage);
+            SpannableString ss = new SpannableString(current_news.news_content.news_Content);
+            setSpanPart(ss);
+            content.setText(ss);
+            content.setMovementMethod(LinkMovementMethod.getInstance());
+        }
+        private void setSpanPart(SpannableString ss) {
+            Pattern p;
+            Matcher m;
+            for(News.NewsDetail.Person i : current_news.news_content.persons) {
+                p = Pattern.compile(i.word);
+                m = p.matcher(ss);
+                int start = 0;
+                while(m.find(start)) {
+                    ss.setSpan(new URLSpan("https://baike.baidu.com/item/" + i.word), m.start(),
+                            m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    start = m.end();
+                }
+            }
+            for(News.NewsDetail.Location i : current_news.news_content.locations) {
+                p = Pattern.compile(i.word);
+                m = p.matcher(ss);
+                int start = 0;
+                while(m.find(start)) {
+                    ss.setSpan(new URLSpan("https://baike.baidu.com/item/" + i.word), m.start(),
+                            m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    start = m.end();
+                }
+            }
+            for(News.NewsDetail.Location i : current_news.news_content.organizations) {
+                p = Pattern.compile(i.word);
+                m = p.matcher(ss);
+                int start = 0;
+                while(m.find(start)) {
+                    ss.setSpan(new URLSpan("https://baike.baidu.com/item/" + i.word), m.start(),
+                            m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    start = m.end();
+                }
+            }
         }
     }
 }
@@ -234,5 +337,31 @@ class MyReadActionProvider extends ActionProvider {
     }
     public boolean hasSubMenu() {
         return true;
+    }
+}
+
+class BaseAdapter_newspage extends BaseAdapter {
+    private Context context;
+    public BaseAdapter_newspage(Context c) {
+        context = c;
+    }
+
+    @Override
+    public int getCount() {
+        return 0;
+    }
+
+    @Override
+    public Object getItem(int i) {
+        return null;
+    }
+
+    @Override
+    public long getItemId(int i) {
+        return 0;
+    }
+
+    public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
+        return null;
     }
 }
