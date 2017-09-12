@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class NewsDatabase extends SQLiteOpenHelper{
     private static final int DB_VERSION = 1;
-    private static final String DB_NAME = "News.db";
+    private static final String DB_NAME = "Newss.db";
     public static final String ALL_TABLE_NAME = "AllNews";
     public static final String FAV_TABLE_NAME = "FavNews";
     public static final String HIS_TABLE_NAME = "SearchHistory";
@@ -37,16 +37,19 @@ public class NewsDatabase extends SQLiteOpenHelper{
     }
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        Log.d("databse", "create");
         // create table Orders(Id integer primary key, CustomName text, OrderPrice integer, Country text);
         String sql = "create table if not exists " + ALL_TABLE_NAME + ALL_DETAILS;
         sqLiteDatabase.execSQL(sql);
         String str = "create table if not exists " + FAV_TABLE_NAME + ALL_DETAILS;
         sqLiteDatabase.execSQL(str);
         String sqr = "create table if not exists " + HIS_TABLE_NAME + HISTORY_DETAILS;
+        Log.d("srq", sqr);
         sqLiteDatabase.execSQL(sqr);
     }
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        Log.d("databse", "update");
         String sql = "DROP TABLE IF EXISTS " + ALL_TABLE_NAME;
         sqLiteDatabase.execSQL(sql);
         String str = "DROP TABLE IF EXISTS " + FAV_TABLE_NAME;
