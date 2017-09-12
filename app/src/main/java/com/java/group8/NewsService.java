@@ -1,20 +1,28 @@
 package com.java.group8;
 
+import android.accounts.NetworkErrorException;
 import android.app.IntentService;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.http.AndroidHttpClient;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
+
 
 import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 import net.sf.json.JSONSerializer;
 
+import org.apache.http.client.methods.HttpGet;
+
+import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.*;
@@ -48,6 +56,7 @@ public class NewsService extends IntentService {
     public static final String NEWSKEYWORD = "_keyword";
     public static final String MOVETYPE = "_move";
     public static final String ISFAV = "isfav";
+    public static final String KIND = "kind";
 
     //add value
     public static final String LIST = "List";
@@ -77,7 +86,7 @@ public class NewsService extends IntentService {
     private static final String LATEST_CATEGORY_URL = "http://166.111.68.66:2042/news/action/query/latest?category=";
     private static final String DETAIL_URL = "http://166.111.68.66:2042/news/action/query/detail?newsId=";
     private static final String SEARCH_URL = "http://166.111.68.66:2042/news/action/query/search?keyword=";
-
+    private final String IMAGE_URL = "https://api.cognitive.microsoft.com/bing/v5.0/images/search?subscription-key=2a11735afda3496aa0c4fc2c9a6c5641&q=";
     //database
     private static final String SELECT = "select * from ";
     private static final String WHEREID = " where ID =?";
@@ -200,7 +209,9 @@ public class NewsService extends IntentService {
                                 if(c.moveToFirst() == true)
                                     news.read = true;
                             }
-
+                            if(news.news_Pictures.equals("")){
+                                news.news_Pictures = getImage(title);
+                            }
                             newslist.add(news);
                             //Log.d("tag", tag);
                         }
@@ -213,12 +224,53 @@ public class NewsService extends IntentService {
                         Log.d("MOVETYPE", move);
                         intent.setAction(MAINACTION);
                         sendBroadcast(intent);
-
                     }
                 });
             }
         }).start();
     }
+
+    private String getImage(String title){
+        String str = title.substring(0, 6>title.length()?title.length():6);
+        Log.d("image", str);
+        HttpURLConnection coon = null;
+        InputStream inputStream = null;
+        try{
+            URL mURL = new URL(IMAGE_URL + str);
+            coon = (HttpURLConnection) mURL.openConnection();
+            coon.setReadTimeout(5000);
+            coon.setConnectTimeout(10000);
+
+            coon.setRequestMethod("GET");
+            int statusCode = coon.getResponseCode();
+            if(statusCode == 200){
+                InputStream is = coon.getInputStream();
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                // 模板代码 必须熟练
+                byte[] buffer = new byte[1024];
+                int len = -1;
+                while ((len = is.read(buffer)) != -1) {
+                    os.write(buffer, 0, len);
+                }
+                is.close();
+                String state = os.toString();// 把流中的数据转换成字符串,采用的编码是utf-8(模拟器默认编码)
+                os.close();
+                JSONObject json = JSONObject.fromObject(state);
+                //Log.d("state", state);
+                JSONArray json_array = json.getJSONArray("value");
+                if(json_array.size() == 0)
+                    return "";
+                String pic = json_array.getJSONObject(0).getString("contentUrl");
+                Log.d("image", pic);
+                return pic;
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+        }
+        Log.d("image", "flase");
+        return "";
+    }
+
 
     private void getDetails(String news_ID){
         Log.d("begin", "2");

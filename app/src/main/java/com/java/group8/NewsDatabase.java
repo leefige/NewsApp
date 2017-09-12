@@ -9,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.support.annotation.StringDef;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -50,6 +51,8 @@ public class NewsDatabase extends SQLiteOpenHelper{
         sqLiteDatabase.execSQL(sql);
         String str = "DROP TABLE IF EXISTS " + FAV_TABLE_NAME;
         sqLiteDatabase.execSQL(str);
+        String sqr = "DROP TABLE IF EXISTS " + HIS_TABLE_NAME;
+        sqLiteDatabase.execSQL(sqr);
         onCreate(sqLiteDatabase);
     }
     @Override
@@ -67,7 +70,7 @@ public class NewsDatabase extends SQLiteOpenHelper{
     public Cursor query(String sql, String[] str){
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery(sql, str);
-        Log.d("query", "query");
+        //Log.d("query", "query");
         return c;
     }
     //根据id删除
