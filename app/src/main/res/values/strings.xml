@@ -33,5 +33,11 @@
     <string name="title_activity_category">栏目</string>
     <string name="loading">加载中</string>
     <string name="label_latest">最新</string>
+    <string name="title_search_activity">搜索</string>
+    <string name="title_result_activity">搜索</string>
+    <string name="title_newspage_activity"> </string>
+    <string name="title_activity_favourite">我的收藏</string>
+    <string name="action_clear_favourite">清空收藏</string>
+
 
 </resources>
