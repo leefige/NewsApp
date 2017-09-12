@@ -32,5 +32,6 @@
     <string name="nav_title_night_mode">夜间模式</string>
     <string name="title_activity_category">栏目</string>
     <string name="loading">加载中</string>
+    <string name="label_latest">最新</string>
 
 </resources>

@@ -52,7 +52,7 @@ public class CategoryActivity extends AppCompatActivity {
             @Override
             public void onItemClick(View view, int position) {
                 Intent intent = new Intent();
-                intent.putExtra("category", position);
+                intent.putExtra("category", position + 1);
                 setResult(RESPONSE_FROM_CATEGORY, intent);
                 finish();
             }

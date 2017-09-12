@@ -40,3 +40,8 @@ filter所要添加的action可以跟key和value一样从NewsService里找，如�
     }
 
 //若按照此方法接收service返回值则一个类只会收到一种返回值，若需要在一个activity里接收多个不同的service的返回值，则可以不绑定filter，在onReceive方法里对action信息进行判断手动执行不同的数据操作
+
+
+
+得到新闻细节的getby的value是NewsService.DETAILS,传进来的新闻id的key是NewsService.NEWSID，输出的是一个news
+搜索的getby的value是NewsService.SEARCH,传进来关键字的key是NewsService.NEWSKEYWORD,输出的是一个newslist
