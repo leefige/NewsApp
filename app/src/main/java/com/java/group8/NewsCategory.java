@@ -1,11 +1,13 @@
 package com.java.group8;
 
+import java.io.Serializable;
+
 /**
  * @auther Li Yifei
  *
  */
 
-public enum NewsCategory {
+public enum NewsCategory implements Serializable {
     SCIENCE(1), EDUCATION(2), MILITARY(3), DOMESTIC(4),
     SOCIETY(5), CULTURE(6), CAR(7), INTERNATIONAL(8),
     SPORT(9), ECONOMY(10), HEALTH(11), ENTERTAINMENT(12);

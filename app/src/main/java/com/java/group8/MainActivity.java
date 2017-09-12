@@ -40,7 +40,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Queue;
 
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -322,7 +321,7 @@ public class MainActivity extends AppCompatActivity
             ListViewFragment frag = fragMap.get(NewsCategory.valueOf(requestQueue.poll()));
             frag.receiveListFromService(newslist);
             Log.d("yew", "perfect");
-            String name = newslist.get(0).news_Author;
+            String name = newslist.get(0).newsClassTag;
             Log.d("news", name);
         }
     }
