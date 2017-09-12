@@ -44,12 +44,14 @@ public class NewsService extends IntentService {
     public static final String NEWSID = "news_ID";
     public static final String NEWSCATEGORY = "_category";
     public static final String NEWSKEYWORD = "_keyword";
+    public static final String MOVETYPE = "_move";
 
     //add value
     public static final String LIST = "List";
     public static final String DETAILS = "Details";
     public static final String SEARCH = "Search";
-
+    public static final String REFRESH = "Refresh";
+    public static final String LOAD = "Load";
 
     //add action
 
@@ -91,7 +93,7 @@ public class NewsService extends IntentService {
             switch (key){
                 case LIST:
                     Bundle b = intent.getExtras();
-                    getNews((NewsCategory)b.get(NEWSCATEGORY));
+                    getNews((NewsCategory)b.get(NEWSCATEGORY), (String) b.get(MOVETYPE));
                     Log.d("start", "startservice");
                     break;
                 case DETAILS:
@@ -121,7 +123,7 @@ public class NewsService extends IntentService {
         super.onDestroy();
     }
 
-    private void getNews(NewsCategory category){
+    private void getNews(final NewsCategory category, final String move){
         final OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .get()
@@ -169,6 +171,8 @@ public class NewsService extends IntentService {
                         Log.d("wait", "a minute");
                         Intent intent = new Intent();
                         intent.putExtra(NEWSLIST, newslist);
+                        intent.putExtra(NEWSCATEGORY, category);
+                        intent.putExtra(MOVETYPE, move);
                         intent.setAction(MAINACTION);
                         sendBroadcast(intent);
 

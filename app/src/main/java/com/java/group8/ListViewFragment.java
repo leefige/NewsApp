@@ -31,12 +31,8 @@ import java.util.List;
  */
 public class ListViewFragment extends Fragment {
 
-    private final int ADDITIONAL_SIZE_PER_LOAD = 20;
     private final int INIT_SIZE = 20;
     public static final int REFRESH_DELAY = 2000;
-
-    private int listSize = INIT_SIZE;
-
 
     private ViewGroup rootView = null;
     private PullUpRefreshList listView = null;
@@ -58,37 +54,48 @@ public class ListViewFragment extends Fragment {
         updateList(category);
     }
 
-    //TODO: ADD A NEW METHOD "INITLIST" TO GET DATA FROM CACHE WHEN CREATE
-    public void initList(NewsCategory c) {
-    }
-
     public void updateList(NewsCategory c) {
 
         Intent intent = new Intent(parent, NewsService.class);
         String key = NewsService.KEY;
         String value = NewsService.LIST;
         intent.putExtra(key, value);
+        intent.putExtra(NewsService.NEWSCATEGORY, c);
+        intent.putExtra(NewsService.MOVETYPE, NewsService.LOAD);
         parent.startService(intent);
-        ((MainActivity)parent).setRequestIndex(c.getIndex());
     }
 
-    public void receiveListFromService(List<News> li) {
+    public void refreshList(NewsCategory c) {
+
+        Intent intent = new Intent(parent, NewsService.class);
+        String key = NewsService.KEY;
+        String value = NewsService.LIST;
+        intent.putExtra(key, value);
+        intent.putExtra(NewsService.NEWSCATEGORY, c);
+        intent.putExtra(NewsService.MOVETYPE, NewsService.REFRESH);
+        parent.startService(intent);
+    }
+
+    public void receiveListFromService(List<News> li, String moveType) {
         receiveList = li;
+        switch (moveType) {
+            case NewsService.LOAD:
+                newsList.addAll(receiveList);
+                break;
+            case NewsService.REFRESH:
+                newsList.clear();
+                newsList.addAll(receiveList);
+                break;
+        }
 
-//        if (newsList.size() < INIT_SIZE) {
-//            newsList = new ArrayList<>()
-//        }
-
-        newsList.addAll(receiveList);
         if (newsList == null) {
             Log.d("newsList", "is null");
         }
         else {
             for (int i = 0; i < newsList.size(); i++) {
-                Log.d("item "+i, newsList.get(i).news_Title);
+                Log.d("ITEM "+i, newsList.get(i).news_Pictures);
             }
         }
-
         adapter.notifyDataSetChanged();
     }
 
@@ -147,17 +154,7 @@ public class ListViewFragment extends Fragment {
                 pullDownView.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        updateList(category);
-//                        if (receiveList != null) {
-//                            newsList.addAll(receiveList);
-//                        }
-                        //TODO: DO REFRESH HERE
-//                        Intent intent = new Intent(parent, NewsService.class);
-//                        String key = NewsService.KEY;
-//                        String value = NewsService.LIST;
-//                        intent.putExtra(key, value);
-//                        parent.startService(intent);
-//                        ((MainActivity)parent).setRequestFragmentIndex();
+                        refreshList(category);
                         pullDownView.setRefreshing(false);
                     }
                 }, REFRESH_DELAY);
@@ -188,7 +185,7 @@ public class ListViewFragment extends Fragment {
 
                 @Override
                 protected void onPostExecute(Void result) {
-                    adapter.notifyDataSetChanged();
+//                    adapter.notifyDataSetChanged();
                     // 控制脚布局隐藏
                     listView.hideFooterView();
                 }
@@ -217,6 +214,7 @@ public class ListViewFragment extends Fragment {
         public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
             final ViewHolder viewHolder;
             final News data = listData.get(position);
+            Log.d("PIC AT "+position, data.news_Title);
             // setup view holder
             if (convertView == null) {
                 convertView = mInflater.inflate(R.layout.list_item, parent, false);
@@ -244,6 +242,7 @@ public class ListViewFragment extends Fragment {
             tmpImageView.setTag(imageUrl);
 
             if (!imageUrl.equals("")) {
+                Log.d("PIC AT "+position, imageUrl);
                 Drawable cachedImage = asyncImageLoader.loadDrawable(imageUrl, new AsyncImageLoader.ImageCallback() {
                     public void imageLoaded(Drawable imageDrawable, String imageUrl) {
                         ImageView imageViewByTag = listView.findViewWithTag(imageUrl);
@@ -259,6 +258,7 @@ public class ListViewFragment extends Fragment {
                 }
             }
             else {
+                Log.d("PIC AT "+position, "empty");
                 viewHolder.imageView.setImageResource(R.drawable.icon_3);
             }
 

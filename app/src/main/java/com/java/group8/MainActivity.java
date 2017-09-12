@@ -37,8 +37,6 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Queue;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -67,12 +65,7 @@ public class MainActivity extends AppCompatActivity
     //receiver接受service数据
     private MyReceiver receiver = null;
 
-    Queue<Integer> requestQueue = new ArrayDeque<>();
-
-
-    ////////////////////////////////////////
     HashMap<NewsCategory, ListViewFragment> fragMap = null;
-    ////////////////////////////////////////
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -207,15 +200,12 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_favourite) {
-//TODO:     add favourite page
             startActivity(new Intent(this, FavoriteActivity.class));
         }
         else if (id == R.id.nav_manage) {
 //TODO:     clear cache
         }
         else if (id == R.id.nav_night) {
-//            boolean isChecked = item.isChecked();
-//            item.setChecked(!isChecked);
             nightChecked = !nightChecked;
             item.setChecked(nightChecked);
             int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
@@ -225,7 +215,6 @@ public class MainActivity extends AppCompatActivity
             ((MyApplication)getApplicationContext()).setNightMode(neoNightMode);
             DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
             drawer.closeDrawer(GravityCompat.START);
-//            recreate();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -265,7 +254,6 @@ public class MainActivity extends AppCompatActivity
             ListViewFragment fragment = new ListViewFragment();
             fragment.setMetadata(MainActivity.this, NewsCategory.valueOf(position + 1), String.valueOf(getPageTitle(position)));
             fragMap.put(NewsCategory.valueOf(position + 1), fragment);
-            fragment.updateList(NewsCategory.valueOf(position + 1));
             return fragment;
         }
 
@@ -308,20 +296,18 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    public void setRequestIndex(int requestIndex) {
-        requestQueue.offer(requestIndex);
-    }
-
     //receiver需要类
     public class MyReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
-            ArrayList<News> newslist = (ArrayList<News>) bundle.get(NewsService.NEWSLIST);
-            ListViewFragment frag = fragMap.get(NewsCategory.valueOf(requestQueue.poll()));
-            frag.receiveListFromService(newslist);
+            ArrayList<News> news_list = (ArrayList<News>) bundle.get(NewsService.NEWSLIST);
+            NewsCategory dst = (NewsCategory)bundle.get(NewsService.NEWSCATEGORY);
+            String move = (String) bundle.get(NewsService.MOVETYPE);
+            ListViewFragment frag = fragMap.get(dst);
+            frag.receiveListFromService(news_list, move);
             Log.d("yew", "perfect");
-            String name = newslist.get(0).newsClassTag;
+            String name = news_list.get(0).newsClassTag;
             Log.d("news", name);
         }
     }
