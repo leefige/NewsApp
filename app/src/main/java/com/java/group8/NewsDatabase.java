@@ -22,17 +22,14 @@ public class NewsDatabase extends SQLiteOpenHelper{
     private static final String DB_NAME = "News.db";
     public static final String ALL_TABLE_NAME = "AllNews";
     public static final String FAV_TABLE_NAME = "FavNews";
+    public static final String HIS_TABLE_NAME = "SearchHistory";
     private static final String ALL_DETAILS = "(ID text primary key, ClassTag text, " +
             "Source text, Title text, Time text, " +
             "URL text, Author text, Type text, " +
             "Pictures text, Video text, Read int, "+
-            "Details blob)";/*
-            "Seggedtitle text, Counttitle int, Countcontent int, Inborn int, " +
-            "Category text, Content text, Crawl_Source text, News_Journal text, " +
-            "Crawl_Time text, Repeat_ID text, Seggedcontent text, Persons_word text, Persons_count int," +
-            "Locations_word text, Locations_count int, Organizations_word text, Organizations_count int" +
-            "Keywords_word text, Keywords_score real,  Bagwords_word text, Bagwords_score real)";*/
+            "Details blob)";
 
+    private static final String HISTORY_DETAILS = "(History text primary key)";
 
     public NewsDatabase(Context context){
         super(context, DB_NAME, null, DB_VERSION);
@@ -44,6 +41,8 @@ public class NewsDatabase extends SQLiteOpenHelper{
         sqLiteDatabase.execSQL(sql);
         String str = "create table if not exists " + FAV_TABLE_NAME + ALL_DETAILS;
         sqLiteDatabase.execSQL(str);
+        String sqr = "create table if not exists " + HIS_TABLE_NAME + HISTORY_DETAILS;
+        sqLiteDatabase.execSQL(sqr);
     }
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {

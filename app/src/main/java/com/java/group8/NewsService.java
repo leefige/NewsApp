@@ -57,16 +57,20 @@ public class NewsService extends IntentService {
     public static final String LOAD = "Load";
     public static final String FAV = "Fav";
     public static final String CLEARLOCAL = "Clearlocal";
+    public static final String HISTORY = "SearchHistory";
 
     //add action
 
     public static final String MAINACTION = "android.intent.action.NEWSLIST";
     public static final String DETAIACTION = "android.intent.action.NEWSDETAILS";
     public static final String SEARCHACTION = "android.intent.action.NEWSSEARCH";
+    public static final String HISTORYACTION = "android.intent.action.SEARCHHISTORY";
+
 
     //add return key
     public static final String NEWSLIST = "newslist";
     public static final String NEWSDETAILS = "newsdetails";
+    public static final String HISTORYLIST = "historylist";
 
     //add URL
     private static final String LATEST_URL = "http://166.111.68.66:2042/news/action/query/latest";
@@ -77,6 +81,7 @@ public class NewsService extends IntentService {
     //database
     private static final String SELECT = "select * from ";
     private static final String WHEREID = " where ID =?";
+    private static final String WHEREHIS = " where History =?";
 
     public NewsService() {
         super("NewsService");
@@ -118,6 +123,9 @@ public class NewsService extends IntentService {
                     break;
                 case CLEARLOCAL:
                     clearLocal();
+                    break;
+                case HISTORY:
+                    getHistory();
                     break;
                 default:
                     break;
@@ -443,6 +451,18 @@ public class NewsService extends IntentService {
                 .get()
                 .url(SEARCH_URL + keyWord)
                 .build();
+        String _str = SELECT + NewsDatabase.HIS_TABLE_NAME + WHEREHIS;
+        String[] _s = {keyWord};
+        Cursor d = dbmanager.query(_str, _s);
+        ContentValues values = new ContentValues();
+        values.put("History", keyWord);
+        if(d.moveToFirst() == false){
+            dbmanager.insert(values, NewsDatabase.HIS_TABLE_NAME);
+        }
+        else{
+            dbmanager.update(NewsDatabase.HIS_TABLE_NAME, values, "History=?", new String[]{keyWord});
+            Log.d("update", "sucess");
+        }
 
 
         new Thread(new Runnable() {
@@ -482,7 +502,9 @@ public class NewsService extends IntentService {
                             newslist.add(news);
                             //Log.d("tag", tag);
                         }
+
                         Log.d("wait", "a minute");
+
                         Intent intent = new Intent();
                         intent.putExtra(NEWSLIST, newslist);
                         intent.setAction(SEARCHACTION);
@@ -537,5 +559,19 @@ public class NewsService extends IntentService {
     private void clearLocal(){
         dbmanager.delete_all(NewsDatabase.ALL_TABLE_NAME);
     }
+
+    private void getHistory(){
+        String str = SELECT + NewsDatabase.HIS_TABLE_NAME;
+        Cursor c = dbmanager.query(str, null);
+        ArrayList<String> historylist = new ArrayList<String>();
+        for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()){
+            historylist.add(c.getString(c.getColumnIndex("History")));
+        }
+        Intent intent = new Intent();
+        intent.putExtra(HISTORYLIST, historylist);
+        intent.setAction(HISTORYACTION);
+        sendBroadcast(intent);
+    }
+
 
 }
