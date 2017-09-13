@@ -74,7 +74,7 @@ public class NewsDatabase extends SQLiteOpenHelper{
     public Cursor query(String sql, String[] str){
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery(sql, str);
-        //Log.d("query", "query");
+        Log.d("query", "query");
         return c;
     }
     //根据id删除

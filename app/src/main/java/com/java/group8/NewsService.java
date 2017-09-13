@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.http.AndroidHttpClient;
 import android.os.Environment;
 import android.os.Bundle;
@@ -116,6 +118,8 @@ public class NewsService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
+            boolean flag = false;
+
             final String key = intent.getStringExtra(KEY);
             switch (key){
                 case LIST:
@@ -155,7 +159,22 @@ public class NewsService extends IntentService {
                     break;
                 case LATEST:
                     Bundle _b = intent.getExtras();
-                    getLatest((NewsCategory)_b.get(NEWSCATEGORY), (String) _b.get(MOVETYPE));
+                    ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+                    if(cm != null) {
+                        NetworkInfo[] infos = cm.getAllNetworkInfo();
+                        if (infos != null) {
+                            for (NetworkInfo ni : infos) {
+                                if (ni.isConnected()) {
+                                    flag = true;
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if(flag == true)
+                        getLatest((NewsCategory)_b.get(NEWSCATEGORY), (String) _b.get(MOVETYPE));
+                    else
+                        getNews((NewsCategory)_b.get(NEWSCATEGORY), (String) _b.get(MOVETYPE));
                     break;
                 default:
                     break;
@@ -261,10 +280,12 @@ public class NewsService extends IntentService {
                 String a = new String();
                 Cursor c;
                 if(category == null) {
+                    Log.d("sad", "null");
                     str = SELECT + NewsDatabase.ALL_TABLE_NAME;
                     c = dbmanager.query(str, null);
                 }
                 else {
+                    Log.d("sad", "have");
                     str = SELECT + NewsDatabase.ALL_TABLE_NAME + WHERECATEGORY;
                     switch (category) {
                         case SCIENCE:
@@ -307,6 +328,7 @@ public class NewsService extends IntentService {
                     String[] _s = {a};
                     c = dbmanager.query(str, _s);
                 }
+                Log.d("cors", String.valueOf(c.moveToFirst()));
                 int count = 0;
                 ArrayList<News> newslist = new ArrayList<News>();
                 while (c.moveToNext()){
@@ -325,6 +347,8 @@ public class NewsService extends IntentService {
                     news.read = read == 1? true : false;
                     newslist.add(news);
                     count++;
+                    Log.d("count", String.valueOf(count));
+                    Log.d("cate", String.valueOf(category.getIndex()));
                     if(count == 20);
                     break;
                 }
