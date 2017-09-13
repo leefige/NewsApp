@@ -429,7 +429,6 @@ public class NewsService extends IntentService {
     private void getDetails(final String news_ID, final String kind) {
         ContentValues values = new ContentValues();
         values.put("Read", 1);
-        dbmanager.update(NewsDatabase.ALL_TABLE_NAME, values, "ID=?", new String[]{news_ID});
 
         String str = SELECT + NewsDatabase.FAV_TABLE_NAME + WHEREID;
         String[] _ss = {news_ID};
@@ -447,11 +446,11 @@ public class NewsService extends IntentService {
             String pic = c.getString(c.getColumnIndex("Pictures"));
             String video = c.getString(c.getColumnIndex("Video"));
             News news = new News(tag, id, source, title, time, url, lang_type, author, pic, video, null);
-            ContentValues _values = new ContentValues();
-            _values.put("Read", 1);
-            dbmanager.update(NewsDatabase.ALL_TABLE_NAME, _values, "ID=?", new String[]{news_ID});
             news.read = true;
             byte data[] = c.getBlob(c.getColumnIndex("Details"));
+            values.put("Details", data);
+            dbmanager.update(NewsDatabase.ALL_TABLE_NAME, values, "ID=?", new String[]{news_ID});
+
             ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(data);
             try {
                 ObjectInputStream inputStream = new ObjectInputStream(arrayInputStream);
@@ -568,9 +567,23 @@ public class NewsService extends IntentService {
                                 News.NewsDetail.Word bagword = news.news_content.new Word(word, count);
                                 news.news_content.bagOfWords.add(bagword);
                             }
-                            ContentValues _values = new ContentValues();
-                            _values.put("Read", 1);
-                            dbmanager.update(NewsDatabase.ALL_TABLE_NAME, _values, "ID=?", new String[]{news_ID});
+                            ByteArrayOutputStream arrayOutputStream = new ByteArrayOutputStream();
+                            try {
+                                ObjectOutputStream objectOutputStream = new ObjectOutputStream(arrayOutputStream);
+                                objectOutputStream.writeObject(news.news_content);
+                                objectOutputStream.flush();
+                                byte data[] = arrayOutputStream.toByteArray();
+                                objectOutputStream.close();
+                                arrayOutputStream.close();
+                                ContentValues _values = new ContentValues();
+                                _values.put("Read", 1);
+                                _values.put("Details", data);
+                                dbmanager.update(NewsDatabase.ALL_TABLE_NAME, _values, "ID=?", new String[]{news_ID});
+                            }catch (Exception e) {
+                                // TODO Auto-generated catch block
+                                e.printStackTrace();
+                            }
+
                             Log.d("wait", "a new");
                             Intent intent = new Intent();
                             intent.putExtra(NEWSDETAILS, news);
