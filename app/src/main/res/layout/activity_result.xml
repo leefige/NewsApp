@@ -44,6 +44,7 @@
                 android:clickable="true"
                 android:textSize="16sp"
                 android:text="确定"
+                android:textColor="?attr/textColorUnread"
                 android:layout_marginRight="7dp" />
 
             <TextView
@@ -55,6 +56,7 @@
                 android:gravity="center"
                 android:clickable="true"
                 android:textSize="16sp"
+                android:textColor="?attr/textColorUnread"
                 android:text="取消" />
         </LinearLayout>
 
@@ -79,7 +81,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:isScrollContainer="true"
-                android:id="@+id/resultList"/>
+                android:id="@+id/resultList"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:dividerHeight="2dp"
+
+                />
+
         </LinearLayout>
 
     </LinearLayout>

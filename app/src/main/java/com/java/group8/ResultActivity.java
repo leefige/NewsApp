@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -164,6 +165,12 @@ class BaseAdapter_ResultActivity extends BaseAdapter {
         View view = LayoutInflater.from(context).inflate(R.layout.list_display_result, null);
         view.setOnClickListener(raocl);
         TextView text = view.findViewById(R.id.text_result);
+        text.setTextSize(18);
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(R.attr.textColorNorm, typedValue, true);
+        text.setTextColor(context.getResources().getColor(typedValue.resourceId));
+        text.setMinHeight(130);
+        text.setPadding(0, 11, 0, 10);
         text.setText(((ResultActivity) context).getResultListX(position).news_Title);
         return view;
     }
