@@ -52,10 +52,11 @@ public class FavoriteActivity extends AppCompatActivity {
         filter.addAction("android.intent.action.FAVORITEACTION");
         FavoriteActivity.this.registerReceiver(receiver, filter);
 
-        Intent serviceIntent = new Intent(this, NewsService.class);
-        String key = NewsService.KEY;
-        String value = NewsService.FAVORITE;
-        serviceIntent.putExtra(key, value);
+        //TODO : favorite
+//        Intent serviceIntent = new Intent(this, NewsService.class);
+//        String key = NewsService.KEY;
+//       String value = NewsService.FAVORITE;
+//        serviceIntent.putExtra(key, value);
 
         listview = (ListView) findViewById(R.id.listview_favorite);
 //        SwipeLayout.SwipeListener sl = new SwipeLayout.SwipeListener() {

@@ -47,6 +47,8 @@ public class ResultActivity extends AppCompatActivity {
 
         raocl = new ResultActivityOnClickListener(this);
 
+        resultList = new ArrayList<News>();
+
         EditText searchInput = (EditText) findViewById(R.id.searchInput);
         searchInput.setOnClickListener(raocl);
         searchInput.clearFocus();
@@ -62,21 +64,17 @@ public class ResultActivity extends AppCompatActivity {
 
         receiver = new MyReceiver_result();
         IntentFilter filter = new IntentFilter();
-        filter.addAction(NewsService.RESULTACTION);
+        filter.addAction(NewsService.SEARCHACTION);
         ResultActivity.this.registerReceiver(receiver, filter);
 
         Intent serviceIntent = new Intent(this, NewsService.class);
         String key = NewsService.KEY;
-        String value = NewsService.SEARCH;
+        String value = NewsService.RESULT;
         String para1 = NewsService.NEWSKEYWORD;
         String keyword = input;
         serviceIntent.putExtra(key, value);
         serviceIntent.putExtra(para1, keyword);
         startService(serviceIntent);
-
-        bara = new BaseAdapter_ResultActivity(this);
-        ListView resultList = (ListView) findViewById(R.id.resultList);
-        resultList.setAdapter(bara);
 
         //resultList.addView(findViewById(R.id.cancel));
     }
@@ -100,6 +98,9 @@ public class ResultActivity extends AppCompatActivity {
             resultList.clear();
             resultList.addAll((ArrayList<News>) bundle.getSerializable(NewsService.NEWSLIST));
             loaded = true;
+            bara = new BaseAdapter_ResultActivity(context, resultList.size());
+            ListView resultList = (ListView) findViewById(R.id.resultList);
+            resultList.setAdapter(bara);
         }
     }
 
@@ -113,13 +114,25 @@ public class ResultActivity extends AppCompatActivity {
                 startActivity(new Intent(currentActivity, NewsPageActivity.class));
             }
             else if(view.getId() == R.id.cancel) {
-                startActivity(new Intent(currentActivity, MainActivity.class));
+                //startActivity(new Intent(currentActivity, MainActivity.class));
             }
             else if(view.getId() == R.id.searchInput) {
                 startActivity(new Intent(currentActivity, SearchActivity.class));
             }
             else if(view.getId() == R.id.layout_result) {
-                startActivity(new Intent(currentActivity, NewsPageActivity.class));
+                TextView text = view.findViewById(R.id.text_result);
+                String title = text.getText().toString();
+                News tar = null;
+                for(News tmp : resultList) {
+                    if(title.equals(tmp.news_Title)) {
+                        tar = tmp;
+                        break;
+                    }
+                }
+                String news_ID = tar.news_ID;
+                Intent inputIntent = new Intent(currentActivity, NewsPageActivity.class);
+                inputIntent.putExtra("news_ID", news_ID);
+                startActivity(inputIntent);
             }
         }
     }
@@ -127,12 +140,14 @@ public class ResultActivity extends AppCompatActivity {
 
 class BaseAdapter_ResultActivity extends BaseAdapter {
     private Context context;
-    public BaseAdapter_ResultActivity(Context c) {
+    private int size;
+    public BaseAdapter_ResultActivity(Context c, int s) {
         context = c;
+        size = s;
     }
     @Override
     public int getCount() {
-        return 10;
+        return (size <= 20) ? size : 20;
     }
 
     @Override
@@ -149,8 +164,7 @@ class BaseAdapter_ResultActivity extends BaseAdapter {
         View view = LayoutInflater.from(context).inflate(R.layout.list_display_result, null);
         view.setOnClickListener(raocl);
         TextView text = view.findViewById(R.id.text_result);
-        if(((ResultActivity) context).loaded)
-            text.setText(((ResultActivity) context).getResultListX(position).news_Title);
+        text.setText(((ResultActivity) context).getResultListX(position).news_Title);
         return view;
     }
 }
