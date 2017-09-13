@@ -192,7 +192,6 @@ public class ListViewFragment extends Fragment {
     private class ListLoadMoreListener implements PullUpRefreshList.OnRefreshListener {
         @Override
         public void onLoadingMore() {
-            //TODO: DO SOMETHING
             CircularProgressView progressView = listView.findViewById(R.id.progress_view);
             progressView.startAnimation();
             new AsyncTask<Void, Void, Void>() {
@@ -356,8 +355,6 @@ public class ListViewFragment extends Fragment {
         }
         @Override
         protected String doInBackground(Integer... params) {
-            // TODO Auto-generated method stub
-
             for(int i=params[0];i>=0;i--){
                 publishProgress(i);
                 //返回顶部时间耗费15个item还没回去，则直接去顶部
@@ -386,7 +383,6 @@ public class ListViewFragment extends Fragment {
         }
         @Override
         protected void onCancelled() {
-            // TODO Auto-generated method stub
             super.onCancelled();
         }
 
