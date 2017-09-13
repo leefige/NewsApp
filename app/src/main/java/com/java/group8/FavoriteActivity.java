@@ -26,6 +26,10 @@ import com.daimajia.swipe.SwipeLayout;
 import com.daimajia.swipe.adapters.BaseSwipeAdapter;
 import com.daimajia.swipe.util.Attributes;
 
+import org.w3c.dom.Text;
+
+import java.util.ArrayList;
+
 /**
  * Created by xzwkl on 17/9/10.
  */
@@ -35,6 +39,10 @@ public class FavoriteActivity extends AppCompatActivity {
     private ListView listview;
     private SwipeLayout swipeLayout;
     private MyReceiver_favorite receiver;
+    private ArrayList<News> favList;
+    private ListViewAdapter lva;
+
+    public News getFavListX(int x) { return favList.get(x);}
 
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
@@ -47,16 +55,18 @@ public class FavoriteActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        favList = new ArrayList<News>();
+
         receiver = new MyReceiver_favorite();
         IntentFilter filter = new IntentFilter();
-        filter.addAction("android.intent.action.FAVORITEACTION");
+        filter.addAction(NewsService.FAVACTION);
         FavoriteActivity.this.registerReceiver(receiver, filter);
 
         //TODO : favorite
-//        Intent serviceIntent = new Intent(this, NewsService.class);
-//        String key = NewsService.KEY;
-//       String value = NewsService.FAVORITE;
-//        serviceIntent.putExtra(key, value);
+        Intent serviceIntent = new Intent(this, NewsService.class);
+        String key = NewsService.KEY;
+        String value = NewsService.NEWSFAVORITE;
+        serviceIntent.putExtra(key, value);
 
         listview = (ListView) findViewById(R.id.listview_favorite);
 //        SwipeLayout.SwipeListener sl = new SwipeLayout.SwipeListener() {
@@ -90,9 +100,6 @@ public class FavoriteActivity extends AppCompatActivity {
 //
 //            }
 //        };
-        ListViewAdapter lva = new ListViewAdapter(this);
-        listview.setAdapter(lva);
-        lva.setMode(Attributes.Mode.Single);
         listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -185,15 +192,27 @@ public class FavoriteActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
+            ArrayList<News> tmp = (ArrayList<News>) bundle.getSerializable(NewsService.FAVLIST);
+            if(tmp == null) {
+                favList = null;
+            } else {
+                favList.addAll(tmp);
+                int size = favList.size();
+                lva = new ListViewAdapter(context, size);
+                listview.setAdapter(lva);
+                lva.setMode(Attributes.Mode.Single);
+            }
         }
     }
 }
 
 class ListViewAdapter extends BaseSwipeAdapter {
     private Context mContext;
+    private int size;
 
-    public ListViewAdapter(Context mContext) {
+    public ListViewAdapter(Context mContext, int s) {
         this.mContext = mContext;
+        this.size = s;
     }
 
     @Override
@@ -213,16 +232,23 @@ class ListViewAdapter extends BaseSwipeAdapter {
 
             }
         });
-        v.findViewById(R.id.delete_favorite).setOnClickListener(new View.OnClickListener() {
+        TextView delete = v.findViewById(R.id.delete_favorite);
+        TextView url = v.findViewById(R.id.url_favorite);
+        delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(mContext, "record delete", Toast.LENGTH_SHORT).show();
             }
         });
-        v.findViewById(R.id.url_favorite).setOnClickListener(new View.OnClickListener() {
+        final News tar = ((FavoriteActivity) mContext).getFavListX(position);
+        url.setText(tar.news_Title);
+        url.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(mContext, "go to" + ((TextView) v.findViewById(R.id.url_favorite)).getText(), Toast.LENGTH_SHORT).show();
+                Intent input = new Intent(mContext, NewsPageActivity.class);
+                input.putExtra("news_ID", tar.news_ID);
+                Toast.makeText(mContext, "go to" + tar.news_URL, Toast.LENGTH_SHORT).show();
+                mContext.startActivity(input);
             }
         });
         return v;
@@ -238,7 +264,7 @@ class ListViewAdapter extends BaseSwipeAdapter {
 
     @Override
     public int getCount() {
-        return 10;
+        return size;
     }
 
     @Override
