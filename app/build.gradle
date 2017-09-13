@@ -27,7 +27,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -41,6 +41,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile project(':lib_phoenix')
     compile 'net.sf.json-lib:json-lib:2.4:JDK15'
-    compile 'org.jsoup:jsoup:1.10.1'
-
+    compile files('libs/MobTools-2017.0823.1556.jar')
+    compile files('libs/MobCommons-2017.0823.1556.jar')
 }

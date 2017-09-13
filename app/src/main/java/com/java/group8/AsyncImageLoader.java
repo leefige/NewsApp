@@ -25,7 +25,7 @@ import java.util.List;
 
 public class AsyncImageLoader {
     private HashMap<String, SoftReference<Drawable>> imageCache;
-    private final String IMAGE_URL = "https://api.cognitive.microsoft.com/bing/v5.0/images/search?subscription-key=2a11735afda3496aa0c4fc2c9a6c5641&q=";
+    private final String IMAGE_URL = "https://api.cognitive.microsoft.com/bing/v5.0/images/search?subscription-key=acc35fffbfd942119fbe4e0c000bf724&q=";
 
     public AsyncImageLoader() {
         imageCache = new HashMap<>();
@@ -99,10 +99,7 @@ public class AsyncImageLoader {
     }
 
     private String getImage(String title) {
-        return "";
-
-        /*String str = title.substring(0, 6 > title.length() ? title.length() : 6);
-        Log.d("image", str);
+        String str = title.substring(0, 6 > title.length() ? title.length() : 6);
         HttpURLConnection coon = null;
         InputStream inputStream = null;
         try {
@@ -137,8 +134,11 @@ public class AsyncImageLoader {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.d("image", "flase");*/
+        Log.d("image", "flase");
+        return "";
     }
+
+
 
     public interface ImageCallback {
         void imageLoaded(Drawable imageDrawable, String imageUrl);
