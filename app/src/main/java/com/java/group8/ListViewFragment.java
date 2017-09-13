@@ -32,8 +32,8 @@ import java.util.List;
 public class ListViewFragment extends Fragment {
 
     private final int INIT_SIZE = 20;
-    public static final int REFRESH_DELAY = 2000;
-    public static final int LOAD_DELAY = 2000;
+    public static final int REFRESH_DELAY = 1750;
+    public static final int LOAD_DELAY = 1500;
 
     private ViewGroup rootView = null;
     private PullUpRefreshList listView = null;
@@ -84,7 +84,7 @@ public class ListViewFragment extends Fragment {
 
         Intent intent = new Intent(parent, NewsService.class);
         String key = NewsService.KEY;
-        String value = NewsService.LIST;
+        String value = NewsService.LATEST;
         intent.putExtra(key, value);
         intent.putExtra(NewsService.NEWSCATEGORY, c);
         intent.putExtra(NewsService.MOVETYPE, NewsService.REFRESH);
@@ -93,6 +93,14 @@ public class ListViewFragment extends Fragment {
 
     public void receiveListFromService(List<News> li, String moveType) {
         receiveList = li;
+        if (receiveList == null ) {
+            refreshList(category);
+            return;
+        }
+        else if (receiveList.size() == 0) {
+            refreshList(category);
+            return;
+        }
         switch (moveType) {
             case NewsService.LOAD:
                 newsList.addAll(receiveList);
@@ -258,6 +266,28 @@ public class ListViewFragment extends Fragment {
                 Drawable cachedImage = null;
                 try {
                     cachedImage = asyncImageLoader.loadDrawable(imageUrl, new AsyncImageLoader.ImageCallback() {
+                        public void imageLoaded(Drawable imageDrawable, String imageUrl) {
+                            ImageView imageViewByTag = listView.findViewWithTag(imageUrl);
+                            if (imageViewByTag != null) {
+                                imageViewByTag.setImageDrawable(imageDrawable);
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.d("Pic Exception", e.getMessage());
+                }
+                finally {
+                    if (cachedImage == null) {
+                        viewHolder.imageView.setImageResource(R.drawable.icon_3);
+                    } else {
+                        viewHolder.imageView.setImageDrawable(cachedImage);
+                    }
+                }
+            }
+            else if(imageUrl.equals("") && ((MyApplication)(parent.getContext().getApplicationContext())).isImageOn()) {
+                Drawable cachedImage = null;
+                try {
+                    cachedImage = asyncImageLoader.loadDrawableFromTitle(data.news_Title, new AsyncImageLoader.ImageCallback() {
                         public void imageLoaded(Drawable imageDrawable, String imageUrl) {
                             ImageView imageViewByTag = listView.findViewWithTag(imageUrl);
                             if (imageViewByTag != null) {

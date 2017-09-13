@@ -168,14 +168,14 @@ public class SearchActivity extends AppCompatActivity {
                                 Log.d("Pic Exception", e.getMessage());
                             } finally {
                                 if (cachedImage == null) {
-                                    img.setImageResource(R.drawable.icon_3);
+                                    img.setImageResource(R.drawable.ic_desert);
                                 } else {
                                     img.setImageDrawable(cachedImage);
                                 }
                             }
                         } else {
                             //                Log.d("PIC AT "+position, "empty");
-                            img.setImageResource(R.drawable.icon_3);
+                            img.setImageResource(R.drawable.ic_desert);
                         }
                         mGallery_commend.addView(view);
                     }
@@ -198,7 +198,7 @@ public class SearchActivity extends AppCompatActivity {
                         ImageView img = (ImageView) view.findViewById(R.id.image_history);
                         TextView text = (TextView) view.findViewById(R.id.text_history);
                         text.setText(i);
-                        img.setImageResource(R.drawable.icon_3);
+                        img.setImageResource(R.drawable.ic_desert);
                         mGallery_history.addView(view);
                     }
                 }
