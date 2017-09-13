@@ -14,7 +14,10 @@ import java.io.InputStream;
 import java.lang.ref.SoftReference;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Li Yifei
@@ -96,7 +99,9 @@ public class AsyncImageLoader {
     }
 
     private String getImage(String title) {
-        String str = title.substring(0, 6 > title.length() ? title.length() : 6);
+        return "";
+
+        /*String str = title.substring(0, 6 > title.length() ? title.length() : 6);
         Log.d("image", str);
         HttpURLConnection coon = null;
         InputStream inputStream = null;
@@ -132,8 +137,7 @@ public class AsyncImageLoader {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        Log.d("image", "flase");
-        return "";
+        Log.d("image", "flase");*/
     }
 
     public interface ImageCallback {
