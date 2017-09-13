@@ -159,7 +159,8 @@ public class NewsService extends IntentService {
                     getHistory(_kind);
                     break;
                 case NEWSFAVORITE:
-                    getFavorite();
+                    final String kind_ = intent.getStringExtra(SERVICEKIND);
+                    getFavorite(kind_);
                     break;
                 case RECOMMEND:
                     final String _keyword = intent.getStringExtra(NEWSKEYWORD);
@@ -422,7 +423,7 @@ public class NewsService extends IntentService {
     }
 
 
-    private void getDetails(String news_ID, final String kind) {
+    private void getDetails(final String news_ID, final String kind) {
         ContentValues values = new ContentValues();
         values.put("Read", 1);
         dbmanager.update(NewsDatabase.ALL_TABLE_NAME, values, "ID=?", new String[]{news_ID});
@@ -443,6 +444,9 @@ public class NewsService extends IntentService {
             String pic = c.getString(c.getColumnIndex("Pictures"));
             String video = c.getString(c.getColumnIndex("Video"));
             News news = new News(tag, id, source, title, time, url, lang_type, author, pic, video, null);
+            ContentValues _values = new ContentValues();
+            _values.put("Read", 1);
+            dbmanager.update(NewsDatabase.ALL_TABLE_NAME, _values, "ID=?", new String[]{news_ID});
             news.read = true;
             byte data[] = c.getBlob(c.getColumnIndex("Details"));
             ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(data);
@@ -561,7 +565,9 @@ public class NewsService extends IntentService {
                                 News.NewsDetail.Word bagword = news.news_content.new Word(word, count);
                                 news.news_content.bagOfWords.add(bagword);
                             }
-
+                            ContentValues _values = new ContentValues();
+                            _values.put("Read", 1);
+                            dbmanager.update(NewsDatabase.ALL_TABLE_NAME, _values, "ID=?", new String[]{news_ID});
                             Log.d("wait", "a new");
                             Intent intent = new Intent();
                             intent.putExtra(NEWSDETAILS, news);
@@ -775,7 +781,7 @@ public class NewsService extends IntentService {
         sendBroadcast(intent);
     }
 
-    private void getFavorite() {
+    private void getFavorite(final String kind) {
         String str = SELECT + NewsDatabase.FAV_TABLE_NAME;
         Cursor c = dbmanager.query(str, null);
         ArrayList<News> favlist = new ArrayList<News>();
@@ -808,6 +814,7 @@ public class NewsService extends IntentService {
         }
         Intent intent = new Intent();
         intent.putExtra(FAVLIST, favlist);
+        intent.putExtra(SERVICEKIND, kind);
         intent.setAction(FAVACTION);
         sendBroadcast(intent);
 
