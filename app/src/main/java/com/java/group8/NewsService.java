@@ -74,6 +74,7 @@ public class NewsService extends IntentService {
     public static final String DETAIACTION = "android.intent.action.NEWSDETAILS";
     public static final String SEARCHACTION = "android.intent.action.NEWSSEARCH";
     public static final String HISTORYACTION = "android.intent.action.SEARCHHISTORY";
+    public static final String RESULTACTION = "android.intent.action.NEWSRESULT";
 
     //add return key
     public static final String NEWSLIST = "newslist";
