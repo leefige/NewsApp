@@ -284,6 +284,28 @@ public class ListViewFragment extends Fragment {
                     }
                 }
             }
+            else if(imageUrl.equals("") && ((MyApplication)(parent.getContext().getApplicationContext())).isImageOn()) {
+                Drawable cachedImage = null;
+                try {
+                    cachedImage = asyncImageLoader.loadDrawable(imageUrl, new AsyncImageLoader.ImageCallback() {
+                        public void imageLoaded(Drawable imageDrawable, String imageUrl) {
+                            ImageView imageViewByTag = listView.findViewWithTag(imageUrl);
+                            if (imageViewByTag != null) {
+                                imageViewByTag.setImageDrawable(imageDrawable);
+                            }
+                        }
+                    });
+                } catch (Exception e) {
+                    Log.d("Pic Exception", e.getMessage());
+                }
+                finally {
+                    if (cachedImage == null) {
+                        viewHolder.imageView.setImageResource(R.drawable.icon_3);
+                    } else {
+                        viewHolder.imageView.setImageDrawable(cachedImage);
+                    }
+                }
+            }
             else {
 //                Log.d("PIC AT "+position, "empty");
                 viewHolder.imageView.setImageResource(R.drawable.icon_3);
