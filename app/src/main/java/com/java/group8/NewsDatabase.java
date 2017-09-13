@@ -30,6 +30,7 @@ public class NewsDatabase extends SQLiteOpenHelper{
             "Pictures text, Video text, Read int, "+
             "Details blob)";
 
+
     private static final String HISTORY_DETAILS = "(History text primary key)";
 
     public NewsDatabase(Context context){
