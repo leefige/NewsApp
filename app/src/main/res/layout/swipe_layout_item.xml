@@ -39,9 +39,9 @@
             android:orientation="horizontal">
             <TextView
                 android:layout_height="match_parent"
-                android:layout_width="70dp"
+                android:layout_width="wrap_content"
                 android:id="@+id/url_favorite"
-                android:gravity="center"
+                android:gravity="center_vertical"
                 android:textColor="?attr/textColorNorm"
                 android:textSize="22sp"/>
             <!--What you want to show in SurfaceView-->
