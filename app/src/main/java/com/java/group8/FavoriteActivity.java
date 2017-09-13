@@ -217,9 +217,9 @@ public class FavoriteActivity extends AppCompatActivity {
                     favList.addAll(tmp);
                 }
             } else if(servicekind.equals(NewsService.DELEATE_ONE)) {
-
+                Toast.makeText(context, "该条已删除", Toast.LENGTH_SHORT).show();
             } else if(servicekind.equals(NewsService.DELETE_ALL)) {
-
+                Toast.makeText(context, "收藏已清空", Toast.LENGTH_SHORT).show();
             }
             int size = (favList == null) ? 0 : favList.size();
             lva = new ListViewAdapter(context, size);
@@ -275,6 +275,7 @@ class ListViewAdapter extends BaseSwipeAdapter {
                 intent.putExtra(para2, servicekind);
                 mContext.startService(intent);
                 ((FavoriteActivity)mContext).delFavListX(position_tmp);
+                //notifyDataSetChanged();
             }
         });
         final News tar = ((FavoriteActivity) mContext).getFavListX(position);

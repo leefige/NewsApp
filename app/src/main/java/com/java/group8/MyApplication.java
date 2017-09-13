@@ -49,7 +49,7 @@ public class MyApplication extends Application {
         t.setToNow(); // 取得系统时间。
         int hour = t.hour; // 0-23
         nightMode = hour < 7 || hour >= 23 ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
-        lastIndex = "t";
+        lastIndex = "科技";
         AppCompatDelegate.setDefaultNightMode(nightMode);
     }
 }

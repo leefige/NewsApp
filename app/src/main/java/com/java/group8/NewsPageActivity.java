@@ -60,6 +60,8 @@ public class NewsPageActivity extends AppCompatActivity {
     private ShareActionProvider mShareActionProvider;
     public static SpeechSynthesizer mTts;
 
+    private boolean favored;
+
     private News current_news;
 
     public News getCurrentNews() {return current_news;}
@@ -202,6 +204,7 @@ public class NewsPageActivity extends AppCompatActivity {
             Bundle bundle = intent.getExtras();
             String servicekind = bundle.getString(NewsService.SERVICEKIND);
             if(servicekind.equals(NewsService.DETAILS)) {
+                favored = bundle.getBoolean(NewsService.ISFAV);
                 current_news = (News) bundle.getSerializable(NewsService.NEWSDETAILS);
                 TextView title = (TextView) findViewById(R.id.title_newspage);
                 title.setText(current_news.news_Title);
@@ -233,7 +236,11 @@ public class NewsPageActivity extends AppCompatActivity {
                 content.setText(ss);
                 content.setMovementMethod(LinkMovementMethod.getInstance());
             } else if(servicekind.equals(NewsService.FAV)) {
-                Toast.makeText((NewsPageActivity)context, "233", Toast.LENGTH_SHORT).show();
+                favored = !favored;
+                if(favored)
+                    Toast.makeText((NewsPageActivity)context, "已收藏", Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText((NewsPageActivity)context, "取消收藏", Toast.LENGTH_SHORT).show();
             }
         }
         private void setSpanPart(SpannableString ss) {
@@ -245,7 +252,7 @@ public class NewsPageActivity extends AppCompatActivity {
                 p = Pattern.compile(i.word);
                 m = p.matcher(ss);
                 int start = 0;
-                while(m.find(start)) {
+                if(m.find(start)) {
                     ss.setSpan(new URLSpan("https://baike.baidu.com/item/" + i.word), m.start(),
                             m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     ss.setSpan(new ForegroundColorSpan(getResources().getColor(typedValue.resourceId)), m.start(),
@@ -257,7 +264,7 @@ public class NewsPageActivity extends AppCompatActivity {
                 p = Pattern.compile(i.word);
                 m = p.matcher(ss);
                 int start = 0;
-                while(m.find(start)) {
+                if(m.find(start)) {
                     ss.setSpan(new URLSpan("https://baike.baidu.com/item/" + i.word), m.start(),
                             m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     ss.setSpan(new ForegroundColorSpan(getResources().getColor(typedValue.resourceId)), m.start(),
@@ -269,7 +276,7 @@ public class NewsPageActivity extends AppCompatActivity {
                 p = Pattern.compile(i.word);
                 m = p.matcher(ss);
                 int start = 0;
-                while(m.find(start)) {
+                if(m.find(start)) {
                     ss.setSpan(new URLSpan("https://baike.baidu.com/item/" + i.word), m.start(),
                             m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                     ss.setSpan(new ForegroundColorSpan(getResources().getColor(typedValue.resourceId)), m.start(),
