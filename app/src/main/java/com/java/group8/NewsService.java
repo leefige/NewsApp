@@ -259,9 +259,10 @@ public class NewsService extends IntentService {
             public void run() {
                 String str = new String();
                 String a = new String();
+                Cursor c;
                 if(category == null) {
                     str = SELECT + NewsDatabase.ALL_TABLE_NAME;
-                    a = null;
+                    c = dbmanager.query(str, null);
                 }
                 else {
                     str = SELECT + NewsDatabase.ALL_TABLE_NAME + WHERECATEGORY;
@@ -303,9 +304,9 @@ public class NewsService extends IntentService {
                             a = "娱乐";
                             break;
                     }
+                    String[] _s = {a};
+                    c = dbmanager.query(str, _s);
                 }
-                String[] _s = {a};
-                Cursor c = dbmanager.query(str, _s);
                 int count = 0;
                 ArrayList<News> newslist = new ArrayList<News>();
                 while (c.moveToNext()){

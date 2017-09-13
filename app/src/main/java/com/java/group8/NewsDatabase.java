@@ -92,10 +92,4 @@ public class NewsDatabase extends SQLiteOpenHelper{
         db.update(table_name, values, whereClause, whereArgs);
     }
 
-
-
-
-
-
-
 }
