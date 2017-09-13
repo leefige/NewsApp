@@ -62,6 +62,8 @@ public class NewsPageActivity extends AppCompatActivity {
 
     private News current_news;
 
+    public News getCurrentNews() {return current_news;}
+
     public NewsPageActivity() {
         super();
     }
@@ -145,6 +147,7 @@ public class NewsPageActivity extends AppCompatActivity {
 
         MenuItem read_newspage = menu.findItem(R.id.read_newspage);
         MyReadActionProvider mActionProvider = (MyReadActionProvider) MenuItemCompat.getActionProvider(read_newspage);
+        mActionProvider.setContext(this);
 
         MenuItem share_newspage = menu.findItem(R.id.share_newspage);
         mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(share_newspage);
@@ -270,6 +273,9 @@ class MyReadActionProvider extends ActionProvider {
 //    public boolean onMenuItemClick(MenuItem item) {
 //        return true;
 //    }
+    public void setContext(Context context) {
+        this.context = context;
+    }
 
     public MyReadActionProvider(Context context) {
         super(context);
@@ -278,6 +284,7 @@ class MyReadActionProvider extends ActionProvider {
     public View onCreateActionView() {
         current_read_state = false;
         not_init = true;
+        current_read_character = false;
         return null;
     }
     public void onPrepareSubMenu(SubMenu subMenu) {
@@ -293,16 +300,19 @@ class MyReadActionProvider extends ActionProvider {
                         if(not_init) {
                             not_init = false;
                             current_read_state = true;
-                            final String strTextToSpeech = "科大讯飞，让世界聆听我们的声音";
+                            final String strTextToSpeech = ((NewsPageActivity)context).getCurrentNews().news_content.news_Content;
                             mTts.startSpeaking( strTextToSpeech, new SynthesizerListener() {
                                 @Override
                                 public void onSpeakBegin() {//开始播放
+                                    Toast.makeText(context, "开始播报", Toast.LENGTH_SHORT).show();
                                 }
                                 @Override
                                 public void onSpeakPaused() {//暂停播放
+                                    Toast.makeText(context, "暂停播报", Toast.LENGTH_SHORT).show();
                                 }
                                 @Override
                                 public void onSpeakResumed() {//继续播放
+                                    Toast.makeText(context, "继续播报", Toast.LENGTH_SHORT).show();
                                 }
                                 @Override
                                 public void onBufferProgress(int i, int i1, int i2, String s) {//合成进度
