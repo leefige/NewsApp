@@ -98,6 +98,9 @@ public class NewsPageActivity extends AppCompatActivity {
         intent.putExtra(key, value);
         String para1 = "news_ID";
         intent.putExtra(para1, news_ID);
+        String para2 = NewsService.SERVICEKIND;
+        String detail = NewsService.DETAILS;
+        intent.putExtra(para2, detail);
         startService(intent);
 
         TextView content = (TextView) findViewById(R.id.content_newspage);
@@ -167,6 +170,17 @@ public class NewsPageActivity extends AppCompatActivity {
             case R.id.share_newspage:
                 break;
             case R.id.favor_newspage:
+                Intent intent = new Intent(this, NewsService.class);
+                String key = NewsService.KEY;
+                String value = NewsService.FAV;
+                String para1 = NewsService.NEWSID;
+                String news_ID = current_news.news_ID;
+                String para2 = NewsService.SERVICEKIND;
+                String servicekind = NewsService.FAV;
+                intent.putExtra(key, value);
+                intent.putExtra(para1, news_ID);
+                intent.putExtra(para2, servicekind);
+                startService(intent);
                 break;
             case android.R.id.home:
                 this.finish(); // back button
@@ -186,37 +200,41 @@ public class NewsPageActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
-            current_news = (News) bundle.getSerializable(NewsService.NEWSDETAILS);
+            String servicekind = bundle.getString(NewsService.SERVICEKIND);
+            if(servicekind.equals(NewsService.DETAILS)) {
+                current_news = (News) bundle.getSerializable(NewsService.NEWSDETAILS);
+                TextView title = (TextView) findViewById(R.id.title_newspage);
+                title.setText(current_news.news_Title);
+                String src = !current_news.news_content.news_Journal.equals("") ? current_news.news_content.news_Journal :
+                        !current_news.news_Author.equals("") ? current_news.news_Author :
+                                !current_news.news_Source.equals("") ? current_news.news_Source : "未知来源";
+                ((TextView) findViewById(R.id.journal_newspage)).setText(src);
+                if(current_news.news_Time.length() > 8){
+                    String time_string = current_news.news_Time.substring(0, 8);
+                    String show_time = time_string.substring(0, 4)+"年"+time_string.substring(4, 6)+"月"+time_string.substring(6, 8)+"日";
+                    ((TextView) findViewById(R.id.time_newspage)).setText(show_time);
+                }
 
-            TextView title = (TextView) findViewById(R.id.title_newspage);
-            title.setText(current_news.news_Title);
-            String src = !current_news.news_content.news_Journal.equals("") ? current_news.news_content.news_Journal :
-                    !current_news.news_Author.equals("") ? current_news.news_Author :
-                            !current_news.news_Source.equals("") ? current_news.news_Source : "未知来源";
-            ((TextView) findViewById(R.id.journal_newspage)).setText(src);
-            if(current_news.news_Time.length() > 8){
-                String time_string = current_news.news_Time.substring(0, 8);
-                String show_time = time_string.substring(0, 4)+"年"+time_string.substring(4, 6)+"月"+time_string.substring(6, 8)+"日";
-                ((TextView) findViewById(R.id.time_newspage)).setText(show_time);
+                //String time_string = current_news.news_Time.substring(0, 8);
+                //String show_time = time_string.substring(0, 4)+"年"+time_string.substring(4, 6)+"月"+time_string.substring(6, 8)+"日";
+                //((TextView) findViewById(R.id.time_newspage)).setText(show_time);
+
+                String my_news_content = current_news.news_content.news_Content;
+                Pattern p =  Pattern.compile("\\s\\s+");
+                Matcher matcher = p.matcher(my_news_content);
+                my_news_content = matcher.replaceAll("\n\n");
+                p = Pattern.compile("^\\s+");
+                matcher = p.matcher(my_news_content);
+                my_news_content = matcher.replaceFirst("");
+
+                TextView content = (TextView) findViewById(R.id.content_newspage);
+                SpannableString ss = new SpannableString(my_news_content);
+                setSpanPart(ss);
+                content.setText(ss);
+                content.setMovementMethod(LinkMovementMethod.getInstance());
+            } else if(servicekind.equals(NewsService.FAV)) {
+                Toast.makeText((NewsPageActivity)context, "233", Toast.LENGTH_SHORT).show();
             }
-
-            //String time_string = current_news.news_Time.substring(0, 8);
-            //String show_time = time_string.substring(0, 4)+"年"+time_string.substring(4, 6)+"月"+time_string.substring(6, 8)+"日";
-            //((TextView) findViewById(R.id.time_newspage)).setText(show_time);
-
-            String my_news_content = current_news.news_content.news_Content;
-            Pattern p =  Pattern.compile("\\s\\s+");
-            Matcher matcher = p.matcher(my_news_content);
-            my_news_content = matcher.replaceAll("\n\n");
-            p = Pattern.compile("^\\s+");
-            matcher = p.matcher(my_news_content);
-            my_news_content = matcher.replaceFirst("");
-
-            TextView content = (TextView) findViewById(R.id.content_newspage);
-            SpannableString ss = new SpannableString(my_news_content);
-            setSpanPart(ss);
-            content.setText(ss);
-            content.setMovementMethod(LinkMovementMethod.getInstance());
         }
         private void setSpanPart(SpannableString ss) {
             Pattern p;
