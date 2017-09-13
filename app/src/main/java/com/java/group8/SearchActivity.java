@@ -77,6 +77,11 @@ public class SearchActivity extends AppCompatActivity {
         initData();
         //initView();
     }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
+    }
 
     @Override
     public void onResume() {
