@@ -103,12 +103,12 @@ public class SearchActivity extends AppCompatActivity {
         //init commend command
         Intent intent_commend = new Intent(this, NewsService.class);
         String key = NewsService.KEY;
-        String value = NewsService.SEARCH;
+        String value = NewsService.RESULT;
         String para1 = NewsService.NEWSKEYWORD;
         MyApplication ma = (MyApplication) getApplicationContext();
         String news_ID = ma.getLastIndex();
-        String para2 = NewsService.SERVICEKIND;
-        String servicekind = NewsService.SEARCH;
+        //String para2 = NewsService.SERVICEKIND;
+        //String servicekind = NewsService.SEARCH;
         intent_commend.putExtra(key, value);
         intent_commend.putExtra(para1, news_ID);
         //intent_commend.putExtra(para2, servicekind);

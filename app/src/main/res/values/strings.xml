@@ -29,7 +29,7 @@
     <string name="nav_title_clear_cache">清除缓存</string>
     <string name="nav_item_setting">设置</string>
     <string name="nav_title_favourite">我的收藏</string>
-    <string name="nav_title_night_mode">夜间模式</string>
+    <string name="nav_title_image_mode">省流量模式</string>
     <string name="title_activity_category">栏目</string>
     <string name="loading">加载中</string>
     <string name="label_latest">最新</string>

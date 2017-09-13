@@ -60,7 +60,6 @@ public class NewsService extends IntentService {
     public static final String ISFAV = "isfav";
     public static final String SERVICEKIND = "_servicekind";
 
-
     //add value
     public static final String LIST = "List";
     public static final String DETAILS = "Details";
@@ -108,7 +107,7 @@ public class NewsService extends IntentService {
     NewsDatabase dbmanager = null;
 
     @Override
-    public void onCreate(){
+    public void onCreate() {
         super.onCreate();
         dbmanager = new NewsDatabase(this);
         Log.d("dbmanager", "create");
@@ -121,10 +120,10 @@ public class NewsService extends IntentService {
             boolean flag = false;
 
             final String key = intent.getStringExtra(KEY);
-            switch (key){
+            switch (key) {
                 case LIST:
                     Bundle b = intent.getExtras();
-                    getNews((NewsCategory)b.get(NEWSCATEGORY), (String) b.get(MOVETYPE));
+                    getLatest((NewsCategory) b.get(NEWSCATEGORY), (String) b.get(MOVETYPE));
                     Log.d("start", "startservice");
                     break;
                 case DETAILS:
@@ -159,8 +158,8 @@ public class NewsService extends IntentService {
                     break;
                 case LATEST:
                     Bundle _b = intent.getExtras();
-                    ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
-                    if(cm != null) {
+                    ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+                    if (cm != null) {
                         NetworkInfo[] infos = cm.getAllNetworkInfo();
                         if (infos != null) {
                             for (NetworkInfo ni : infos) {
@@ -171,10 +170,10 @@ public class NewsService extends IntentService {
                             }
                         }
                     }
-                    if(flag == true)
-                        getLatest((NewsCategory)_b.get(NEWSCATEGORY), (String) _b.get(MOVETYPE));
+                    if (flag == true)
+                        getLatest((NewsCategory) _b.get(NEWSCATEGORY), (String) _b.get(MOVETYPE));
                     else
-                        getNews((NewsCategory)_b.get(NEWSCATEGORY), (String) _b.get(MOVETYPE));
+                        getNews((NewsCategory) _b.get(NEWSCATEGORY), (String) _b.get(MOVETYPE));
                     break;
                 default:
                     break;
@@ -198,10 +197,11 @@ public class NewsService extends IntentService {
         final OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .get()
-                .url(category == null? LATEST_URL : LATEST_CATEGORY_URL + category.getIndex())
+                .url(category == null ? LATEST_URL : LATEST_CATEGORY_URL + category.getIndex())
                 .build();
 
         Log.d("URL REQUEST", request.toString());
+
 
         new Thread(new Runnable() {
             @Override
@@ -215,14 +215,16 @@ public class NewsService extends IntentService {
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        if(!response.isSuccessful())
+                        if (!response.isSuccessful())
                             throw new IOException("Unexpected code " + response.code());
+                        //Log.d("Response", response.body().string());
                         String body = response.body().string();
                         JSONObject json = JSONObject.fromObject(body);
                         JSONArray list = json.getJSONArray("list");
                         ArrayList<News> newslist = new ArrayList<News>();
-                        for(int i=0; i<list.size(); i++){
+                        for (int i = 0; i < list.size(); i++) {
                             JSONObject json_obj = list.getJSONObject(i);
+                            //Log.d("res", json_obj.toString());
                             String id = json_obj.getString("news_ID");
                             String tag = json_obj.getString("newsClassTag");
                             String source = json_obj.getString("news_Source");
@@ -238,7 +240,7 @@ public class NewsService extends IntentService {
                             String _str = SELECT + NewsDatabase.ALL_TABLE_NAME + WHEREID;
                             String[] _s = {id};
                             Cursor c = dbmanager.query(_str, _s);
-                            if(c.moveToFirst() == false){
+                            if (c.moveToFirst() == false) {
                                 ContentValues values = new ContentValues();
                                 values.put("ID", id);
                                 values.put("ClassTag", tag);
@@ -252,11 +254,11 @@ public class NewsService extends IntentService {
                                 values.put("Video", video);
                                 values.put("Read", 0);
                                 dbmanager.insert(values, NewsDatabase.ALL_TABLE_NAME);
-                            }
-                            else{
+                            } else {
                                 news.read = true;
                             }
                             newslist.add(news);
+                            //Log.d("tag", tag);
                         }
                         Log.d("wait", "a minute");
                         Intent intent = new Intent();
@@ -265,26 +267,26 @@ public class NewsService extends IntentService {
                         intent.putExtra(MOVETYPE, move);
                         intent.setAction(MAINACTION);
                         sendBroadcast(intent);
+
                     }
                 });
             }
         }).start();
-
     }
 
-    private void getNews(final NewsCategory category, final String move){
+
+    private void getNews(final NewsCategory category, final String move) {
         new Thread(new Runnable() {
             @Override
             public void run() {
                 String str = new String();
                 String a = new String();
                 Cursor c;
-                if(category == null) {
+                if (category == null) {
                     Log.d("sad", "null");
                     str = SELECT + NewsDatabase.ALL_TABLE_NAME;
                     c = dbmanager.query(str, null);
-                }
-                else {
+                } else {
                     Log.d("sad", "have");
                     str = SELECT + NewsDatabase.ALL_TABLE_NAME + WHERECATEGORY;
                     switch (category) {
@@ -331,25 +333,26 @@ public class NewsService extends IntentService {
                 Log.d("cors", String.valueOf(c.moveToFirst()));
                 int count = 0;
                 ArrayList<News> newslist = new ArrayList<News>();
-                while (c.moveToNext()){
+                while (c.moveToNext()) {
                     String id = c.getString(c.getColumnIndex("ID"));
                     String tag = c.getString(c.getColumnIndex("ClassTag"));
                     String source = c.getString(c.getColumnIndex("Source"));
                     String title = c.getString(c.getColumnIndex("Title"));
                     String time = c.getString(c.getColumnIndex("Time"));
                     String url = c.getString(c.getColumnIndex("URL"));
-                    String lang_type = c.getString(c.getColumnIndex("Type"));;
+                    String lang_type = c.getString(c.getColumnIndex("Type"));
+                    ;
                     String author = c.getString(c.getColumnIndex("Author"));
                     String pic = c.getString(c.getColumnIndex("Pictures"));
                     String video = c.getString(c.getColumnIndex("Video"));
                     int read = c.getInt(c.getColumnIndex("Read"));
                     News news = new News(tag, id, source, title, time, url, author, lang_type, pic, video, null);
-                    news.read = read == 1? true : false;
+                    news.read = read == 1 ? true : false;
                     newslist.add(news);
                     count++;
                     Log.d("count", String.valueOf(count));
                     Log.d("cate", String.valueOf(category.getIndex()));
-                    if(count == 20);
+                    if (count == 20) ;
                     break;
                 }
                 Intent intent = new Intent();
@@ -362,12 +365,13 @@ public class NewsService extends IntentService {
             }
         }).start();
     }
-    private String getImage(String title){
-        String str = title.substring(0, 6>title.length()?title.length():6);
+
+    private String getImage(String title) {
+        String str = title.substring(0, 6 > title.length() ? title.length() : 6);
         Log.d("image", str);
         HttpURLConnection coon = null;
         InputStream inputStream = null;
-        try{
+        try {
             URL mURL = new URL(IMAGE_URL + str);
             coon = (HttpURLConnection) mURL.openConnection();
             coon.setReadTimeout(1000);
@@ -375,7 +379,7 @@ public class NewsService extends IntentService {
 
             coon.setRequestMethod("GET");
             int statusCode = coon.getResponseCode();
-            if(statusCode == 200){
+            if (statusCode == 200) {
                 InputStream is = coon.getInputStream();
                 ByteArrayOutputStream os = new ByteArrayOutputStream();
                 // 模板代码 必须熟练
@@ -390,13 +394,13 @@ public class NewsService extends IntentService {
                 JSONObject json = JSONObject.fromObject(state);
                 //Log.d("state", state);
                 JSONArray json_array = json.getJSONArray("value");
-                if(json_array.size() == 0)
+                if (json_array.size() == 0)
                     return "";
                 String pic = json_array.getJSONObject(0).getString("contentUrl");
                 Log.d("image", pic);
                 return pic;
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         Log.d("image", "flase");
@@ -404,7 +408,7 @@ public class NewsService extends IntentService {
     }
 
 
-    private void getDetails(String news_ID){
+    private void getDetails(String news_ID) {
         ContentValues values = new ContentValues();
         values.put("Read", 1);
         dbmanager.update(NewsDatabase.ALL_TABLE_NAME, values, "ID=?", new String[]{news_ID});
@@ -412,14 +416,15 @@ public class NewsService extends IntentService {
         String str = SELECT + NewsDatabase.FAV_TABLE_NAME + WHEREID;
         String[] _ss = {news_ID};
         Cursor c = dbmanager.query(str, _ss);
-        if(c.moveToFirst() == true){
+        if (c.moveToFirst() == true) {
             String id = c.getString(c.getColumnIndex("ID"));
             String tag = c.getString(c.getColumnIndex("ClassTag"));
             String source = c.getString(c.getColumnIndex("Source"));
             String title = c.getString(c.getColumnIndex("Title"));
             String time = c.getString(c.getColumnIndex("Time"));
             String url = c.getString(c.getColumnIndex("URL"));
-            String lang_type = c.getString(c.getColumnIndex("Type"));;
+            String lang_type = c.getString(c.getColumnIndex("Type"));
+            ;
             String author = c.getString(c.getColumnIndex("Author"));
             String pic = c.getString(c.getColumnIndex("Pictures"));
             String video = c.getString(c.getColumnIndex("Video"));
@@ -441,12 +446,11 @@ public class NewsService extends IntentService {
             intent.putExtra(ISFAV, true);
             intent.setAction(DETAIACTION);
             sendBroadcast(intent);
-        }
-        else {
+        } else {
             final OkHttpClient client = new OkHttpClient();
             final Request request = new Request.Builder()
                     .get()
-                    .url(DETAIL_URL+news_ID)
+                    .url(DETAIL_URL + news_ID)
                     .build();
             new Thread(new Runnable() {
                 @Override
@@ -459,7 +463,7 @@ public class NewsService extends IntentService {
 
                         @Override
                         public void onResponse(Call call, Response response) throws IOException {
-                            if(!response.isSuccessful())
+                            if (!response.isSuccessful())
                                 throw new IOException("Unexpected code " + response.code());
                             String body = response.body().string();
                             Log.d("Response", body);
@@ -489,12 +493,12 @@ public class NewsService extends IntentService {
 
                             news.news_content.seggedPListOfContent = new ArrayList<String>();
                             JSONArray listcontent = json_obj.getJSONArray("seggedPListOfContent");
-                            for(int i=0; i<listcontent.size(); i++){
+                            for (int i = 0; i < listcontent.size(); i++) {
                                 news.news_content.seggedPListOfContent.add(listcontent.getString(i));
                             }
                             news.news_content.persons = new ArrayList<News.NewsDetail.Person>();
                             JSONArray person_json = json_obj.getJSONArray("persons");
-                            for(int i=0; i<person_json.size(); i++){
+                            for (int i = 0; i < person_json.size(); i++) {
                                 JSONObject person_json_obj = person_json.getJSONObject(i);
                                 String word = person_json_obj.getString("word");
                                 int count = person_json_obj.getInt("count");
@@ -504,7 +508,7 @@ public class NewsService extends IntentService {
 
                             news.news_content.locations = new ArrayList<News.NewsDetail.Location>();
                             JSONArray location_json = json_obj.getJSONArray("locations");
-                            for(int i=0; i<location_json.size(); i++){
+                            for (int i = 0; i < location_json.size(); i++) {
                                 JSONObject location_json_obj = location_json.getJSONObject(i);
                                 String word = location_json_obj.getString("word");
                                 int count = location_json_obj.getInt("count");
@@ -513,16 +517,16 @@ public class NewsService extends IntentService {
                             }
                             news.news_content.organizations = new ArrayList<News.NewsDetail.Location>();
                             JSONArray organ_json = json_obj.getJSONArray("organizations");
-                            for(int i=0; i<organ_json.size(); i++){
+                            for (int i = 0; i < organ_json.size(); i++) {
                                 JSONObject organ_json_obj = organ_json.getJSONObject(i);
-                                String word =organ_json_obj.getString("word");
+                                String word = organ_json_obj.getString("word");
                                 int count = organ_json_obj.getInt("count");
                                 News.NewsDetail.Location location = news.news_content.new Location(word, count);
                                 news.news_content.organizations.add(location);
                             }
                             news.news_content.Keywords = new ArrayList<News.NewsDetail.Keyword>();
                             JSONArray keyword_json = json_obj.getJSONArray("Keywords");
-                            for(int i=0; i<keyword_json.size(); i++){
+                            for (int i = 0; i < keyword_json.size(); i++) {
                                 JSONObject keyword_json_obj = keyword_json.getJSONObject(i);
                                 String word = keyword_json_obj.getString("word");
                                 double count = keyword_json_obj.getDouble("score");
@@ -531,7 +535,7 @@ public class NewsService extends IntentService {
                             }
                             news.news_content.bagOfWords = new ArrayList<News.NewsDetail.Word>();
                             JSONArray bag_json = json_obj.getJSONArray("bagOfWords");
-                            for(int i=0; i<bag_json.size(); i++){
+                            for (int i = 0; i < bag_json.size(); i++) {
                                 JSONObject bag_json_obj = bag_json.getJSONObject(i);
                                 String word = bag_json_obj.getString("word");
                                 double count = bag_json_obj.getDouble("score");
@@ -551,10 +555,9 @@ public class NewsService extends IntentService {
             }).start();
 
         }
-
     }
 
-    private void getResult(String keyWord){
+    private void getResult(String keyWord) {
         final OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .get()
@@ -565,10 +568,9 @@ public class NewsService extends IntentService {
         Cursor d = dbmanager.query(_str, _s);
         ContentValues values = new ContentValues();
         values.put("History", keyWord);
-        if(d.moveToFirst() == false){
+        if (d.moveToFirst() == false) {
             dbmanager.insert(values, NewsDatabase.HIS_TABLE_NAME);
-        }
-        else{
+        } else {
             dbmanager.update(NewsDatabase.HIS_TABLE_NAME, values, "History=?", new String[]{keyWord});
             Log.d("update", "sucess");
         }
@@ -585,14 +587,14 @@ public class NewsService extends IntentService {
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        if(!response.isSuccessful())
+                        if (!response.isSuccessful())
                             throw new IOException("Unexpected code " + response.code());
                         //Log.d("Response", response.body().string());
                         String body = response.body().string();
                         JSONObject json = JSONObject.fromObject(body);
                         JSONArray list = json.getJSONArray("list");
                         ArrayList<News> newslist = new ArrayList<News>();
-                        for(int i=0; i<list.size(); i++){
+                        for (int i = 0; i < list.size(); i++) {
                             JSONObject json_obj = list.getJSONObject(i);
                             //Log.d("res", json_obj.toString());
                             String id = json_obj.getString("news_ID");
@@ -621,7 +623,7 @@ public class NewsService extends IntentService {
         }).start();
     }
 
-    private void getRecommend(String keyWord, final String kind){
+    private void getRecommend(String keyWord, final String kind) {
         final OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .get()
@@ -639,14 +641,14 @@ public class NewsService extends IntentService {
 
                     @Override
                     public void onResponse(Call call, Response response) throws IOException {
-                        if(!response.isSuccessful())
+                        if (!response.isSuccessful())
                             throw new IOException("Unexpected code " + response.code());
                         //Log.d("Response", response.body().string());
                         String body = response.body().string();
                         JSONObject json = JSONObject.fromObject(body);
                         JSONArray list = json.getJSONArray("list");
                         ArrayList<News> newslist = new ArrayList<News>();
-                        for(int i=0; i<list.size(); i++){
+                        for (int i = 0; i < list.size(); i++) {
                             JSONObject json_obj = list.getJSONObject(i);
                             //Log.d("res", json_obj.toString());
                             String id = json_obj.getString("news_ID");
@@ -676,24 +678,24 @@ public class NewsService extends IntentService {
         }).start();
     }
 
-    private void addFavorite(String news_ID){
+    private void addFavorite(String news_ID) {
         String _str = SELECT + NewsDatabase.FAV_TABLE_NAME + WHEREID;
         String[] _s = {news_ID};
         Cursor c = dbmanager.query(_str, _s);
-        if(c.moveToFirst() == true){
+        if (c.moveToFirst() == true) {
             dbmanager.delete(news_ID, NewsDatabase.FAV_TABLE_NAME);
-        }
-        else{
+        } else {
             _str = SELECT + NewsDatabase.ALL_TABLE_NAME + WHEREID;
             c = dbmanager.query(_str, _s);
-            if(c.moveToFirst() == true){
+            if (c.moveToFirst() == true) {
                 String id = c.getString(c.getColumnIndex("ID"));
                 String tag = c.getString(c.getColumnIndex("ClassTag"));
                 String source = c.getString(c.getColumnIndex("Source"));
                 String title = c.getString(c.getColumnIndex("Title"));
                 String time = c.getString(c.getColumnIndex("Time"));
                 String url = c.getString(c.getColumnIndex("URL"));
-                String lang_type = c.getString(c.getColumnIndex("Type"));;
+                String lang_type = c.getString(c.getColumnIndex("Type"));
+                ;
                 String author = c.getString(c.getColumnIndex("Author"));
                 String pic = c.getString(c.getColumnIndex("Pictures"));
                 String video = c.getString(c.getColumnIndex("Video"));
@@ -717,15 +719,15 @@ public class NewsService extends IntentService {
         }
     }
 
-    private void clearLocal(){
+    private void clearLocal() {
         dbmanager.delete_all(NewsDatabase.ALL_TABLE_NAME);
     }
 
-    private void getHistory(final String kind){
+    private void getHistory(final String kind) {
         String str = SELECT + NewsDatabase.HIS_TABLE_NAME;
         Cursor c = dbmanager.query(str, null);
         ArrayList<String> historylist = new ArrayList<String>();
-        for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()){
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
             historylist.add(c.getString(c.getColumnIndex("History")));
         }
         Intent intent = new Intent();
@@ -735,11 +737,11 @@ public class NewsService extends IntentService {
         sendBroadcast(intent);
     }
 
-    private void getFavorite(){
+    private void getFavorite() {
         String str = SELECT + NewsDatabase.FAV_TABLE_NAME;
         Cursor c = dbmanager.query(str, null);
         ArrayList<News> favlist = new ArrayList<News>();
-        for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()){
+        for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
             String id = c.getString(c.getColumnIndex("ID"));
             String classtag = c.getString(c.getColumnIndex("ClassTag"));
             String source = c.getString(c.getColumnIndex("Source"));
@@ -751,7 +753,7 @@ public class NewsService extends IntentService {
             String Pictures = c.getString(c.getColumnIndex("Pictures"));
             String Video = c.getString(c.getColumnIndex("Video"));
             int Read = c.getInt(c.getColumnIndex("Read"));
-            boolean _read = Read == 1? true : false;
+            boolean _read = Read == 1 ? true : false;
             byte data[] = c.getBlob(c.getColumnIndex("Details"));
             News news = new News(classtag, id, source, Title, Time, URL, Author, Type, Pictures, Video, null);
             news.read = _read;
@@ -772,6 +774,4 @@ public class NewsService extends IntentService {
         sendBroadcast(intent);
 
     }
-
-
 }

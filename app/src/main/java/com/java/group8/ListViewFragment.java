@@ -33,10 +33,11 @@ public class ListViewFragment extends Fragment {
 
     private final int INIT_SIZE = 20;
     public static final int REFRESH_DELAY = 2000;
-    public static final int LOAD_DELAY = 1500;
+    public static final int LOAD_DELAY = 2000;
 
     private ViewGroup rootView = null;
     private PullUpRefreshList listView = null;
+
     private SampleAdapter adapter = null;
     private PullToRefreshView pullDownView;
 
@@ -50,9 +51,18 @@ public class ListViewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+//        setRetainInstance(true);
         newsList = new ArrayList<>();
         updateList(category);
+    }
+
+    public SampleAdapter getAdapter() {
+        return adapter;
+    }
+
+    public void goToTop() {
+        GoTopTask task=new GoTopTask();
+        task.execute(0);
     }
 
     public void notifyRead() {
@@ -243,7 +253,7 @@ public class ListViewFragment extends Fragment {
             ImageView tmpImageView = viewHolder.imageView;
             tmpImageView.setTag(imageUrl);
 
-            if (!imageUrl.equals("")) {
+            if (!imageUrl.equals("") && ((MyApplication)(parent.getContext().getApplicationContext())).isImageOn()) {
 //                Log.d("PIC AT "+position, imageUrl);
                 Drawable cachedImage = null;
                 try {
@@ -268,6 +278,7 @@ public class ListViewFragment extends Fragment {
             }
             else {
 //                Log.d("PIC AT "+position, "empty");
+                viewHolder.imageView.setImageResource(R.drawable.icon_3);
             }
 
             convertView.setOnClickListener(new View.OnClickListener() {
@@ -281,6 +292,10 @@ public class ListViewFragment extends Fragment {
                 }
             });
             return convertView;
+        }
+
+        public ListView getListView() {
+            return listView;
         }
 
         class ViewHolder {
@@ -298,5 +313,52 @@ public class ListViewFragment extends Fragment {
                 categoryView = convertView.findViewById(R.id.news_category);
             }
         }
+    }
+
+    private class GoTopTask extends AsyncTask<Integer, Integer, String> {
+        private int time;
+        final private int MAX_SCROLL = 25;
+        @Override
+        protected void onPreExecute() {
+            //回到顶部时间置0  此处的时间不是侠义上的时间
+            time=0;
+            super.onPreExecute();
+        }
+        @Override
+        protected String doInBackground(Integer... params) {
+            // TODO Auto-generated method stub
+
+            for(int i=params[0];i>=0;i--){
+                publishProgress(i);
+                //返回顶部时间耗费15个item还没回去，则直接去顶部
+                //目的：要产生滚动的假象，但也不能耗时过多
+                time++;
+                if(time > MAX_SCROLL){
+                    publishProgress(0);
+                    return null;
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+            return null;
+        }
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            adapter.getListView().setSelection(values[0]);
+            super.onProgressUpdate(values);
+        }
+        @Override
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+        }
+        @Override
+        protected void onCancelled() {
+            // TODO Auto-generated method stub
+            super.onCancelled();
+        }
+
     }
 }
