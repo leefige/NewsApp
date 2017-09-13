@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/share_newspage"
-        android:icon="@drawable/ic_main_search"
+        android:icon="@drawable/ic_share"
         android:title="分享"
         app:showAsAction="ifRoom"/>
     <item
