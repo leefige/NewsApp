@@ -267,6 +267,9 @@ public class NewsService extends IntentService {
                                 values.put("Read", 0);
                                 dbmanager.insert(values, NewsDatabase.ALL_TABLE_NAME);
                             }
+                            else{
+                                news.read = c.getInt(c.getColumnIndex("Read")) == 1? true : false;
+                            }
                             newslist.add(news);
                             if (c != null && !c.isClosed())
                                 c.close();
