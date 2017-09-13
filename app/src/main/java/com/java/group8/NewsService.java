@@ -75,6 +75,7 @@ public class NewsService extends IntentService {
     public static final String LATEST = "Latest";
     public static final String DELEATE_ONE = "Deleteone";
     public static final String FAV_ONE = "Fav_one";
+    public static final String DELETE_ALL = "Deleteall";
 
     //add action
 
