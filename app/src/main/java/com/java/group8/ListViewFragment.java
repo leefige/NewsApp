@@ -51,7 +51,7 @@ public class ListViewFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRetainInstance(true);
+//        setRetainInstance(true);
         newsList = new ArrayList<>();
         updateList(category);
     }
@@ -253,7 +253,7 @@ public class ListViewFragment extends Fragment {
             ImageView tmpImageView = viewHolder.imageView;
             tmpImageView.setTag(imageUrl);
 
-            if (!imageUrl.equals("")) {
+            if (!imageUrl.equals("") && ((MyApplication)(parent.getContext().getApplicationContext())).isImageOn()) {
 //                Log.d("PIC AT "+position, imageUrl);
                 Drawable cachedImage = null;
                 try {
@@ -278,6 +278,7 @@ public class ListViewFragment extends Fragment {
             }
             else {
 //                Log.d("PIC AT "+position, "empty");
+                viewHolder.imageView.setImageResource(R.drawable.icon_3);
             }
 
             convertView.setOnClickListener(new View.OnClickListener() {

@@ -16,9 +16,9 @@
 
         <menu>
             <item
-                android:id="@+id/nav_night"
-                android:icon="@drawable/ic_menu_night"
-                android:title="@string/nav_title_night_mode"/>
+                android:id="@+id/nav_image"
+                android:icon="@drawable/ic_menu_gallery"
+                android:title="@string/nav_title_image_mode"/>
             <item
                 android:id="@+id/nav_manage"
                 android:icon="@drawable/ic_menu_manage"
