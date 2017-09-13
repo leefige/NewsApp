@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class NewsDatabase extends SQLiteOpenHelper{
     private static final int DB_VERSION = 1;
-    private static final String DB_NAME = "Newss.db";
+    private static final String DB_NAME = "Newsss.db";
     public static final String ALL_TABLE_NAME = "AllNews";
     public static final String FAV_TABLE_NAME = "FavNews";
     public static final String HIS_TABLE_NAME = "SearchHistory";

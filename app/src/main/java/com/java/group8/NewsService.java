@@ -653,7 +653,7 @@ public class NewsService extends IntentService {
                             String intro = json_obj.getString("news_Intro");
                             News news = new News(tag, id, source, title, time, url, author, lang_type, pic, video, intro);
                             newslist.add(news);
-                            //Log.d("tag", tag);
+                            Log.d("tag", tag);
                         }
                         Log.d("wait", "a minute");
                         Intent intent = new Intent();
