@@ -57,13 +57,13 @@ public class NewsService extends IntentService {
     public static final String MOVETYPE = "_move";
     public static final String ISFAV = "isfav";
     public static final String SERVICEKIND = "_servicekind";
-    public static final String RECOMMEND = "recommed";
 
 
     //add value
     public static final String LIST = "List";
     public static final String DETAILS = "Details";
-    public static final String SEARCH = "Search";
+    public static final String RESULT = "Result";
+    public static final String RECOMMEND = "Recommed";
     public static final String REFRESH = "Refresh";
     public static final String LOAD = "Load";
     public static final String FAV = "Fav";
@@ -77,9 +77,8 @@ public class NewsService extends IntentService {
     public static final String MAINACTION = "android.intent.action.NEWSLIST";
     public static final String DETAIACTION = "android.intent.action.NEWSDETAILS";
     public static final String SEARCHACTION = "android.intent.action.NEWSSEARCH";
-    public static final String HISTORYACTION = "android.intent.action.SEARCHHISTORY";
     public static final String FAVACTION = "android.intent.action.GETFAV";
-    public static final String RECACTION = "android.intent.action.RECOMMED";
+    public static final String RECOMMEDACTION = "android.intent.action.RECOMMED";
 
     //add return key
     public static final String NEWSLIST = "newslist";
@@ -128,7 +127,7 @@ public class NewsService extends IntentService {
                     getDetails(news_ID);
                     Log.d("start", "getdetails");
                     break;
-                case SEARCH:
+                case RESULT:
                     final String keyword = intent.getStringExtra(NEWSKEYWORD);
                     getResult(keyword);
                     Log.d("start", "getresult");
@@ -142,14 +141,16 @@ public class NewsService extends IntentService {
                     clearLocal();
                     break;
                 case HISTORY:
-                    getHistory();
+                    final String _kind = intent.getStringExtra(SERVICEKIND);
+                    getHistory(_kind);
                     break;
                 case NEWSFAVORITE:
                     getFavorite();
                     break;
                 case RECOMMEND:
                     final String _keyword = intent.getStringExtra(NEWSKEYWORD);
-                    getRecommend(_keyword);
+                    final String _kind_ = intent.getStringExtra(SERVICEKIND);
+                    getRecommend(_keyword, _kind_);
                     break;
                 default:
                     break;
@@ -224,9 +225,9 @@ public class NewsService extends IntentService {
                                 if(c.moveToFirst() == true)
                                     news.read = true;
                             }
-                            if(news.news_Pictures.equals("")){
+                            /*if(news.news_Pictures.equals("")){
                                 news.news_Pictures = getImage(title);
-                            }
+                            }*/
                             newslist.add(news);
                             //Log.d("tag", tag);
                         }
@@ -412,7 +413,7 @@ public class NewsService extends IntentService {
                             News.NewsDetail.Word bagword = news.news_content.new Word(word, count);
                             news.news_content.bagOfWords.add(bagword);
                         }
-                        ByteArrayOutputStream OutputStream = new ByteArrayOutputStream();
+                        /*ByteArrayOutputStream OutputStream = new ByteArrayOutputStream();
                         try{
                             ObjectOutputStream objectOutputStream = new ObjectOutputStream(OutputStream);
                             objectOutputStream.writeObject(news.news_content);
@@ -430,7 +431,7 @@ public class NewsService extends IntentService {
                         } catch (Exception e) {
                             // TODO Auto-generated catch block
                             e.printStackTrace();
-                        }
+                        }*/
 
 
                         Log.d("wait", "a new");
@@ -512,7 +513,7 @@ public class NewsService extends IntentService {
         }).start();
     }
 
-    private void getRecommend(String keyWord){
+    private void getRecommend(String keyWord, final String kind){
         final OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .get()
@@ -558,7 +559,8 @@ public class NewsService extends IntentService {
                         Log.d("wait", "a minute");
                         Intent intent = new Intent();
                         intent.putExtra(NEWSLIST, newslist);
-                        intent.setAction(RECACTION);
+                        intent.putExtra(SERVICEKIND, kind);
+                        intent.setAction(RECOMMEDACTION);
                         sendBroadcast(intent);
                     }
                 });
@@ -611,7 +613,7 @@ public class NewsService extends IntentService {
         dbmanager.delete_all(NewsDatabase.ALL_TABLE_NAME);
     }
 
-    private void getHistory(){
+    private void getHistory(final String kind){
         String str = SELECT + NewsDatabase.HIS_TABLE_NAME;
         Cursor c = dbmanager.query(str, null);
         ArrayList<String> historylist = new ArrayList<String>();
@@ -620,7 +622,8 @@ public class NewsService extends IntentService {
         }
         Intent intent = new Intent();
         intent.putExtra(HISTORYLIST, historylist);
-        intent.setAction(HISTORYACTION);
+        intent.putExtra(SERVICEKIND, kind);
+        intent.setAction(RECOMMEDACTION);
         sendBroadcast(intent);
     }
 
@@ -643,6 +646,7 @@ public class NewsService extends IntentService {
             boolean _read = Read == 1? true : false;
             byte data[] = c.getBlob(c.getColumnIndex("Details"));
             News news = new News(classtag, id, source, Title, Time, URL, Author, Type, Pictures, Video, null);
+            news.read = _read;
             ByteArrayInputStream arrayInputStream = new ByteArrayInputStream(data);
             try {
                 ObjectInputStream inputStream = new ObjectInputStream(arrayInputStream);
