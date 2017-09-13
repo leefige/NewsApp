@@ -87,6 +87,12 @@ public class ResultActivity extends AppCompatActivity {
         getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
+    }
+
     public class MyReceiver_result extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {

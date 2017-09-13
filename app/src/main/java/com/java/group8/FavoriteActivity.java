@@ -1,6 +1,9 @@
 package com.java.group8;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -31,6 +34,7 @@ public class FavoriteActivity extends AppCompatActivity {
 
     private ListView listview;
     private SwipeLayout swipeLayout;
+    private MyReceiver_favorite receiver;
 
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
@@ -42,6 +46,16 @@ public class FavoriteActivity extends AppCompatActivity {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
+
+        receiver = new MyReceiver_favorite();
+        IntentFilter filter = new IntentFilter();
+        filter.addAction("android.intent.action.FAVORITEACTION");
+        FavoriteActivity.this.registerReceiver(receiver, filter);
+
+        Intent serviceIntent = new Intent(this, NewsService.class);
+        String key = NewsService.KEY;
+        String value = NewsService.FAVORITE;
+        serviceIntent.putExtra(key, value);
 
         listview = (ListView) findViewById(R.id.listview_favorite);
 //        SwipeLayout.SwipeListener sl = new SwipeLayout.SwipeListener() {
@@ -158,6 +172,19 @@ public class FavoriteActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unregisterReceiver(receiver);
+    }
+
+    public class MyReceiver_favorite extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Bundle bundle = intent.getExtras();
+        }
     }
 }
 
