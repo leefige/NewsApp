@@ -9,6 +9,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.content.IntentFilter;
 
@@ -32,6 +33,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -74,6 +76,7 @@ public class MainActivity extends AppCompatActivity
         if (toolbar != null) {
             setSupportActionBar(toolbar);
         }
+        Log.d("main", "start");
         //开启receiver,选择filter
         receiver = new MyReceiver();
         IntentFilter filter = new IntentFilter();
@@ -116,8 +119,9 @@ public class MainActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+                fragMap.get(NewsCategory.valueOf(mViewPager.getCurrentItem())).goToTop();
             }
         });
 
@@ -128,6 +132,9 @@ public class MainActivity extends AppCompatActivity
     public void onResume() {
         super.onResume();
         getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
+        for (ListViewFragment frg: fragMap.values()) {
+            frg.notifyRead();
+        }
     }
 
     @Override
@@ -150,6 +157,11 @@ public class MainActivity extends AppCompatActivity
     /**
      * Methods related to OPTIONS MENU
      */
+
+    @Override
+    public void onConfigurationChanged(Configuration config) {
+        super.onConfigurationChanged(config);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -201,7 +213,12 @@ public class MainActivity extends AppCompatActivity
             startActivity(new Intent(this, FavoriteActivity.class));
         }
         else if (id == R.id.nav_manage) {
-//TODO:     clear cache
+            Intent intent = new Intent(this, NewsService.class);
+            String key = NewsService.KEY;
+            String value = NewsService.CLEARLOCAL;
+            intent.putExtra(key, value);
+            startService(intent);
+            Toast.makeText(this, "缓存已清空", Toast.LENGTH_SHORT).show();
         }
         else if (id == R.id.nav_night) {
             nightChecked = !nightChecked;
@@ -306,6 +323,14 @@ public class MainActivity extends AppCompatActivity
             NewsCategory dst = (NewsCategory)bundle.get(NewsService.NEWSCATEGORY);
             String move = (String) bundle.get(NewsService.MOVETYPE);
             ListViewFragment frag = fragMap.get(dst);
+            if(news_list == null)
+                Log.d("Newslist", "null");
+            if(move == null)
+                Log.d("move", "null");
+            if(frag == null)
+                Log.d("frag", "null");
+            if(fragMap == null)
+                Log.d("fragmap", "null");
             frag.receiveListFromService(news_list, move);
             Log.d("yew", "perfect");
             String name = news_list.get(0).newsClassTag;

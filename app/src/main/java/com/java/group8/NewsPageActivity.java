@@ -13,13 +13,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.ShareActionProvider;
 import android.support.v7.widget.Toolbar;
+import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.method.ScrollingMovementMethod;
+import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.util.Patterns;
+import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.SubMenu;
@@ -96,7 +99,6 @@ public class NewsPageActivity extends AppCompatActivity {
         startService(intent);
 
         TextView content = (TextView) findViewById(R.id.content_newspage);
-        content.setMovementMethod(new ScrollingMovementMethod());
 //        TextView title = (TextView) findViewById(R.id.title_newspage);
 //        TextView content = (TextView) findViewById(R.id.content_newspage);
 //        BaseAdapter_newspage banp = new BaseAdapter_newspage(this);
@@ -185,8 +187,24 @@ public class NewsPageActivity extends AppCompatActivity {
 
             TextView title = (TextView) findViewById(R.id.title_newspage);
             title.setText(current_news.news_Title);
+            String src = !current_news.news_content.news_Journal.equals("") ? current_news.news_content.news_Journal :
+                    !current_news.news_Author.equals("") ? current_news.news_Author :
+                            !current_news.news_Source.equals("") ? current_news.news_Source : "未知来源";
+            ((TextView) findViewById(R.id.journal_newspage)).setText(src);
+            String time_string = current_news.news_Time.substring(0, 8);
+            String show_time = time_string.substring(0, 4)+"年"+time_string.substring(4, 6)+"月"+time_string.substring(6, 8)+"日";
+            ((TextView) findViewById(R.id.time_newspage)).setText(show_time);
+
+            String my_news_content = current_news.news_content.news_Content;
+            Pattern p =  Pattern.compile("\\s\\s+");
+            Matcher matcher = p.matcher(my_news_content);
+            my_news_content = matcher.replaceAll("\n\n");
+            p = Pattern.compile("^\\s+");
+            matcher = p.matcher(my_news_content);
+            my_news_content = matcher.replaceFirst("");
+
             TextView content = (TextView) findViewById(R.id.content_newspage);
-            SpannableString ss = new SpannableString(current_news.news_content.news_Content);
+            SpannableString ss = new SpannableString(my_news_content);
             setSpanPart(ss);
             content.setText(ss);
             content.setMovementMethod(LinkMovementMethod.getInstance());
@@ -194,6 +212,8 @@ public class NewsPageActivity extends AppCompatActivity {
         private void setSpanPart(SpannableString ss) {
             Pattern p;
             Matcher m;
+            TypedValue typedValue = new TypedValue();
+            getTheme().resolveAttribute(R.attr.textColorSpan, typedValue, true);
             for(News.NewsDetail.Person i : current_news.news_content.persons) {
                 p = Pattern.compile(i.word);
                 m = p.matcher(ss);
@@ -201,6 +221,8 @@ public class NewsPageActivity extends AppCompatActivity {
                 while(m.find(start)) {
                     ss.setSpan(new URLSpan("https://baike.baidu.com/item/" + i.word), m.start(),
                             m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    ss.setSpan(new ForegroundColorSpan(getResources().getColor(typedValue.resourceId)), m.start(),
+                            m.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     start = m.end();
                 }
             }
@@ -211,6 +233,8 @@ public class NewsPageActivity extends AppCompatActivity {
                 while(m.find(start)) {
                     ss.setSpan(new URLSpan("https://baike.baidu.com/item/" + i.word), m.start(),
                             m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    ss.setSpan(new ForegroundColorSpan(getResources().getColor(typedValue.resourceId)), m.start(),
+                            m.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     start = m.end();
                 }
             }
@@ -221,10 +245,13 @@ public class NewsPageActivity extends AppCompatActivity {
                 while(m.find(start)) {
                     ss.setSpan(new URLSpan("https://baike.baidu.com/item/" + i.word), m.start(),
                             m.end(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    ss.setSpan(new ForegroundColorSpan(getResources().getColor(typedValue.resourceId)), m.start(),
+                            m.end(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     start = m.end();
                 }
             }
         }
+
     }
 }
 class MyReadActionProvider extends ActionProvider {
@@ -337,31 +364,5 @@ class MyReadActionProvider extends ActionProvider {
     }
     public boolean hasSubMenu() {
         return true;
-    }
-}
-
-class BaseAdapter_newspage extends BaseAdapter {
-    private Context context;
-    public BaseAdapter_newspage(Context c) {
-        context = c;
-    }
-
-    @Override
-    public int getCount() {
-        return 0;
-    }
-
-    @Override
-    public Object getItem(int i) {
-        return null;
-    }
-
-    @Override
-    public long getItemId(int i) {
-        return 0;
-    }
-
-    public View getView(final int position, View convertView, @NonNull final ViewGroup parent) {
-        return null;
     }
 }

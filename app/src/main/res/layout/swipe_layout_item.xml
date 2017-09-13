@@ -3,24 +3,29 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="150dp"
     android:layout_width="match_parent"
-    android:id="@+id/layout_out_swipe">
+    android:id="@+id/layout_out_swipe"
+    android:background="?attr/uiBackground">
     <com.daimajia.swipe.SwipeLayout
         android:layout_width="match_parent"
-        android:layout_height="220dp"
+        android:layout_height="100dp"
         android:id="@+id/swipeLayout_favorite">
         <!-- Bottom View Start-->
         <LinearLayout
-            android:background="#66ddff00"
+            android:background="@color/deleteItem"
             android:id="@+id/bottom_view_favorite"
             android:layout_width="160dp"
             android:weightSum="1"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:gravity="center">
             <!--What you want to show-->
             <TextView
                 android:layout_height="match_parent"
                 android:layout_width="70dp"
-                android:id="@+id/delete_favorite"/>
+                android:id="@+id/delete_favorite"
+                android:gravity="center_horizontal|center_vertical"
+                android:textColor="@color/colorItemNormal"
+                android:textSize="22sp"/>
         </LinearLayout>
         <!-- Bottom View End-->
 
@@ -28,14 +33,17 @@
         <LinearLayout
             android:id="@+id/surface_view_favorite"
             android:padding="10dp"
-            android:background="#ffffff"
+            android:background="?attr/listItemBackground"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal">
             <TextView
                 android:layout_height="match_parent"
                 android:layout_width="70dp"
-                android:id="@+id/url_favorite"/>
+                android:id="@+id/url_favorite"
+                android:gravity="center"
+                android:textColor="?attr/textColorNorm"
+                android:textSize="22sp"/>
             <!--What you want to show in SurfaceView-->
         </LinearLayout>
         <!-- Surface View End -->
