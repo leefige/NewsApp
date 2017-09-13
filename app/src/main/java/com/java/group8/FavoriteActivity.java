@@ -43,6 +43,9 @@ public class FavoriteActivity extends AppCompatActivity {
     private ListViewAdapter lva;
 
     public News getFavListX(int x) { return favList.get(x);}
+    public void delFavListX(int x) {
+        favList.remove(x);
+    }
 
     protected void onCreate(Bundle saveInstanceState) {
         super.onCreate(saveInstanceState);
@@ -66,7 +69,11 @@ public class FavoriteActivity extends AppCompatActivity {
         Intent serviceIntent = new Intent(this, NewsService.class);
         String key = NewsService.KEY;
         String value = NewsService.NEWSFAVORITE;
+        String para1 = NewsService.SERVICEKIND;
+        String newsfavorite = NewsService.NEWSFAVORITE;
         serviceIntent.putExtra(key, value);
+        serviceIntent.putExtra(para1, newsfavorite);
+        startService(serviceIntent);
 
         listview = (ListView) findViewById(R.id.listview_favorite);
 //        SwipeLayout.SwipeListener sl = new SwipeLayout.SwipeListener() {
@@ -176,6 +183,15 @@ public class FavoriteActivity extends AppCompatActivity {
                 return true;
             case R.id.action_clear_favourite:
                 //TODO: CLEAR FAVOURITE
+                Intent intent = new Intent(this, NewsService.class);
+                String key = NewsService.KEY;
+                String value = NewsService.CLEARFAV;
+                String para1 = NewsService.SERVICEKIND;
+                String servicekind = NewsService.DELETE_ALL;
+                intent.putExtra(key, value);
+                intent.putExtra(para1, servicekind);
+                startService(intent);
+                favList.clear();
                 this.finish(); // back button
                 return true;
         }
@@ -192,16 +208,23 @@ public class FavoriteActivity extends AppCompatActivity {
         @Override
         public void onReceive(Context context, Intent intent) {
             Bundle bundle = intent.getExtras();
-            ArrayList<News> tmp = (ArrayList<News>) bundle.getSerializable(NewsService.FAVLIST);
-            if(tmp == null) {
-                favList = null;
-            } else {
-                favList.addAll(tmp);
-                int size = favList.size();
-                lva = new ListViewAdapter(context, size);
-                listview.setAdapter(lva);
-                lva.setMode(Attributes.Mode.Single);
+            String servicekind = bundle.getString(NewsService.SERVICEKIND);
+            if(servicekind.equals(NewsService.NEWSFAVORITE)) {
+                ArrayList<News> tmp = (ArrayList<News>) bundle.getSerializable(NewsService.FAVLIST);
+                if(tmp == null) {
+                    favList.clear();
+                } else {
+                    favList.addAll(tmp);
+                }
+            } else if(servicekind.equals(NewsService.DELEATE_ONE)) {
+
+            } else if(servicekind.equals(NewsService.DELETE_ALL)) {
+
             }
+            int size = (favList == null) ? 0 : favList.size();
+            lva = new ListViewAdapter(context, size);
+            listview.setAdapter(lva);
+            lva.setMode(Attributes.Mode.Single);
         }
     }
 }
@@ -224,6 +247,7 @@ class ListViewAdapter extends BaseSwipeAdapter {
     //           You have to do that in fillValues method.
     @Override
     public View generateView(int position, ViewGroup parent) {
+        final int position_tmp = position;
         final View v = LayoutInflater.from(mContext).inflate(R.layout.swipe_layout_item, null);
         SwipeLayout swipeLayout = (SwipeLayout)v.findViewById(getSwipeLayoutResourceId(position));
         swipeLayout.addSwipeListener(new SimpleSwipeListener() {
@@ -238,6 +262,19 @@ class ListViewAdapter extends BaseSwipeAdapter {
             @Override
             public void onClick(View view) {
                 Toast.makeText(mContext, "record delete", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(mContext, NewsService.class);
+                String key = NewsService.KEY;
+                String value = NewsService.FAV;
+                String para1 = NewsService.NEWSID;
+                News tmp = ((FavoriteActivity)mContext).getFavListX(position_tmp);
+                String news_ID = tmp.news_ID;
+                String para2 = NewsService.SERVICEKIND;
+                String servicekind = NewsService.DELEATE_ONE;
+                intent.putExtra(key, value);
+                intent.putExtra(para1, news_ID);
+                intent.putExtra(para2, servicekind);
+                mContext.startService(intent);
+                ((FavoriteActivity)mContext).delFavListX(position_tmp);
             }
         });
         final News tar = ((FavoriteActivity) mContext).getFavListX(position);
@@ -259,7 +296,7 @@ class ListViewAdapter extends BaseSwipeAdapter {
         TextView bottom_t = (TextView) convertView.findViewById(R.id.delete_favorite);
         bottom_t.setText("删除");
         TextView surface_t = (TextView) convertView.findViewById(R.id.url_favorite);
-        surface_t.setText("url" + String.valueOf(position));
+        surface_t.setText(((FavoriteActivity) mContext).getFavListX(position).news_Title);
     }
 
     @Override
