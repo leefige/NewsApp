@@ -10,13 +10,22 @@ import android.support.v7.app.AppCompatDelegate;
 public class MyApplication extends Application {
 
     private int nightMode;
+    private String lastIndex;
 
     public int getNightMode() {
         return nightMode;
     }
 
+    public String getLastIndex() {
+        return lastIndex;
+    }
+
     public void setNightMode(int nightMode) {
         this.nightMode = nightMode;
+    }
+
+    public void setLastIndex(String index) {
+        this.lastIndex = index;
     }
 
     @Override
@@ -24,6 +33,7 @@ public class MyApplication extends Application {
         super.onCreate();
         // 默认设置为日间模式
         nightMode = AppCompatDelegate.MODE_NIGHT_NO;
+        lastIndex = "t";
         AppCompatDelegate.setDefaultNightMode(nightMode);
     }
 }
