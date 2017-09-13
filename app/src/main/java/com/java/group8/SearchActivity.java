@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.HorizontalScrollView;
@@ -218,6 +219,11 @@ public class SearchActivity extends AppCompatActivity {
             if (view.getId() == R.id.cancel) {
                 //Intent i = new Intent(current_activity, MainActivity.class);
                 //startActivity(i);
+                EditText ev = (EditText) findViewById(R.id.searchInput);
+                //ev.setFocusable(false);
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(ev.getWindowToken(), 0);
+                ev.setFocusable(true);
             } else if (view.getId() == R.id.submit) {
                 Intent i = new Intent(current_activity, ResultActivity.class);
                 EditText e = (EditText) findViewById(R.id.searchInput);

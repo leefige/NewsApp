@@ -115,7 +115,8 @@ public class ResultActivity extends AppCompatActivity {
                 startActivity(new Intent(currentActivity, NewsPageActivity.class));
             }
             else if(view.getId() == R.id.cancel) {
-                //startActivity(new Intent(currentActivity, MainActivity.class));
+                Intent i = new Intent(currentActivity, SearchActivity.class);
+                startActivity(i);
             }
             else if(view.getId() == R.id.searchInput) {
                 startActivity(new Intent(currentActivity, SearchActivity.class));
