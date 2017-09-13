@@ -211,7 +211,7 @@ public class NewsService extends IntentService {
                                     news.read = true;
                             }
                             if(news.news_Pictures.equals("")){
-                                news.news_Pictures = getImage(title);
+//                                news.news_Pictures = getImage(title);
                             }
                             newslist.add(news);
                             //Log.d("tag", tag);
