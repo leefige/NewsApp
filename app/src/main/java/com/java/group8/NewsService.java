@@ -73,6 +73,8 @@ public class NewsService extends IntentService {
     public static final String HISTORY = "SearchHistory";
     public static final String NEWSFAVORITE = "Newsfavorite";
     public static final String LATEST = "Latest";
+    public static final String DELEATE_ONE = "Deleteone";
+    public static final String FAV_ONE = "Fav_one";
 
     //add action
 
@@ -129,7 +131,8 @@ public class NewsService extends IntentService {
                     break;
                 case DETAILS:
                     final String news_ID = intent.getStringExtra(NEWSID);
-                    getDetails(news_ID);
+                    final String service_kind = intent.getStringExtra(SERVICEKIND);
+                    getDetails(news_ID, service_kind);
                     Log.d("start", "getdetails");
                     break;
                 case RESULT:
@@ -139,14 +142,16 @@ public class NewsService extends IntentService {
                     break;
                 case FAV:
                     final String _news_ID = intent.getStringExtra(NEWSID);
-                    addFavorite(_news_ID);
+                    final String _service_kind = intent.getStringExtra(SERVICEKIND);
+                    addFavorite(_news_ID, _service_kind);
                     Log.d("start", "addfavorite");
                     break;
                 case CLEARLOCAL:
                     clearLocal();
                     break;
                 case CLEARFAV:
-                    clearFav();
+                    final String service__kind = intent.getStringExtra(SERVICEKIND);
+                    clearFav(service__kind);
                     break;
                 case HISTORY:
                     final String _kind = intent.getStringExtra(SERVICEKIND);
@@ -416,7 +421,7 @@ public class NewsService extends IntentService {
     }
 
 
-    private void getDetails(String news_ID) {
+    private void getDetails(String news_ID, final String kind) {
         ContentValues values = new ContentValues();
         values.put("Read", 1);
         dbmanager.update(NewsDatabase.ALL_TABLE_NAME, values, "ID=?", new String[]{news_ID});
@@ -454,6 +459,7 @@ public class NewsService extends IntentService {
             Intent intent = new Intent();
             intent.putExtra(NEWSDETAILS, news);
             intent.putExtra(ISFAV, true);
+            intent.putExtra(SERVICEKIND, kind);
             intent.setAction(DETAIACTION);
             sendBroadcast(intent);
         }
@@ -559,6 +565,7 @@ public class NewsService extends IntentService {
                             Intent intent = new Intent();
                             intent.putExtra(NEWSDETAILS, news);
                             intent.putExtra(ISFAV, false);
+                            intent.putExtra(SERVICEKIND, kind);
                             intent.setAction(DETAIACTION);
                             sendBroadcast(intent);
                         }
@@ -691,7 +698,7 @@ public class NewsService extends IntentService {
         }).start();
     }
 
-    private void addFavorite(String news_ID) {
+    private void addFavorite(String news_ID, String kind) {
         String _str = SELECT + NewsDatabase.FAV_TABLE_NAME + WHEREID;
         String[] _s = {news_ID};
         Cursor c = dbmanager.query(_str, _s);
@@ -732,13 +739,24 @@ public class NewsService extends IntentService {
         }
         if (c != null && !c.isClosed())
             c.close();
+        Intent intent = new Intent();
+        intent.putExtra(SERVICEKIND, kind);
+        if(kind == DELEATE_ONE)
+            intent.setAction(FAVACTION);
+        else
+            intent.setAction(DETAIACTION);
+        sendBroadcast(intent);
     }
 
     private void clearLocal() {
         dbmanager.delete_all(NewsDatabase.ALL_TABLE_NAME);
     }
-    private void clearFav(){
+    private void clearFav(String kind){
         dbmanager.delete_all(NewsDatabase.FAV_TABLE_NAME);
+        Intent intent = new Intent();
+        intent.putExtra(SERVICEKIND, kind);
+        intent.setAction(FAVACTION);
+        sendBroadcast(intent);
     }
     private void getHistory(final String kind) {
         String str = SELECT + NewsDatabase.HIS_TABLE_NAME;
