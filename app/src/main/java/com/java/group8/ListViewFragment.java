@@ -84,7 +84,7 @@ public class ListViewFragment extends Fragment {
 
         Intent intent = new Intent(parent, NewsService.class);
         String key = NewsService.KEY;
-        String value = NewsService.LIST;
+        String value = NewsService.LATEST;
         intent.putExtra(key, value);
         intent.putExtra(NewsService.NEWSCATEGORY, c);
         intent.putExtra(NewsService.MOVETYPE, NewsService.REFRESH);
@@ -93,6 +93,14 @@ public class ListViewFragment extends Fragment {
 
     public void receiveListFromService(List<News> li, String moveType) {
         receiveList = li;
+        if (receiveList == null ) {
+            refreshList(category);
+            return;
+        }
+        else if (receiveList.size() == 0) {
+            refreshList(category);
+            return;
+        }
         switch (moveType) {
             case NewsService.LOAD:
                 newsList.addAll(receiveList);
