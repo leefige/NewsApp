@@ -249,6 +249,7 @@ class ListViewAdapter extends BaseSwipeAdapter {
     @Override
     public View generateView(final int position, ViewGroup parent) {
         final int position_tmp = position;
+        final ListView p = (ListView) parent;
         final View v = LayoutInflater.from(mContext).inflate(R.layout.swipe_layout_item, null);
         SwipeLayout swipeLayout = (SwipeLayout)v.findViewById(getSwipeLayoutResourceId(position));
         swipeLayout.addSwipeListener(new SimpleSwipeListener() {
@@ -276,9 +277,12 @@ class ListViewAdapter extends BaseSwipeAdapter {
                 intent.putExtra(para2, servicekind);
                 mContext.startService(intent);
                 ((FavoriteActivity)mContext).delFavListX(position_tmp);
+                size--;
+
+                //p.removeViewAt(position_tmp);
 //                ListView tmp_list = ((FavoriteActivity)mContext).getListView();
 //                tmp_list.removeViewAt(position);
-                //notifyDataSetChanged();
+                notifyDataSetChanged();
             }
         });
         final News tar = ((FavoriteActivity) mContext).getFavListX(position);
