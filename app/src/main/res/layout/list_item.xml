@@ -13,10 +13,10 @@
             android:id="@+id/item_frame"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginBottom="0dp"
             android:layout_marginLeft="7dp"
             android:layout_marginRight="7dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="0dp"
             android:background="@drawable/rect_edge">
 
             <ImageView
@@ -27,8 +27,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"
                 android:layout_gravity="center"
-                android:src="@drawable/icon_1"
-                android:scaleType="centerCrop"/>
+                android:scaleType="centerCrop"
+                android:src="@drawable/icon_1" />
 
             <TextView
                 android:id="@+id/news_title"
@@ -40,20 +40,20 @@
                 android:layout_alignParentStart="true"
                 android:layout_below="@id/image_view_icon"
                 android:layout_marginTop="3dp"
+                android:fontFamily="sans-serif"
+                android:paddingBottom="5dp"
                 android:paddingLeft="15dp"
                 android:paddingRight="15dp"
-                android:paddingBottom="5dp"
-                android:fontFamily="cursive"
                 android:text="This is a title"
                 android:textSize="24sp" />
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_below="@id/news_title">
+                android:layout_below="@id/news_title"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/news_content"
@@ -63,21 +63,21 @@
                     android:layout_marginBottom="6dp"
                     android:layout_marginRight="30dp"
                     android:fontFamily="serif"
+                    android:paddingBottom="5dp"
                     android:paddingLeft="15dp"
                     android:paddingRight="25dp"
-                    android:paddingBottom="5dp"
                     android:text="This is a test text"
-                    android:textColor="?attr/textColorNorm"/>
+                    android:textColor="?attr/textColorNorm" />
 
                 <TextView
                     android:id="@+id/news_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
-                    android:paddingRight="15dp"
                     android:paddingBottom="5dp"
+                    android:paddingRight="15dp"
                     android:text="category"
-                    android:textColor="?attr/textColorNorm"/>
+                    android:textColor="?attr/textColorNorm" />
             </RelativeLayout>
 
 

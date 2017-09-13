@@ -53,9 +53,9 @@ public class AsyncImageLoader {
         return null;
     }
 
-    public Drawable loadDrawableFromTitle(final String imageUrl, final String title, final ImageCallback imageCallback) {
-        if (imageCache.containsKey(imageUrl)) {
-            SoftReference<Drawable> softReference = imageCache.get(imageUrl);
+    public Drawable loadDrawableFromTitle(final String title, final ImageCallback imageCallback) {
+        if (imageCache.containsKey(title)) {
+            SoftReference<Drawable> softReference = imageCache.get(title);
             Drawable drawable = softReference.get();
             if (drawable != null) {
                 return drawable;
@@ -64,16 +64,17 @@ public class AsyncImageLoader {
 
         final Handler handler = new Handler() {
             public void handleMessage(Message message) {
-                imageCallback.imageLoaded((Drawable) message.obj, imageUrl);
+                imageCallback.imageLoaded((Drawable) message.obj, title);
             }
         };
 
         new Thread() {
             @Override
             public void run() {
-                String mUrl = "";
-                Drawable drawable = loadImageFromUrl(imageUrl);
-                imageCache.put(imageUrl, new SoftReference<>(drawable));
+                String mUrl = getImage(title);
+                Log.d("Find IMG", mUrl);
+                Drawable drawable = loadImageFromUrl(mUrl);
+                imageCache.put(title, new SoftReference<>(drawable));
                 Message message = handler.obtainMessage(0, drawable);
                 handler.sendMessage(message);
             }

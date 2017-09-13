@@ -32,8 +32,8 @@ import java.util.List;
 public class ListViewFragment extends Fragment {
 
     private final int INIT_SIZE = 20;
-    public static final int REFRESH_DELAY = 2000;
-    public static final int LOAD_DELAY = 2000;
+    public static final int REFRESH_DELAY = 1750;
+    public static final int LOAD_DELAY = 1500;
 
     private ViewGroup rootView = null;
     private PullUpRefreshList listView = null;
@@ -287,7 +287,7 @@ public class ListViewFragment extends Fragment {
             else if(imageUrl.equals("") && ((MyApplication)(parent.getContext().getApplicationContext())).isImageOn()) {
                 Drawable cachedImage = null;
                 try {
-                    cachedImage = asyncImageLoader.loadDrawable(imageUrl, new AsyncImageLoader.ImageCallback() {
+                    cachedImage = asyncImageLoader.loadDrawableFromTitle(data.news_Title, new AsyncImageLoader.ImageCallback() {
                         public void imageLoaded(Drawable imageDrawable, String imageUrl) {
                             ImageView imageViewByTag = listView.findViewWithTag(imageUrl);
                             if (imageViewByTag != null) {
