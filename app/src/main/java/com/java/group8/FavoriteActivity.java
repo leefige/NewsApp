@@ -66,7 +66,6 @@ public class FavoriteActivity extends AppCompatActivity {
         filter.addAction(NewsService.FAVACTION);
         FavoriteActivity.this.registerReceiver(receiver, filter);
 
-        //TODO : favorite
         Intent serviceIntent = new Intent(this, NewsService.class);
         String key = NewsService.KEY;
         String value = NewsService.NEWSFAVORITE;
@@ -183,7 +182,6 @@ public class FavoriteActivity extends AppCompatActivity {
                 this.finish(); // back button
                 return true;
             case R.id.action_clear_favourite:
-                //TODO: CLEAR FAVOURITE
                 Intent intent = new Intent(this, NewsService.class);
                 String key = NewsService.KEY;
                 String value = NewsService.CLEARFAV;

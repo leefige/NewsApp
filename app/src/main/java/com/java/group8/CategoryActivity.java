@@ -59,7 +59,7 @@ public class CategoryActivity extends AppCompatActivity {
 
             @Override
             public void onItemLongClick(View view, int position) {
-//                TODO: ADD REMOVE TAG
+//                noTODO: ADD REMOVE TAG
                 onItemClick(view, position);
             }
         });

@@ -41,7 +41,6 @@ public class News implements Serializable{
     }
 
     public void addDetail() {
-        /*TODO: ADD DETAILS TO THIS OBJECT*/
         read = true;
         news_content = new NewsDetail();
     }
