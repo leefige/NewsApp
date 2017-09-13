@@ -69,6 +69,7 @@ public class NewsService extends IntentService {
     public static final String LOAD = "Load";
     public static final String FAV = "Fav";
     public static final String CLEARLOCAL = "Clearlocal";
+    public static final String CLEARFAV = "Clearfav";
     public static final String HISTORY = "SearchHistory";
     public static final String NEWSFAVORITE = "Newsfavorite";
     public static final String LATEST = "Latest";
@@ -143,6 +144,9 @@ public class NewsService extends IntentService {
                     break;
                 case CLEARLOCAL:
                     clearLocal();
+                    break;
+                case CLEARFAV:
+                    clearFav();
                     break;
                 case HISTORY:
                     final String _kind = intent.getStringExtra(SERVICEKIND);
@@ -255,8 +259,6 @@ public class NewsService extends IntentService {
                                 values.put("Video", video);
                                 values.put("Read", 0);
                                 dbmanager.insert(values, NewsDatabase.ALL_TABLE_NAME);
-                            } else {
-                                news.read = true;
                             }
                             newslist.add(news);
                             if (c != null && !c.isClosed())
@@ -735,7 +737,9 @@ public class NewsService extends IntentService {
     private void clearLocal() {
         dbmanager.delete_all(NewsDatabase.ALL_TABLE_NAME);
     }
-
+    private void clearFav(){
+        dbmanager.delete_all(NewsDatabase.FAV_TABLE_NAME);
+    }
     private void getHistory(final String kind) {
         String str = SELECT + NewsDatabase.HIS_TABLE_NAME;
         Cursor c = dbmanager.query(str, null);
