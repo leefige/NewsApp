@@ -5,6 +5,9 @@ package com.java.group8;
  *
  */
 
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +21,7 @@ import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.NavigationView;
 
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -25,17 +29,25 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 
+import android.text.format.DateFormat;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
+import android.widget.CompoundButton;
+import android.widget.Switch;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity
@@ -71,6 +83,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         if (toolbar != null) {
@@ -131,7 +144,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume() {
         super.onResume();
-        getDelegate().setLocalNightMode(((MyApplication)getApplicationContext()).getNightMode());
         for (ListViewFragment frg: fragMap.values()) {
             frg.notifyRead();
         }
@@ -220,16 +232,23 @@ public class MainActivity extends AppCompatActivity
             startService(intent);
             Toast.makeText(this, "缓存已清空", Toast.LENGTH_SHORT).show();
         }
-        else if (id == R.id.nav_night) {
-            nightChecked = !nightChecked;
-            item.setChecked(nightChecked);
-            int currentNightMode = getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-            int neoNightMode = currentNightMode == Configuration.UI_MODE_NIGHT_NO ?
-                    AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO;
-            getDelegate().setLocalNightMode(neoNightMode);
-            ((MyApplication)getApplicationContext()).setNightMode(neoNightMode);
-            DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-            drawer.closeDrawer(GravityCompat.START);
+        else if (id == R.id.nav_image) {
+            LayoutInflater inflater = getLayoutInflater();
+            View layout = inflater.inflate(R.layout.night_dialog, (ViewGroup) findViewById(R.id.night_dialog));
+
+            Switch mSwitch = layout.findViewById(R.id.night_switch);
+            mSwitch.setChecked(!((MyApplication)getApplicationContext()).isImageOn());
+            // 添加监听
+            mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    ((MyApplication)getApplicationContext()).setImageOn(!isChecked);
+                }
+            });
+
+            new AlertDialog.Builder(this).setTitle(" ").setView(layout)
+                    .setNegativeButton("关闭", null)
+                    .show();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -267,6 +286,12 @@ public class MainActivity extends AppCompatActivity
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             ListViewFragment fragment = new ListViewFragment();
+            return fragment;
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            ListViewFragment fragment = (ListViewFragment)super.instantiateItem(container, position);
             fragment.setMetadata(MainActivity.this, NewsCategory.valueOf(position), String.valueOf(getPageTitle(position)));
             fragMap.put(NewsCategory.valueOf(position), fragment);
             return fragment;

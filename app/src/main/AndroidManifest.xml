@@ -42,9 +42,9 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/AppTheme.NoActionBar"
-            android:screenOrientation="portrait">
-            android:theme="@style/AppTheme.NoActionBar"
+            android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
