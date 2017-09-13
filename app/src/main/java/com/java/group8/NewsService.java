@@ -118,7 +118,7 @@ public class NewsService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             boolean flag = false;
-
+            Log.d("flagg", "232");
             final String key = intent.getStringExtra(KEY);
             switch (key) {
                 case LIST:
@@ -170,6 +170,7 @@ public class NewsService extends IntentService {
                             }
                         }
                     }
+                    Log.d("flagg", String.valueOf(flag));
                     if (flag == true)
                         getLatest((NewsCategory) _b.get(NEWSCATEGORY), (String) _b.get(MOVETYPE));
                     else
@@ -258,6 +259,8 @@ public class NewsService extends IntentService {
                                 news.read = true;
                             }
                             newslist.add(news);
+                            if (c != null && !c.isClosed())
+                                c.close();
                             //Log.d("tag", tag);
                         }
                         Log.d("wait", "a minute");
@@ -286,7 +289,8 @@ public class NewsService extends IntentService {
                     Log.d("sad", "null");
                     str = SELECT + NewsDatabase.ALL_TABLE_NAME;
                     c = dbmanager.query(str, null);
-                } else {
+                }
+                else {
                     Log.d("sad", "have");
                     str = SELECT + NewsDatabase.ALL_TABLE_NAME + WHERECATEGORY;
                     switch (category) {
@@ -355,6 +359,8 @@ public class NewsService extends IntentService {
                     if (count == 20) ;
                     break;
                 }
+                if (c != null && !c.isClosed())
+                    c.close();
                 Intent intent = new Intent();
                 intent.putExtra(NEWSLIST, newslist);
                 intent.putExtra(NEWSCATEGORY, category);
@@ -441,17 +447,21 @@ public class NewsService extends IntentService {
                 e.printStackTrace();
             }
             Log.d("wait", "a new");
+            if (c != null && !c.isClosed())
+                c.close();
             Intent intent = new Intent();
             intent.putExtra(NEWSDETAILS, news);
             intent.putExtra(ISFAV, true);
             intent.setAction(DETAIACTION);
             sendBroadcast(intent);
-        } else {
+        }
+        else {
             final OkHttpClient client = new OkHttpClient();
             final Request request = new Request.Builder()
                     .get()
                     .url(DETAIL_URL + news_ID)
                     .build();
+            Log.d("IDIDID", news_ID);
             new Thread(new Runnable() {
                 @Override
                 public void run() {
@@ -480,7 +490,7 @@ public class NewsService extends IntentService {
                             String video = json_obj.getString("news_Video");
                             News news = new News(tag, id, source, title, time, url, author, lang_type, pic, video, null);
                             news.read = true;
-                            news.news_content.news_Category = json_obj.getString("news_Category");
+                            //news.news_content.news_Category = json_obj.getString("news_Category");
                             news.news_content.inborn_KeyWords = json_obj.getString("inborn_KeyWords");
                             news.news_content.news_Content = json_obj.getString("news_Content");
                             news.news_content.crawl_Source = json_obj.getString("crawl_Source");
@@ -574,7 +584,8 @@ public class NewsService extends IntentService {
             dbmanager.update(NewsDatabase.HIS_TABLE_NAME, values, "History=?", new String[]{keyWord});
             Log.d("update", "sucess");
         }
-
+        if (d != null && !d.isClosed())
+            d.close();
         new Thread(new Runnable() {
             @Override
             public void run() {
@@ -717,6 +728,8 @@ public class NewsService extends IntentService {
                 dbmanager.insert(values, NewsDatabase.FAV_TABLE_NAME);
             }
         }
+        if (c != null && !c.isClosed())
+            c.close();
     }
 
     private void clearLocal() {
@@ -730,6 +743,8 @@ public class NewsService extends IntentService {
         for (c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
             historylist.add(c.getString(c.getColumnIndex("History")));
         }
+        if (c != null && !c.isClosed())
+            c.close();
         Intent intent = new Intent();
         intent.putExtra(HISTORYLIST, historylist);
         intent.putExtra(SERVICEKIND, kind);

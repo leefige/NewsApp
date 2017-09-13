@@ -191,14 +191,15 @@ public class NewsPageActivity extends AppCompatActivity {
                     !current_news.news_Author.equals("") ? current_news.news_Author :
                             !current_news.news_Source.equals("") ? current_news.news_Source : "未知来源";
             ((TextView) findViewById(R.id.journal_newspage)).setText(src);
-            if(current_news.news_Time.length() >= 8) {
+            if(current_news.news_Time.length() > 8){
                 String time_string = current_news.news_Time.substring(0, 8);
-                String show_time = time_string.substring(0, 4) + "年" + time_string.substring(4, 6) + "月" + time_string.substring(6, 8) + "日";
-                ((TextView) findViewById(R.id.time_newspage)).setText(show_time);
-            } else {
-                String show_time = current_news.news_Time;
+                String show_time = time_string.substring(0, 4)+"年"+time_string.substring(4, 6)+"月"+time_string.substring(6, 8)+"日";
                 ((TextView) findViewById(R.id.time_newspage)).setText(show_time);
             }
+
+            //String time_string = current_news.news_Time.substring(0, 8);
+            //String show_time = time_string.substring(0, 4)+"年"+time_string.substring(4, 6)+"月"+time_string.substring(6, 8)+"日";
+            //((TextView) findViewById(R.id.time_newspage)).setText(show_time);
 
             String my_news_content = current_news.news_content.news_Content;
             Pattern p =  Pattern.compile("\\s\\s+");
