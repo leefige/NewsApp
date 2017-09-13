@@ -30,6 +30,7 @@ public class NewsDatabase extends SQLiteOpenHelper{
             "Pictures text, Video text, Read int, "+
             "Details blob)";
 
+
     private static final String HISTORY_DETAILS = "(History text primary key)";
 
     public NewsDatabase(Context context){
@@ -73,7 +74,7 @@ public class NewsDatabase extends SQLiteOpenHelper{
     public Cursor query(String sql, String[] str){
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.rawQuery(sql, str);
-        //Log.d("query", "query");
+        Log.d("query", "query");
         return c;
     }
     //根据id删除
@@ -90,11 +91,5 @@ public class NewsDatabase extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         db.update(table_name, values, whereClause, whereArgs);
     }
-
-
-
-
-
-
 
 }
