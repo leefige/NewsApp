@@ -42,6 +42,7 @@ public class FavoriteActivity extends AppCompatActivity {
     private ArrayList<News> favList;
     private ListViewAdapter lva;
 
+    public ListView getListView() {return listview;}
     public News getFavListX(int x) { return favList.get(x);}
     public void delFavListX(int x) {
         favList.remove(x);
@@ -246,7 +247,7 @@ class ListViewAdapter extends BaseSwipeAdapter {
     //ATTENTION: Never bind listener or fill values in generateView.
     //           You have to do that in fillValues method.
     @Override
-    public View generateView(int position, ViewGroup parent) {
+    public View generateView(final int position, ViewGroup parent) {
         final int position_tmp = position;
         final View v = LayoutInflater.from(mContext).inflate(R.layout.swipe_layout_item, null);
         SwipeLayout swipeLayout = (SwipeLayout)v.findViewById(getSwipeLayoutResourceId(position));
@@ -275,6 +276,8 @@ class ListViewAdapter extends BaseSwipeAdapter {
                 intent.putExtra(para2, servicekind);
                 mContext.startService(intent);
                 ((FavoriteActivity)mContext).delFavListX(position_tmp);
+//                ListView tmp_list = ((FavoriteActivity)mContext).getListView();
+//                tmp_list.removeViewAt(position);
                 //notifyDataSetChanged();
             }
         });
