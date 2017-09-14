@@ -25,7 +25,7 @@ import java.util.List;
 
 public class AsyncImageLoader {
     private HashMap<String, SoftReference<Drawable>> imageCache;
-    private final String IMAGE_URL = "https://api.cognitive.microsoft.com/bing/v5.0/images/search?subscription-key=acc35fffbfd942119fbe4e0c000bf724&q=";
+    private final String IMAGE_URL = "https://api.cognitive.microsoft.com/bing/v5.0/images/search?subscription-key=88e13b7745df437d979ac5d4582a79a4&q=";
 
     public AsyncImageLoader() {
         imageCache = new HashMap<>();
