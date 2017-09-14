@@ -66,6 +66,24 @@ public class SearchActivity extends AppCompatActivity {
         submit.setOnClickListener(saocl);
 
         EditText searchInput = (EditText) findViewById(R.id.searchInput);
+        searchInput.setText("请输入搜索内容");
+        searchInput.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v,boolean hasFocus)
+            {
+                EditText _v = (EditText)v;
+                if(!hasFocus)
+                {
+                    _v.setText(_v.getText());
+                }
+                else
+                {
+                    //String hint = _v.getHint().toString();
+                    //_v.setTag(hint);
+                    _v.setText("");
+                }
+            }
+        });
         searchInput.selectAll();
 
         receiver = new MyReceiver_search();
@@ -251,7 +269,7 @@ public class SearchActivity extends AppCompatActivity {
                 startActivity(i);
             } else if (view.getId() == R.id.searchInput) {
                 EditText input = (EditText) view;
-                input.selectAll();
+                //input.setText("");
             }
         }
     }

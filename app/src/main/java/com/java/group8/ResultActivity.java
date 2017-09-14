@@ -112,7 +112,7 @@ public class ResultActivity extends AppCompatActivity {
         }
         public void onClick(View view) {
             if(view.getId() == R.id.submit) {
-                startActivity(new Intent(currentActivity, NewsPageActivity.class));
+                //startActivity(new Intent(currentActivity, NewsPageActivity.class));
             }
             else if(view.getId() == R.id.cancel) {
                 Intent i = new Intent(currentActivity, SearchActivity.class);
