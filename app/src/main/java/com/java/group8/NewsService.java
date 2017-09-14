@@ -121,12 +121,11 @@ public class NewsService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
-            boolean flag = false;
             final String key = intent.getStringExtra(KEY);
             switch (key) {
                 case LIST:
                     Bundle b = intent.getExtras();
-                    getLatest((NewsCategory) b.get(NEWSCATEGORY), (String) b.get(MOVETYPE));
+                    getNews((NewsCategory) b.get(NEWSCATEGORY), (String) b.get(MOVETYPE));
                     Log.d("start", "startservice");
                     break;
                 case DETAILS:
@@ -167,17 +166,13 @@ public class NewsService extends IntentService {
                     getRecommend(_keyword, _kind_);
                     break;
                 case LATEST:
+                    boolean flag = false;
                     Bundle _b = intent.getExtras();
                     ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
                     if (cm != null) {
-                        NetworkInfo[] infos = cm.getAllNetworkInfo();
-                        if (infos != null) {
-                            for (NetworkInfo ni : infos) {
-                                if (ni.isConnected()) {
-                                    flag = true;
-                                    break;
-                                }
-                            }
+                        NetworkInfo infos = cm.getActiveNetworkInfo();
+                        if (infos.isConnected()) {
+                            flag = true;
                         }
                     }
                     Log.d("flagg", String.valueOf(flag));
@@ -205,6 +200,7 @@ public class NewsService extends IntentService {
     }
 
     private void getLatest(final NewsCategory category, final String move) {
+        Log.d("getlatest", "123");
         final OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
                 .get()
@@ -348,7 +344,7 @@ public class NewsService extends IntentService {
                 Log.d("cors", String.valueOf(c.moveToFirst()));
                 int count = 0;
                 ArrayList<News> newslist = new ArrayList<News>();
-                while (c.moveToNext()) {
+                for(c.moveToFirst(); !c.isAfterLast(); c.moveToNext()) {
                     String id = c.getString(c.getColumnIndex("ID"));
                     String tag = c.getString(c.getColumnIndex("ClassTag"));
                     String source = c.getString(c.getColumnIndex("Source"));
@@ -356,7 +352,7 @@ public class NewsService extends IntentService {
                     String time = c.getString(c.getColumnIndex("Time"));
                     String url = c.getString(c.getColumnIndex("URL"));
                     String lang_type = c.getString(c.getColumnIndex("Type"));
-                    ;
+
                     String author = c.getString(c.getColumnIndex("Author"));
                     String pic = c.getString(c.getColumnIndex("Pictures"));
                     String video = c.getString(c.getColumnIndex("Video"));
@@ -366,9 +362,8 @@ public class NewsService extends IntentService {
                     newslist.add(news);
                     count++;
                     Log.d("count", String.valueOf(count));
-                    Log.d("cate", String.valueOf(category.getIndex()));
-                    if (count == 20) ;
-                    break;
+                    if (count == 20)
+                        break;
                 }
                 if (c != null && !c.isClosed())
                     c.close();
@@ -381,47 +376,6 @@ public class NewsService extends IntentService {
 
             }
         }).start();
-    }
-
-    private String getImage(String title) {
-        String str = title.substring(0, 6 > title.length() ? title.length() : 6);
-        Log.d("image", str);
-        HttpURLConnection coon = null;
-        InputStream inputStream = null;
-        try {
-            URL mURL = new URL(IMAGE_URL + str);
-            coon = (HttpURLConnection) mURL.openConnection();
-            coon.setReadTimeout(1000);
-            coon.setConnectTimeout(1000);
-
-            coon.setRequestMethod("GET");
-            int statusCode = coon.getResponseCode();
-            if (statusCode == 200) {
-                InputStream is = coon.getInputStream();
-                ByteArrayOutputStream os = new ByteArrayOutputStream();
-                // 模板代码 必须熟练
-                byte[] buffer = new byte[1024];
-                int len = -1;
-                while ((len = is.read(buffer)) != -1) {
-                    os.write(buffer, 0, len);
-                }
-                is.close();
-                String state = os.toString();// 把流中的数据转换成字符串,采用的编码是utf-8(模拟器默认编码)
-                os.close();
-                JSONObject json = JSONObject.fromObject(state);
-                //Log.d("state", state);
-                JSONArray json_array = json.getJSONArray("value");
-                if (json_array.size() == 0)
-                    return "";
-                String pic = json_array.getJSONObject(0).getString("contentUrl");
-                Log.d("image", pic);
-                return pic;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        Log.d("image", "flase");
-        return "";
     }
 
 
@@ -578,7 +532,23 @@ public class NewsService extends IntentService {
                                 ContentValues _values = new ContentValues();
                                 _values.put("Read", 1);
                                 _values.put("Details", data);
-                                dbmanager.update(NewsDatabase.ALL_TABLE_NAME, _values, "ID=?", new String[]{news_ID});
+                                String str = SELECT + NewsDatabase.ALL_TABLE_NAME + WHEREID;
+                                Cursor c = dbmanager.query(str, new String[]{news_ID});
+                                if(c.moveToFirst() == false){
+                                    _values.put("ID", id);
+                                    _values.put("ClassTag", tag);
+                                    _values.put("Source", source);
+                                    _values.put("Title", title);
+                                    _values.put("Time", time);
+                                    _values.put("URL", url);
+                                    _values.put("Author", author);
+                                    _values.put("Type", lang_type);
+                                    _values.put("Pictures", pic);
+                                    _values.put("Video", video);
+                                    dbmanager.insert(_values, NewsDatabase.ALL_TABLE_NAME);
+                                }
+                                else
+                                    dbmanager.update(NewsDatabase.ALL_TABLE_NAME, _values, "ID=?", new String[]{news_ID});
                             }catch (Exception e) {
                                 // TODO Auto-generated catch block
                                 e.printStackTrace();

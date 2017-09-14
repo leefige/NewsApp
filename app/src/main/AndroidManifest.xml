@@ -42,13 +42,13 @@
         android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@mipmap/icon1"
-        android:label="8_李逸飞"
+        android:label="08_李逸飞"
         android:roundIcon="@mipmap/icon1"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme">git
         <activity
             android:name=".MainActivity"
-            android:label="8_李逸飞"
+            android:label="08_李逸飞"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"
             android:configChanges="orientation|keyboardHidden">

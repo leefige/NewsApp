@@ -360,8 +360,6 @@ public class MainActivity extends AppCompatActivity
             Log.d("yew", "perfect");
             if(news_list == null);
             Log.d("yew", "err");
-            String name = news_list.get(0).newsClassTag;
-            Log.d("news", name);
         }
     }
 }

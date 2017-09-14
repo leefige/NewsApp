@@ -67,8 +67,9 @@ public class NewsDatabase extends SQLiteOpenHelper{
     //表名，插入数据
     public void insert(ContentValues values, String table_name){
         SQLiteDatabase db = getWritableDatabase();
-        db.insert(table_name, null, values);
+        long a = db.insert(table_name, null, values);
         Log.d("insert", "sucess");
+        Log.d("insert", String.valueOf(a));
     }
     //查询，选择语句，占位符
     public Cursor query(String sql, String[] str){
