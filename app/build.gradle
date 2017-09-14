@@ -44,4 +44,5 @@ dependencies {
     compile 'net.sf.json-lib:json-lib:2.4:JDK15'
     compile files('libs/MobTools-2017.0823.1556.jar')
     compile files('libs/MobCommons-2017.0823.1556.jar')
+    compile 'commons-beanutils:commons-beanutils:1.9.0'
 }
