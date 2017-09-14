@@ -122,7 +122,6 @@ public class NewsService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         if (intent != null) {
             boolean flag = false;
-            Log.d("flagg", "232");
             final String key = intent.getStringExtra(KEY);
             switch (key) {
                 case LIST:
@@ -427,6 +426,7 @@ public class NewsService extends IntentService {
 
 
     private void getDetails(final String news_ID, final String kind) {
+        Log.d("asdf", news_ID);
         ContentValues values = new ContentValues();
         values.put("Read", 1);
 
